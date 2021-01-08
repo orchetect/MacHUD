@@ -9,8 +9,8 @@
 //
 
 import Cocoa
-import CoreImage
-import OTShared
+@_implementationOnly import CoreImage
+@_implementationOnly import OTShared
 
 /// HUD popup notification singleton class.
 public class OTHUDControllerHost {

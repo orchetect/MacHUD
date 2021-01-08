@@ -6,8 +6,8 @@
 //
 
 import Cocoa
-import OTCore
-import OTShared
+@_implementationOnly import OTCore
+@_implementationOnly import OTShared
 
 extension OTHUDControllerHost {
 	

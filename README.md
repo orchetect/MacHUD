@@ -1,6 +1,6 @@
 # HUDKit
 
-A macOS HUD (heads-up-display) library written in Swift.
+A macOS HUD (heads-up-display) alert library written in Swift.
 
 ## Roadmap
 
