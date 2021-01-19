@@ -5,9 +5,8 @@
 //  Created by Steffan Andrews on 2020-09-23.
 //
 
-import Cocoa
+import AppKit
 @_implementationOnly import OTCore
-@_implementationOnly import OTShared
 
 extension OTHUDControllerHost {
 	
@@ -21,11 +20,12 @@ extension OTHUDControllerHost {
 		
 		var delayTask: OTTimeUtils.Task?
 		
-		//		var createdAtTime: Date? = Date() // attach a creation date in order to establish precedence in notifications array
+		//var createdAtTime: Date? = Date() // attach a creation date in order to establish precedence in notifications array
 		
 		var uniqueID: Int?
 		
 		init() {
+			
 			// increment perpetual counter
 			if OTHUDControllerHost.shared.perpetualInstanceCounter > 1000 { OTHUDControllerHost.shared.perpetualInstanceCounter = 0 } // wrap at 1000
 			self.uniqueID = OTHUDControllerHost.shared.perpetualInstanceCounter + 1
@@ -34,12 +34,13 @@ extension OTHUDControllerHost {
 			self.hudWindow = NSWindow(contentRect: NSMakeRect(0, 0, 500, 160), styleMask: NSWindow.StyleMask.borderless, backing: .buffered, defer: false)
 			self.hudView = NSView()
 			self.hudTextField = NSTextField()
+			
 		}
 		
 		deinit {
 			// not deallocating stuff here, doing it in killClass()
 			
-			//			llog("HUD instance deinit")
+			//Log.debug("HUD instance deinit")
 		}
 		
 		
@@ -49,12 +50,11 @@ extension OTHUDControllerHost {
 					 size: OTHUDSize = .medium,
 					 style: OTHUDStyle = .dark,
 					 bordered: Bool = false,
-					 fadeOut: OTHUDFade = .defaultDuration
-		) {
+					 fadeOut: OTHUDFade = .defaultDuration) {
 			
 			// set up UI
-			//			window = NSWindow(contentRect: NSMakeRect(0, 0, 500, 160), styleMask: NSBorderlessWindowMask, backing: .buffered, defer: false)
-			//		hudWindow.styleMask = .hudWindow // don't make HID window - it disappears on app deactivation!
+			//window = NSWindow(contentRect: NSMakeRect(0, 0, 500, 160), styleMask: NSBorderlessWindowMask, backing: .buffered, defer: false)
+			//hudWindow.styleMask = .hudWindow // don't make HID window - it disappears on app deactivation!
 			hudWindow.level = NSWindow.Level(rawValue: Int(CGWindowLevelForKey(CGWindowLevelKey.assistiveTechHighWindow)))
 			hudWindow.isOpaque = false
 			hudWindow.backgroundColor = NSColor.clear
@@ -62,9 +62,9 @@ extension OTHUDControllerHost {
 			hudWindow.isExcludedFromWindowsMenu = true
 			hudWindow.collectionBehavior = [NSWindow.CollectionBehavior.ignoresCycle, NSWindow.CollectionBehavior.stationary, NSWindow.CollectionBehavior.moveToActiveSpace] // excludes from Exposé
 			
-			//			hudView = NSView()
+			//hudView = NSView()
 			
-			//			hudTextField = NSTextField()
+			//hudTextField = NSTextField()
 			hudTextField.preferredMaxLayoutWidth = (NSScreen.main?.visibleFrame.size.width ?? 1000) - 50
 			hudTextField.isBordered = false
 			hudTextField.isEditable = false
@@ -159,7 +159,10 @@ extension OTHUDControllerHost {
 				hudTextField.setFrameSize(NSSize(width: hudTextField.frame.width, height: screenRect.height))
 			}
 			
-			var displayBounds = NSMakeRect((screenMainFrame.size.width - hudTextField.frame.size.width - 40) * 0.5, 0, hudTextField.frame.size.width + 40, hudTextField.frame.size.height + 40 )
+			var displayBounds = NSMakeRect((screenMainFrame.size.width - hudTextField.frame.size.width - 40) * 0.5,
+										   0,
+										   hudTextField.frame.size.width + 40,
+										   hudTextField.frame.size.height + 40 )
 			switch position {
 			case .bottom:
 				displayBounds.origin.y = 150
@@ -208,9 +211,11 @@ extension OTHUDControllerHost {
 			}) {
 				
 			}
+			
 		}
 		
 		internal func hideHUD(_ fade: OTHUDFade = .defaultDuration) {
+			
 			var fadeTime: Double = 0.2
 			
 			switch fade {
@@ -226,14 +231,19 @@ extension OTHUDControllerHost {
 			
 			// animating CIFilters needs to be added to the view’s filters array, not the layer’s content or background filters arrays.
 			if let bfilter = CIFilter(name: "CIMotionBlur", parameters: [kCIInputRadiusKey : 0]) {
-				self.hudView.contentFilters.append(bfilter) }
+				
+				self.hudView.contentFilters.append(bfilter)
+				
+			}
 			
 			// begin async animation event
 			NSAnimationContext.runAnimationGroup({ context in
 				context.duration = fadeTime
 				context.allowsImplicitAnimation = true // doesn't affect things?
 				self.hudWindow.animator().alphaValue = 0
-				self.hudWindow.contentView?.animator().contentFilters[0].setValue(1.5, forKey: kCIInputRadiusKey) // CIMotionBlur does not animate here - have to discover a way to animate CIFilter properties.
+				
+				// CIMotionBlur does not animate here - have to discover a way to animate CIFilter properties.
+				self.hudWindow.contentView?.animator().contentFilters[0].setValue(1.5, forKey: kCIInputRadiusKey)
 				
 			}) {
 				self.hudWindow.orderOut(self)
@@ -245,7 +255,8 @@ extension OTHUDControllerHost {
 		}
 		
 		internal func killClass() {
-			//			llog("HUD killClass() fired.")
+			
+			//Log.debug("HUD killClass() fired.")
 			
 			/// attempts to trigger a deinit() by destroying any references inside the class
 			//delayTask = nil
@@ -253,11 +264,20 @@ extension OTHUDControllerHost {
 			//hudView = nil
 			//hudWindow = nil
 			if let idx = shared.OTHUDNotifications.firstIndex(where: { $0 == self }) {
-				shared.OTHUDNotifications.remove(at: idx) // remove from array
-			} else { llog(level: .err, "HUD notiication class deinit: couldn't remove from manager array. Possible memory leak may result.") }
+				
+				// remove from array
+				shared.OTHUDNotifications.remove(at: idx)
+				
+			} else {
+				
+				Log.error("HUD notiication class deinit: couldn't remove from manager array. Possible memory leak may result.")
+				
+			}
+			
 			self.uniqueID = nil
 			
-			//			llog("HUD notifications array count:", sharedInstance.OTHUDNotifications.count)
+			//Log.debug("HUD notifications array count:", sharedInstance.OTHUDNotifications.count)
+			
 		}
 		
 	}

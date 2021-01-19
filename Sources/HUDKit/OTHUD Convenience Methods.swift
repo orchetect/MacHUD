@@ -6,8 +6,6 @@
 //  Copyright © 2016 Steffan Andrews. All rights reserved.
 //
 
-import Foundation
-
 /// Display a HUD alert on the screen.
 public func hudDisplayAlert(_ message: String) {
 	

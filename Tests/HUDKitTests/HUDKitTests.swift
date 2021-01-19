@@ -3,8 +3,6 @@ import XCTest
 
 final class HUDKitTests: XCTestCase {
 	
-    func testExample() {
-        XCTAssertTrue(true)
-    }
+    // no unit tests
 	
 }

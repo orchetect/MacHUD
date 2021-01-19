@@ -1,5 +1,5 @@
 //
-//  OTHUD.swift
+//  OTHUDControllerHost.swift
 //  HUDKit
 //
 //  Created by AntScript on 5/18/16.
@@ -8,9 +8,9 @@
 //  Modified by Steffan Andrews on 6/26/2016
 //
 
-import Cocoa
+import AppKit
 @_implementationOnly import CoreImage
-@_implementationOnly import OTShared
+@_implementationOnly import OTCore
 
 /// HUD popup notification singleton class.
 public class OTHUDControllerHost {
@@ -44,8 +44,7 @@ public class OTHUDControllerHost {
 	                     size: OTHUDSize = .medium,
 	                     style: OTHUDStyle = .dark,
 	                     bordered: Bool = false,
-	                     fadeOut: OTHUDFade = .defaultDuration)
-	{
+	                     fadeOut: OTHUDFade = .defaultDuration) {
 	
 		// check for any existing notifications in the manager array
 		
@@ -55,48 +54,81 @@ public class OTHUDControllerHost {
 			var notification: OTHUDNotification?
 	
 			DispatchQueue.main.async { // we need to do UI stuff on the main thread
+				
 				notification = OTHUDNotification()
-				guard notification != nil else { llog("OTHUD: showNewHUDAlert(...) Error: Failed to create OTHUDNotification object.") ; return }
-				self.OTHUDNotifications.insert(notification!, at: 0) // add to notifications array
-				notification!.showHUD(msg: msg, stickyTime: stickyTime, position: position, size: size, style: style, bordered: bordered, fadeOut: fadeOut) // trigger notification
+				
+				guard let notification = notification else {
+					Log.error("OTHUD: showNewHUDAlert(...) Error: Failed to create OTHUDNotification object.")
+					return
+				}
+				
+				// add to notifications array
+				self.OTHUDNotifications.insert(notification, at: 0)
+				
+				// trigger notification
+				notification.showHUD(msg: msg,
+									 stickyTime: stickyTime,
+									 position: position,
+									 size: size,
+									 style: style,
+									 bordered: bordered,
+									 fadeOut: fadeOut)
+				
 			}
 	
 		}
 		
 	}
 	
-	/// Used to wake up the singleton instance on app load
-	public var touch: () -> Void = { }
 }
 
 enum OTHUDPosition: Int {
+	
 	case top, bottom, center
+	
 }
 
 enum OTHUDSize: Int {
+	
 	case small, medium, large, superLarge
+	
 }
 
 enum OTHUDStyle: Int {
+	
 	case light, mediumLight, dark, ultraDark
+	
 }
 
 enum OTHUDFade: Equatable {
+	
 	case defaultDuration
 	case withDuration(Double)
 	case noFade
+	
 }
 
 func ==(a: OTHUDFade, b: OTHUDFade) -> Bool {
+	
 	switch (a, b) {
-	case (.defaultDuration, .defaultDuration): return true
-	case (.withDuration(let a), .withDuration(let b)) where a == b: return true
-	case (.noFade, .noFade): return true
-	default: return false
+	case (.defaultDuration, .defaultDuration):
+		return true
+		
+	case (.withDuration(let a), .withDuration(let b)) where a == b:
+		return true
+		
+	case (.noFade, .noFade):
+		return true
+		
+	default:
+		return false
 	}
+	
 }
 
 /// Setting determining behavior of overlapping HID notifications
 enum hidManagerOverlapBehavior: Int {
+	
 	case replaceLast, stack
+	
 }
