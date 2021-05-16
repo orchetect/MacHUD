@@ -13,20 +13,24 @@ let package = Package(
     products: [
         .library(
             name: "HUDKit",
-            targets: ["HUDKit"]),
+            targets: ["HUDKit"])
     ],
 	
     dependencies: [
-		.package(url: "https://github.com/orchetect/OTCore", from: "1.1.0")
+		.package(url: "https://github.com/orchetect/OTCore", from: "1.1.8")
     ],
 	
-    targets: [
-        .target(
-            name: "HUDKit",
-            dependencies: ["OTCore"]),
-        .testTarget(
-            name: "HUDKitTests",
-            dependencies: ["HUDKit"]),
-    ]
+	targets: [
+		.target(
+			name: "HUDKit",
+			dependencies: ["OTCore"]
+		),
+		.testTarget(
+			name: "HUDKitTests",
+			dependencies: ["HUDKit",
+						   .product(name: "OTCore-Testing-XCTest",
+									package: "OTCore")]
+		)
+	]
 	
 )
