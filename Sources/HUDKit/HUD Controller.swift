@@ -18,12 +18,40 @@ extension HUD {
 		/// Shared HUD popup notification dispatcher.
 		static let shared = Controller() // singleton
 		
-//		/// Set to desired behavior when overlapping HID notifications occur
-//		static var overlapBehavior: OverlapBehavior = .replaceLast
+		internal var notifications: [Notification] =
+			(1...5)
+			.reduce(into: []) {
+				$0.append(Notification())
+				_ = $1
+			}
 		
-		internal var notifications: [Notification] = []
+		internal func addNewNotification() -> Notification {
+			
+			let newNotification = Notification()
+			notifications.append(newNotification)
+			return newNotification
+			
+		}
 		
-		internal var perpetualInstanceCounter: Int = 0
+		internal func getFreeNotification() -> Notification {
+			
+			precondition(notifications.count > 0)
+			
+			if let firstFree = notifications
+				.first(where: { !$0.inUse })
+			{
+				return firstFree
+			}
+			
+			// failsafe: don't allow more than 100 notification objects
+			if notifications.count > 100 {
+				return notifications.last!
+			}
+			
+			// add new object and return it
+			return addNewNotification()
+			
+		}
 		
 		private init() {
 			
@@ -32,12 +60,13 @@ extension HUD {
 		/// Number of active HID notifications
 		public var count: Int {
 			
-			notifications.count
+			notifications.reduce(0) {
+				$0 + ($1.inUse ? 1 : 0)
+			}
 			
 		}
 		
 		/// This is the method to call to trigger a new HID alert notification.
-		/// Overlap behavior is determined by `overlapBehavior` property of singleton class.
 		internal func newHUDAlert(_ msg: String,
 								  stickyTime: TimeInterval = 3,
 								  position: Position = .center,
@@ -47,28 +76,20 @@ extension HUD {
 								  fadeOut: Fade = .defaultDuration)
 		{
 			
-			DispatchQueue.main.async { // we need to do UI stuff on the main thread
+			autoreleasepool {
 				
-				// not sure if this truly helps but it might prevent runaway RAM footprints
-				autoreleasepool {
-					
-					let notification = Notification()
-					
-					// add to top of notifications array
-					self.notifications.insert(notification, at: 0)
-					
-					// trigger notification
-					try? notification.createAndShow(
-						msg: msg,
-						stickyTime: stickyTime,
-						position: position,
-						size: size,
-						style: style,
-						bordered: bordered,
-						fadeOut: fadeOut
-					)
-					
-				}
+				let notification = self.getFreeNotification()
+				
+				// trigger notification
+				try? notification.show(
+					msg: msg,
+					stickyTime: stickyTime,
+					position: position,
+					size: size,
+					style: style,
+					bordered: bordered,
+					fadeOut: fadeOut
+				)
 				
 			}
 			
@@ -133,17 +154,6 @@ extension HUD {
 			}
 			
 		}
-		
-	}
-	
-}
-
-extension HUD {
-	
-	/// Setting determining behavior of overlapping HID notifications
-	enum OverlapBehavior: Int {
-		
-		case replaceLast, stack
 		
 	}
 	
