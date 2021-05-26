@@ -11,7 +11,10 @@ import Foundation
 extension HUD {
 	
 	/// Display a HUD alert on the screen.
-	public static func displayAlert(_ message: String) {
+	public static func displayAlert(
+		_ message: String,
+		style: Style = Style()
+	) {
 		
 		// we need to do UI stuff on the main thread
 		DispatchQueue.main.async {
@@ -20,38 +23,11 @@ extension HUD {
 				
 				Controller.shared.newHUDAlert(
 					message,
-					stickyTime: 1.2,
-					position: .bottom,
-					size: .large,
-					style: .dark,
-					bordered: false,
-					fadeOut: .withDuration(0.8)
+					style: style
 				)
 				
 			}
-		}
-		
-	}
-	
-	/// Display a HUD alert on the screen.
-	public static func displayAlertEmoji(_ message: String) {
-		
-		// we need to do UI stuff on the main thread
-		DispatchQueue.main.async {
 			
-			autoreleasepool {
-				
-				Controller.shared.newHUDAlert(
-					message,
-					stickyTime: 1.2,
-					position: .bottom,
-					size: .superLarge,
-					style: .dark,
-					bordered: false,
-					fadeOut: .withDuration(0.8)
-				)
-				
-			}
 		}
 		
 	}

@@ -74,12 +74,7 @@ extension HUD.Notification {
 	/// Creates the notification window and shows it on screen.
 	internal func show(
 		msg: String,
-		stickyTime: TimeInterval = 3,
-		position: HUD.Position = .center,
-		size: HUD.Size = .medium,
-		style: HUD.Style = .dark,
-		bordered: Bool = false,
-		fadeOut: HUD.Fade = .defaultDuration
+		style: HUD.Style
 	) throws {
 		
 		guard created else {
@@ -107,13 +102,13 @@ extension HUD.Notification {
 			
 			do {
 				try __modify(msg: msg,
-							 position: position,
-							 size: size,
-							 style: style,
-							 bordered: bordered)
+							 position: style.position,
+							 size: style.size,
+							 shade: style.shade,
+							 bordered: style.bordered)
 				
-				__show(stickyTime: stickyTime,
-					   fadeOut: fadeOut)
+				__show(stickyTime: style.stickyTime,
+					   fadeOut: style.fadeOut)
 			} catch {
 				inUse = false
 				throw error
@@ -125,12 +120,12 @@ extension HUD.Notification {
 	
 	/// Triggers notification dismissal, animating out, and disposing of its resources.
 	internal func dismiss(
-		_ fade: HUD.Fade = .defaultDuration
+		_ fade: HUD.Style.Fade = .defaultDuration
 	) throws {
 		
 		autoreleasepool {
 			
-			var fadeTime: Double = 0.2
+			var fadeTime: TimeInterval = 0.2
 			
 			switch fade {
 			case .noFade:
@@ -295,9 +290,9 @@ extension HUD.Notification {
 	/// Updates the UI with new parameters after `__create()` has been called.
 	fileprivate func __modify(
 		msg: String,
-		position: HUD.Position = .center,
-		size: HUD.Size = .medium,
-		style: HUD.Style = .dark,
+		position: HUD.Style.Position = .center,
+		size: HUD.Style.Size = .medium,
+		shade: HUD.Style.Shade = .dark,
 		bordered: Bool = false
 	) throws {
 		
@@ -342,7 +337,7 @@ extension HUD.Notification {
 				borderWidth = 5
 			}
 			
-			switch style {
+			switch shade {
 			case .light, .mediumLight:
 				hudTextField.textColor = #colorLiteral(red: 0.08749181937, green: 0.08749181937, blue: 0.08749181937, alpha: 1)
 				
@@ -352,7 +347,7 @@ extension HUD.Notification {
 			}
 			
 			if bordered {
-				switch style {
+				switch shade {
 				case .light, .mediumLight:
 					hudView.layer?.borderWidth = CGFloat(borderWidth)
 					hudView.layer?.borderColor = NSColor(red: 0.15, green: 0.16, blue: 0.17, alpha: 1.00).cgColor
@@ -397,7 +392,7 @@ extension HUD.Notification {
 			hudWindow.setFrame(hudWindow.constrainFrameRect(hudWindow.frame, to: nsScreenFirst), display: true)
 			
 			// hudView_VisualEffectView (NSVisualEffectView)
-			switch style {
+			switch shade {
 			case .light:
 				hudView_VisualEffectView?.material = .light
 			case .mediumLight:
@@ -421,7 +416,7 @@ extension HUD.Notification {
 	/// Shows it on screen.
 	fileprivate func __show(
 		stickyTime: TimeInterval = 3,
-		fadeOut: HUD.Fade = .defaultDuration
+		fadeOut: HUD.Style.Fade = .defaultDuration
 	) {
 		
 		autoreleasepool {

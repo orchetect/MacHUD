@@ -68,12 +68,7 @@ extension HUD {
 		
 		/// This is the method to call to trigger a new HID alert notification.
 		internal func newHUDAlert(_ msg: String,
-								  stickyTime: TimeInterval = 3,
-								  position: Position = .center,
-								  size: Size = .medium,
-								  style: Style = .dark,
-								  bordered: Bool = false,
-								  fadeOut: Fade = .defaultDuration)
+								  style: Style)
 		{
 			
 			autoreleasepool {
@@ -83,74 +78,9 @@ extension HUD {
 				// trigger notification
 				try? notification.show(
 					msg: msg,
-					stickyTime: stickyTime,
-					position: position,
-					size: size,
-					style: style,
-					bordered: bordered,
-					fadeOut: fadeOut
+					style: style
 				)
 				
-			}
-			
-		}
-		
-	}
-	
-}
-
-extension HUD {
-	
-	enum Position: Int {
-		
-		case top, bottom, center
-		
-	}
-	
-}
-
-extension HUD {
-	
-	enum Size: Int {
-		
-		case small, medium, large, superLarge
-		
-	}
-	
-}
-
-extension HUD {
-	
-	enum Style: Int {
-		
-		case light, mediumLight, dark, ultraDark
-		
-	}
-	
-}
-
-extension HUD {
-	
-	enum Fade: Equatable {
-		
-		case defaultDuration
-		case withDuration(Double)
-		case noFade
-		
-		static func == (lhs: Self, rhs: Self) -> Bool {
-			
-			switch (lhs, rhs) {
-			case (.defaultDuration, .defaultDuration):
-				return true
-				
-			case (.withDuration(let a), .withDuration(let b)) where a == b:
-				return true
-				
-			case (.noFade, .noFade):
-				return true
-				
-			default:
-				return false
 			}
 			
 		}
