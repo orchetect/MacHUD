@@ -1,5 +1,5 @@
 //
-//  HUD Notification.swift
+//  HUD Alert.swift
 //  HUDKit
 //
 //  Created by Steffan Andrews on 2020-09-23.
@@ -11,9 +11,8 @@ import AppKit
 
 extension HUD {
 	
-	/// Represents a HUD notification object.
-	/// Instanced to generate a notification, and auto-deallocates when done.
-	internal class Notification {
+	/// Represents a HUD alert object which can be shown and hidden.
+	internal class Alert {
 		
 		let uuid = UUID()
 		
@@ -69,9 +68,9 @@ extension HUD {
 
 // MARK: - Methods
 
-extension HUD.Notification {
+extension HUD.Alert {
 	
-	/// Creates the notification window and shows it on screen.
+	/// Creates the alert window and shows it on screen.
 	internal func show(
 		msg: String,
 		style: HUD.Style
@@ -79,7 +78,7 @@ extension HUD.Notification {
 		
 		guard created else {
 			inUse = false
-			throw HUD.HUDError.internalInconsistency("Notification class was not created.")
+			throw HUD.HUDError.internalInconsistency("Alert class was not created.")
 		}
 		
 		if inUse {
@@ -118,7 +117,7 @@ extension HUD.Notification {
 		
 	}
 	
-	/// Triggers notification dismissal, animating out, and disposing of its resources.
+	/// Triggers alert dismissal, animating out, and disposing of its resources.
 	internal func dismiss(
 		_ fade: HUD.Style.Fade = .defaultDuration
 	) throws {
@@ -170,9 +169,9 @@ extension HUD.Notification {
 
 // MARK: - Private Methods
 
-extension HUD.Notification {
+extension HUD.Alert {
 
-	/// Creates the notification window.
+	/// Creates the alert window.
 	fileprivate func __create() throws {
 		
 		try autoreleasepool {
@@ -183,7 +182,7 @@ extension HUD.Notification {
 				throw HUD.HUDError.internalInconsistency("Can't get reference to main screen.")
 			}
 			
-			// determine maximum size for notification
+			// determine maximum size for alert
 			let screenMainFrame = nsScreenFirst.visibleFrame
 			
 			// origin is bottom left of screen. Y axis goes up, X axis goes right.
@@ -213,7 +212,7 @@ extension HUD.Notification {
 			hudTextField.alignment = .center
 			hudTextField.usesSingleLineMode = false
 			hudTextField.cell?.wraps = true
-			// if notification fills screen, truncate it with ellipsis
+			// if alert fills screen, truncate it with ellipsis
 			hudTextField.cell?.truncatesLastVisibleLine = true
 			hudView.autoresizesSubviews = true // doesn't affect anything
 			
@@ -304,7 +303,7 @@ extension HUD.Notification {
 				throw HUD.HUDError.internalInconsistency("Can't get reference to main screen.")
 			}
 			
-			// determine maximum size for notification
+			// determine maximum size for alert
 			let screenMainFrame = nsScreenFirst.visibleFrame
 			
 			// origin is bottom left of screen. Y axis goes up, X axis goes right.
@@ -421,7 +420,7 @@ extension HUD.Notification {
 		
 		autoreleasepool {
 			
-			// show notification
+			// show alert
 			hudWindow.orderFront(self)
 			
 			// remain on screen for specified time period; schedule the fade out
@@ -433,7 +432,7 @@ extension HUD.Notification {
 				
 			}
 			
-			// animate notification appearing
+			// animate alert appearing
 			hudWindow.alphaValue = 0
 			NSAnimationContext.runAnimationGroup(
 				{ [weak self] context in
@@ -454,9 +453,9 @@ extension HUD.Notification {
 
 // MARK: - Protocol Adoptions
 
-extension HUD.Notification: Equatable {
+extension HUD.Alert: Equatable {
 	
-	static func == (lhs: HUD.Notification, rhs: HUD.Notification) -> Bool {
+	static func == (lhs: HUD.Alert, rhs: HUD.Alert) -> Bool {
 		
 		lhs.uuid == rhs.uuid
 		

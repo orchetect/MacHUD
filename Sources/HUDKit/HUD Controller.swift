@@ -12,44 +12,44 @@ import AppKit
 
 extension HUD {
 	
-	/// HUD popup notification singleton class.
+	/// HUD popup alert singleton class.
 	internal class Controller {
 		
-		/// Shared HUD popup notification dispatcher.
+		/// Shared HUD popup alert dispatcher.
 		static let shared = Controller() // singleton
 		
-		internal var notifications: [Notification] =
+		internal var alerts: [Alert] =
 			(1...5)
 			.reduce(into: []) {
-				$0.append(Notification())
+				$0.append(Alert())
 				_ = $1
 			}
 		
-		internal func addNewNotification() -> Notification {
+		internal func addNewAlert() -> Alert {
 			
-			let newNotification = Notification()
-			notifications.append(newNotification)
-			return newNotification
+			let newAlert = Alert()
+			alerts.append(newAlert)
+			return newAlert
 			
 		}
 		
-		internal func getFreeNotification() -> Notification {
+		internal func getFreeAlert() -> Alert {
 			
-			precondition(notifications.count > 0)
+			precondition(alerts.count > 0)
 			
-			if let firstFree = notifications
+			if let firstFree = alerts
 				.first(where: { !$0.inUse })
 			{
 				return firstFree
 			}
 			
-			// failsafe: don't allow more than 100 notification objects
-			if notifications.count > 100 {
-				return notifications.last!
+			// failsafe: cap max number of alerts
+			if alerts.count > 100 {
+				return alerts.last!
 			}
 			
 			// add new object and return it
-			return addNewNotification()
+			return addNewAlert()
 			
 		}
 		
@@ -57,26 +57,26 @@ extension HUD {
 			
 		}
 		
-		/// Number of active HID notifications
+		/// Number of active HID alerts.
 		public var count: Int {
 			
-			notifications.reduce(0) {
+			alerts.reduce(0) {
 				$0 + ($1.inUse ? 1 : 0)
 			}
 			
 		}
 		
-		/// This is the method to call to trigger a new HID alert notification.
+		/// Trigger a new HID alert being shown on-screen.
 		internal func newHUDAlert(_ msg: String,
 								  style: Style)
 		{
 			
 			autoreleasepool {
 				
-				let notification = self.getFreeNotification()
+				let alert = self.getFreeAlert()
 				
-				// trigger notification
-				try? notification.show(
+				// trigger alert
+				try? alert.show(
 					msg: msg,
 					style: style
 				)
