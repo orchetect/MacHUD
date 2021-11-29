@@ -17,7 +17,7 @@ let package = Package(
     ],
 	
     dependencies: [
-		.package(url: "https://github.com/orchetect/OTCore", from: "1.1.8")
+		.package(url: "https://github.com/orchetect/OTCore", from: "1.1.22")
     ],
 	
 	targets: [
@@ -27,9 +27,7 @@ let package = Package(
 		),
 		.testTarget(
 			name: "HUDKitTests",
-			dependencies: ["HUDKit",
-						   .product(name: "OTCore-Testing-XCTest",
-									package: "OTCore")]
+			dependencies: ["HUDKit"]
 		)
 	]
 	
