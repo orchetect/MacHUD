@@ -2,7 +2,6 @@ import XCTest
 import AppKit // not needed?
 @testable import HUDKit
 import OTCore
-import OTCoreTestingXCTest
 
 final class HUDKitTests: XCTestCase {
 	
@@ -46,7 +45,7 @@ final class HUDKitTests: XCTestCase {
 		
 		HUD.displayAlert("Test")
 		
-		XCTWait(sec: 2)
+        sleep(2)
 		
 		print("Done")
 		
