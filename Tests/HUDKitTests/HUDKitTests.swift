@@ -5,12 +5,10 @@ import OTCore
 
 final class HUDKitTests: XCTestCase {
 	
-	override func setUp() {
-		Log.setup(enabled: true,
-				  defaultLog: nil,
-				  defaultSubsystem: nil,
-				  useEmoji: .all)
-	}
+    let logger = OSLogger(enabled: true,
+                          useEmoji: .all)
+    
+	override func setUp() { }
 	
 	func testStyle() {
 		
