@@ -1,3 +1,8 @@
+//
+//  HUDKitTests.swift
+//  HUDKit • https://github.com/orchetect/HUDKit
+//
+
 import XCTest
 import AppKit // not needed?
 @testable import HUDKit
@@ -5,9 +10,6 @@ import OTCore
 
 final class HUDKitTests: XCTestCase {
 	
-    let logger = OSLogger(enabled: true,
-                          useEmoji: .all)
-    
 	override func setUp() { }
 	
 	func testStyle() {

@@ -1,8 +1,6 @@
 //
 //  HUD Error.swift
-//  HUDKit
-//
-//  Created by Steffan Andrews on 2021-05-15.
+//  HUDKit • https://github.com/orchetect/HUDKit
 //
 
 extension HUD {

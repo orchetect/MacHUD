@@ -1,9 +1,6 @@
 //
 //  HUD Controller.swift
-//  HUDKit
-//
-//  Created by Steffan Andrews on 6/26/2016
-//  Copyright © 2016 Steffan Andrews. All rights reserved.
+//  HUDKit • https://github.com/orchetect/HUDKit
 //
 
 import AppKit

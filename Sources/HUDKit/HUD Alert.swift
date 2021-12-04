@@ -1,9 +1,6 @@
 //
 //  HUD Alert.swift
-//  HUDKit
-//
-//  Created by Steffan Andrews on 2020-09-23.
-//  Copyright © 2020 Steffan Andrews. All rights reserved.
+//  HUDKit • https://github.com/orchetect/HUDKit
 //
 
 import AppKit

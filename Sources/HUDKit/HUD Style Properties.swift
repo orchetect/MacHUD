@@ -1,9 +1,6 @@
 //
 //  HUD Style Properties.swift
-//  HUDKit
-//
-//  Created by Steffan Andrews on 2021-05-25.
-//  Copyright © 2021 Steffan Andrews. All rights reserved.
+//  HUDKit • https://github.com/orchetect/HUDKit
 //
 
 import Foundation
