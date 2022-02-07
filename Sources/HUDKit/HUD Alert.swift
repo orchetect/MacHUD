@@ -421,7 +421,9 @@ extension HUD.Alert {
 			hudWindow.orderFront(self)
 			
 			// remain on screen for specified time period; schedule the fade out
-			DispatchQueue.main.asyncAfterDelta(stickyTime) { [weak self] in
+            // prevent time values less than 0.01 seconds as failsafe
+            let delay = stickyTime.clamped(to: 0.01...)
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
 				
 				autoreleasepool {
 					try? self?.dismiss(fadeOut)

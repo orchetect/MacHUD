@@ -18,7 +18,7 @@ extension HUD {
 			
 			autoreleasepool {
 				
-				Controller.shared.newHUDAlert(
+				Manager.shared.newHUDAlert(
 					message,
 					style: style
 				)

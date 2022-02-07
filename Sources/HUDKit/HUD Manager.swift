@@ -1,5 +1,5 @@
 //
-//  HUD Controller.swift
+//  HUD Manager.swift
 //  HUDKit • https://github.com/orchetect/HUDKit
 //
 
@@ -10,10 +10,10 @@ import AppKit
 extension HUD {
 	
 	/// HUD popup alert singleton class.
-	internal class Controller {
+	internal class Manager {
 		
 		/// Shared HUD popup alert dispatcher.
-		static let shared = Controller() // singleton
+		static let shared = Manager() // singleton
 		
 		internal var alerts: [Alert] =
 			(1...5)
