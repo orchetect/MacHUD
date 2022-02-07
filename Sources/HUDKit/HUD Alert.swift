@@ -27,8 +27,6 @@ extension HUD {
 		
 		weak var hudTextField: NSTextField!
 		
-//		var animGroup: CAAnimationGroup? = nil
-		
 		// MARK: - Init
 		
 		init() {
@@ -175,12 +173,14 @@ extension HUD.Alert {
 			
 			// grab first screen
 			// (not .main) because .main will reference focused screen if user has "Displays have separate Spaces" enabled in System Preferences -> Mission Control
-			guard let nsScreenFirst = NSScreen.screens.first else {
-				throw HUD.HUDError.internalInconsistency("Can't get reference to main screen.")
+            guard let nsScreen = NSScreen.main else {
+				throw HUD.HUDError.internalInconsistency(
+                    "Can't get reference to main screen."
+                )
 			}
 			
 			// determine maximum size for alert
-			let screenMainFrame = nsScreenFirst.visibleFrame
+			let screenMainFrame = nsScreen.visibleFrame
 			
 			// origin is bottom left of screen. Y axis goes up, X axis goes right.
 			let screenRect = NSRect(
@@ -193,15 +193,17 @@ extension HUD.Alert {
 			// set up UI
 			//window = NSWindow(contentRect: NSMakeRect(0, 0, 500, 160), styleMask: NSBorderlessWindowMask, backing: .buffered, defer: false)
 			//hudWindow.styleMask = .hudWindow // don't make HID window - it disappears on app deactivation!
-			hudWindow.level = .init(rawValue: CGWindowLevelForKey(.assistiveTechHighWindow).int)
+            hudWindow.level = .screenSaver
 			hudWindow.isOpaque = false
 			hudWindow.backgroundColor = NSColor.clear
 			hudWindow.ignoresMouseEvents = true
 			hudWindow.isExcludedFromWindowsMenu = true
 			// excludes from Exposé
-			hudWindow.collectionBehavior = [.ignoresCycle, .stationary, .moveToActiveSpace]
-			
-			hudTextField.preferredMaxLayoutWidth = (nsScreenFirst.visibleFrame.size.width - 50).clamped(to: 1...)
+			hudWindow.collectionBehavior = [
+                .ignoresCycle, .stationary, .fullScreenNone, .canJoinAllSpaces, .transient
+            ]
+            
+			hudTextField.preferredMaxLayoutWidth = (nsScreen.visibleFrame.size.width - 50).clamped(to: 1...)
 			hudTextField.isBordered = false
 			hudTextField.isEditable = false
 			hudTextField.isSelectable = false
@@ -242,7 +244,7 @@ extension HUD.Alert {
 										attribute: .height,
 										multiplier: 1,
 										constant: 0))
-			hudWindow.maxSize = nsScreenFirst.frame.size
+			hudWindow.maxSize = nsScreen.frame.size
 			
 			hudView.wantsLayer = true // needed to enable corner radius mask
 			hudView.layer?.masksToBounds = true

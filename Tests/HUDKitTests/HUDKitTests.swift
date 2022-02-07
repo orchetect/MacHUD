@@ -43,6 +43,9 @@ final class HUDKitTests: XCTestCase {
 	
 	func testHUD() {
 		
+        dump(NSScreen.screens)
+        print(NSScreen.main?.localizedName)
+        
 		HUD.displayAlert("Test")
 		
         sleep(2)
