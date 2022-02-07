@@ -191,17 +191,24 @@ extension HUD.Alert {
 			)
 			
 			// set up UI
-			//window = NSWindow(contentRect: NSMakeRect(0, 0, 500, 160), styleMask: NSBorderlessWindowMask, backing: .buffered, defer: false)
-			//hudWindow.styleMask = .hudWindow // don't make HID window - it disappears on app deactivation!
+            
+            hudWindow.styleMask = [.borderless] // already set at window creation, above
             hudWindow.level = .screenSaver
-			hudWindow.isOpaque = false
-			hudWindow.backgroundColor = NSColor.clear
-			hudWindow.ignoresMouseEvents = true
-			hudWindow.isExcludedFromWindowsMenu = true
-			// excludes from Exposé
-			hudWindow.collectionBehavior = [
-                .ignoresCycle, .stationary, .fullScreenNone, .canJoinAllSpaces, .transient
+            //hudWindow.canBecomeKey = false // read-only
+            //hudWindow.canBecomeMain = false // read-only
+            hudWindow.hidesOnDeactivate = false
+            
+            hudWindow.ignoresMouseEvents = true
+            hudWindow.isExcludedFromWindowsMenu = true
+            hudWindow.allowsToolTipsWhenApplicationIsInactive = false
+            // excludes from Exposé
+            hudWindow.collectionBehavior = [
+                .ignoresCycle, .stationary, .canJoinAllSpaces,
+                .fullScreenAuxiliary, .transient
             ]
+            
+            hudWindow.isOpaque = false
+            hudWindow.backgroundColor = NSColor.clear
             
 			hudTextField.preferredMaxLayoutWidth = (nsScreen.visibleFrame.size.width - 50).clamped(to: 1...)
 			hudTextField.isBordered = false
@@ -421,10 +428,10 @@ extension HUD.Alert {
 			
 			// show alert
 			hudWindow.orderFront(self)
-			
+            
 			// remain on screen for specified time period; schedule the fade out
-            // prevent time values less than 0.01 seconds as failsafe
-            let delay = stickyTime.clamped(to: 0.01...)
+            // prevent time values being too small as failsafe
+            let delay = stickyTime.clamped(to: 0.1...)
             DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
 				
 				autoreleasepool {
