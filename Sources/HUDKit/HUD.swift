@@ -6,7 +6,5 @@
 import Foundation
 
 public enum HUD {
-	
-	// HUD base namespace
-	
+    // HUD base namespace
 }

@@ -3,32 +3,31 @@
 import PackageDescription
 
 let package = Package(
-	
     name: "HUDKit",
-	
-	platforms: [
-		.macOS(.v10_12)
-	],
-	
+    
+    platforms: [
+        .macOS(.v10_12)
+    ],
+    
     products: [
         .library(
             name: "HUDKit",
-            targets: ["HUDKit"])
+            targets: ["HUDKit"]
+        )
     ],
-	
+    
     dependencies: [
-		.package(url: "https://github.com/orchetect/OTCore", from: "1.2.0")
+        .package(url: "https://github.com/orchetect/OTCore", from: "1.4.2")
     ],
-	
-	targets: [
-		.target(
-			name: "HUDKit",
-			dependencies: ["OTCore"]
-		),
-		.testTarget(
-			name: "HUDKitTests",
-			dependencies: ["HUDKit"]
-		)
-	]
-	
+    
+    targets: [
+        .target(
+            name: "HUDKit",
+            dependencies: ["OTCore"]
+        ),
+        .testTarget(
+            name: "HUDKitTests",
+            dependencies: ["HUDKit"]
+        )
+    ]
 )

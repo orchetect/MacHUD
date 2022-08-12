@@ -8,80 +8,65 @@ import AppKit
 @_implementationOnly import OTCore
 
 extension HUD {
-	
-	/// HUD popup alert singleton class.
-	internal class Manager {
+    /// HUD popup alert singleton class.
+    internal class Manager {
+        /// Shared HUD popup alert dispatcher.
+        static let shared = Manager() // singleton
 		
-		/// Shared HUD popup alert dispatcher.
-		static let shared = Manager() // singleton
+        internal var alerts: [Alert] =
+            (1 ... 5)
+            .reduce(into: []) {
+                $0.append(Alert())
+                _ = $1
+            }
 		
-		internal var alerts: [Alert] =
-			(1...5)
-			.reduce(into: []) {
-				$0.append(Alert())
-				_ = $1
-			}
+        internal func addNewAlert() -> Alert {
+            let newAlert = Alert()
+            alerts.append(newAlert)
+            return newAlert
+        }
 		
-		internal func addNewAlert() -> Alert {
+        internal func getFreeAlert() -> Alert {
+            precondition(!alerts.isEmpty)
 			
-			let newAlert = Alert()
-			alerts.append(newAlert)
-			return newAlert
+            if let firstFree = alerts
+                .first(where: { !$0.inUse })
+            {
+                return firstFree
+            }
 			
-		}
+            // failsafe: cap max number of alerts
+            if alerts.count > 100 {
+                return alerts.last!
+            }
+			
+            // add new object and return it
+            return addNewAlert()
+        }
 		
-		internal func getFreeAlert() -> Alert {
-			
-			precondition(alerts.count > 0)
-			
-			if let firstFree = alerts
-				.first(where: { !$0.inUse })
-			{
-				return firstFree
-			}
-			
-			// failsafe: cap max number of alerts
-			if alerts.count > 100 {
-				return alerts.last!
-			}
-			
-			// add new object and return it
-			return addNewAlert()
-			
-		}
+        private init() { }
 		
-		private init() {
-			
-		}
+        /// Number of active HID alerts.
+        public var count: Int {
+            alerts.reduce(0) {
+                $0 + ($1.inUse ? 1 : 0)
+            }
+        }
 		
-		/// Number of active HID alerts.
-		public var count: Int {
-			
-			alerts.reduce(0) {
-				$0 + ($1.inUse ? 1 : 0)
-			}
-			
-		}
-		
-		/// Trigger a new HID alert being shown on-screen.
-		internal func newHUDAlert(_ msg: String,
-								  style: Style)
-		{
-			
-			autoreleasepool {
+        /// Trigger a new HID alert being shown on-screen.
+        internal func newHUDAlert(
+            _ msg: String,
+            style: Style
+        ) {
+            autoreleasepool {
+                let alert = self.getFreeAlert()
 				
-				let alert = self.getFreeAlert()
-				
-				// trigger alert
-				try? alert.show(
-					msg: msg,
-					style: style
-				)
-				
-			}
-			
-		}
-		
-	}
-	
+                // trigger alert
+                try? alert.show(
+                    msg: msg,
+                    style: style
+                )
+            }
+        }
+    }
 }

@@ -4,11 +4,7 @@
 //
 
 extension HUD {
-	
-	public enum HUDError: Error {
-		
-		case internalInconsistency(_ verboseError: String)
-		
-	}
-	
+    public enum HUDError: Error {
+        case internalInconsistency(_ verboseError: String)
+    }
 }
