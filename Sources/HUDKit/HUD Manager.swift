@@ -4,8 +4,8 @@
 //
 
 import AppKit
-@_implementationOnly import CoreImage
-@_implementationOnly import OTCore
+internal import CoreImage
+internal import OTCore
 
 extension HUD {
     /// HUD popup alert singleton class.

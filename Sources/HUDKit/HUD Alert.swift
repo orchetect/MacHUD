@@ -4,7 +4,7 @@
 //
 
 import AppKit
-@_implementationOnly import OTCore
+internal import OTCore
 
 extension HUD {
     /// Represents a HUD alert object which can be shown and hidden.
