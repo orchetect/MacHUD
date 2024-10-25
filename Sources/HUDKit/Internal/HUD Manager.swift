@@ -9,7 +9,7 @@ internal import OTCore
 
 extension HUD {
     /// HUD popup alert singleton class.
-    internal class Manager {
+    @MainActor final class Manager {
         /// Shared HUD popup alert dispatcher.
         static let shared = Manager() // singleton
 		

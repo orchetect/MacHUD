@@ -6,7 +6,7 @@
 import Foundation
 
 extension HUD.Style {
-    public enum Position: Int, CaseIterable {
+    public enum Position: Int, CaseIterable, Sendable {
         case top
         case bottom
         case center
@@ -14,7 +14,7 @@ extension HUD.Style {
 }
 
 extension HUD.Style {
-    public enum Size: Int, CaseIterable {
+    public enum Size: Int, CaseIterable, Sendable {
         case small
         case medium
         case large
@@ -23,7 +23,7 @@ extension HUD.Style {
 }
 
 extension HUD.Style {
-    public enum Shade: Int, CaseIterable {
+    public enum Shade: Int, CaseIterable, Sendable {
         case light
         case mediumLight
         case dark
@@ -32,7 +32,7 @@ extension HUD.Style {
 }
 
 extension HUD.Style {
-    public enum Fade: Equatable, Hashable {
+    public enum Fade: Equatable, Hashable, Sendable {
         case defaultDuration
         case withDuration(TimeInterval)
         case noFade

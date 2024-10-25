@@ -33,14 +33,3 @@ import AppKit
         fadeOut: .defaultDuration
     )
 }
-
-@Test func testHUD() {
-    dump(NSScreen.screens)
-    print(NSScreen.main?.localizedName as Any)
-    
-    HUD.displayAlert("Test")
-    
-    sleep(2)
-    
-    print("Done")
-}

@@ -8,7 +8,7 @@ internal import OTCore
 
 extension HUD {
     /// Represents a HUD alert object which can be shown and hidden.
-    internal class Alert {
+    @MainActor internal class Alert {
         let uuid = UUID()
 		
         var inUse = false
@@ -43,7 +43,6 @@ extension HUD {
                 hudView.addSubview(hudTextField)
 				
                 hudWindow.contentView? = hudView
-                hudWindow.isOneShot = false
 				
                 if (try? __create()) != nil { created = true }
             }
@@ -57,6 +56,7 @@ extension HUD {
 
 // MARK: - Methods
 
+@MainActor
 extension HUD.Alert {
     /// Creates the alert window and shows it on screen.
     internal func show(
@@ -151,6 +151,7 @@ extension HUD.Alert {
 
 // MARK: - Private Methods
 
+@MainActor
 extension HUD.Alert {
     /// Creates the alert window.
     fileprivate func __create() throws {
@@ -428,12 +429,14 @@ extension HUD.Alert {
             // remain on screen for specified time period; schedule the fade out
             // prevent time values being too small as failsafe
             let delay = stickyTime.clamped(to: 0.1...)
-            DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
-				
-                autoreleasepool {
-                    try? self?.dismiss(fadeOut)
-                }
-            }
+            // ⚠️ NOTE: Animations will not work unless this is called on main thread/actor
+             let nsec = UInt64(delay * TimeInterval(NSEC_PER_SEC))
+             Task { @MainActor [weak self] in
+                 try? await Task.sleep(nanoseconds: nsec)
+                 autoreleasepool {
+                     try? self?.dismiss(fadeOut)
+                 }
+             }
 			
             // animate alert appearing
             hudWindow.alphaValue = 0
@@ -453,8 +456,8 @@ extension HUD.Alert {
 
 // MARK: - Protocol Adoptions
 
-extension HUD.Alert: Equatable {
-    static func == (lhs: HUD.Alert, rhs: HUD.Alert) -> Bool {
-        lhs.uuid == rhs.uuid
-    }
-}
+// extension HUD.Alert: Equatable {
+//     static func == (lhs: HUD.Alert, rhs: HUD.Alert) -> Bool {
+//         lhs.uuid == rhs.uuid
+//     }
+// }

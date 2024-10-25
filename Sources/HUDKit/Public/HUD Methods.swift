@@ -11,14 +11,11 @@ extension HUD {
         _ message: String,
         style: Style = Style()
     ) {
-        // we need to do UI stuff on the main thread
-        DispatchQueue.main.async {
-            autoreleasepool {
-                Manager.shared.newHUDAlert(
-                    message,
-                    style: style
-                )
-            }
+        Task { @MainActor in // we need to do UI stuff on the main thread}
+            await Manager.shared.newHUDAlert(
+                message,
+                style: style
+            )
         }
     }
 }

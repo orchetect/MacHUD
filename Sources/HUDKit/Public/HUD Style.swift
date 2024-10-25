@@ -6,7 +6,7 @@
 import Foundation
 
 extension HUD {
-    public struct Style: Equatable, Hashable {
+    public struct Style: Equatable, Hashable, Sendable {
         public var stickyTime: TimeInterval
         public var position: Position
         public var size: Size
@@ -87,7 +87,7 @@ extension HUD.Style {
 }
 
 extension HUD.Style {
-    public enum Preset {
+    public enum Preset: Sendable {
         case automatic
         case macOS_10_15
         case macOS_11_0
