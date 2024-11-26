@@ -12,7 +12,7 @@ extension HUD {
         style: Style = Style()
     ) {
         Task { @MainActor in // we need to do UI stuff on the main thread}
-            await Manager.shared.newHUDAlert(
+            Manager.shared.newHUDAlert(
                 message,
                 style: style
             )
