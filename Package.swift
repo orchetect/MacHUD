@@ -12,7 +12,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/orchetect/OTCore", from: "1.7.0")
+        .package(url: "https://github.com/orchetect/OTCore", from: "1.7.9")
     ],
     targets: [
         .target(
