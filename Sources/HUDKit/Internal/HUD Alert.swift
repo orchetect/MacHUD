@@ -138,10 +138,12 @@ extension HUD.Alert {
                             .setValue(1.5, forKey: kCIInputRadiusKey)
                     }
                 }, completionHandler: { [weak self] in
-                    autoreleasepool {
-                        self?.hudWindow.orderOut(self)
-                        self?.hudWindow.alphaValue = 0
-                        self?.inUse = false
+                    Task { @MainActor in
+                        autoreleasepool {
+                            self?.hudWindow.orderOut(self)
+                            self?.hudWindow.alphaValue = 0
+                            self?.inUse = false
+                        }
                     }
                 }
             )
