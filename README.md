@@ -1,4 +1,4 @@
-# HUDKit
+# swift-hud
 
 A macOS HUD (heads-up-display) alert library written in Swift.
 
@@ -29,3 +29,32 @@ To enable HUD notifications showing over top of full-screen application windows 
      <key>LSUIPresentationMode</key>
      <integer>0</integer>
      ```
+
+## Installation
+
+### Swift Package Manager (SPM)
+
+To add this package to an Xcode app project, use:
+
+ `https://github.com/orchetect/swift-hud` as the URL.
+
+To add this package to a Swift package, add the dependency to your package and target in Package.swift:
+
+```swift
+let package = Package(
+    dependencies: [
+        .package(url: "https://github.com/orchetect/swift-hud", from: "0.3.0")
+    ],
+    targets: [
+        .target(
+            dependencies: [
+                .product(name: "SwiftHUD", package: "swift-hud")
+            ]
+        )
+    ]
+)
+```
+
+## Legacy
+
+This repository was formerly known as HUDKit and OTHUD.

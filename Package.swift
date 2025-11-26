@@ -1,27 +1,29 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.2
 
 import PackageDescription
 
 let package = Package(
-    name: "HUDKit",
+    name: "swift-hud",
     platforms: [.macOS(.v10_15)],
     products: [
         .library(
-            name: "HUDKit",
-            targets: ["HUDKit"]
+            name: "SwiftHUD",
+            targets: ["SwiftHUD"]
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/orchetect/OTCore", from: "1.7.9")
+        .package(url: "https://github.com/orchetect/swift-extensions", from: "2.0.0")
     ],
     targets: [
         .target(
-            name: "HUDKit",
-            dependencies: ["OTCore"]
+            name: "SwiftHUD",
+            dependencies: [
+                .product(name: "SwiftExtensions", package: "swift-extensions")
+            ]
         ),
         .testTarget(
-            name: "HUDKitTests",
-            dependencies: ["HUDKit"]
+            name: "SwiftHUDTests",
+            dependencies: ["SwiftHUD"]
         )
     ]
 )

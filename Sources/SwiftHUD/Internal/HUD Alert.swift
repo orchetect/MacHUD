@@ -1,10 +1,10 @@
 //
 //  HUD Alert.swift
-//  HUDKit • https://github.com/orchetect/HUDKit
+//  swift-hud • https://github.com/orchetect/swift-hud
 //
 
 import AppKit
-internal import OTCore
+internal import SwiftExtensions
 
 extension HUD {
     /// Represents a HUD alert object which can be shown and hidden.

@@ -1,11 +1,11 @@
 //
 //  HUD Manager.swift
-//  HUDKit • https://github.com/orchetect/HUDKit
+//  swift-hud • https://github.com/orchetect/swift-hud
 //
 
 import AppKit
 internal import CoreImage
-internal import OTCore
+internal import SwiftExtensions
 
 extension HUD {
     /// HUD popup alert singleton class.

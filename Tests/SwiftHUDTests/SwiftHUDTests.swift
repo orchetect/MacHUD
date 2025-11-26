@@ -1,10 +1,10 @@
 //
-//  HUDKitTests.swift
-//  HUDKit • https://github.com/orchetect/HUDKit
+//  SwiftHUDTests.swift
+//  swift-hud • https://github.com/orchetect/swift-hud
 //
 
 import Testing
-@testable import HUDKit
+@testable import SwiftHUD
 import AppKit
 
 @Test func testStyle() {

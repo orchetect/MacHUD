@@ -1,10 +1,10 @@
 //
 //  Dev Tests.swift
-//  HUDKit • https://github.com/orchetect/HUDKit
+//  swift-hud • https://github.com/orchetect/swift-hud
 //
 
 import Testing
-@testable import HUDKit
+@testable import SwiftHUD
 import AppKit
 
 @Test func showDefaultHUD() async {

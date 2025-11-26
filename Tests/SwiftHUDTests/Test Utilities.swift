@@ -1,6 +1,6 @@
 //
 //  Test Utilities.swift
-//  HUDKit • https://github.com/orchetect/HUDKit
+//  swift-hud • https://github.com/orchetect/swift-hud
 //
 
 import Foundation
