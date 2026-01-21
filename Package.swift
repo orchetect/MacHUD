@@ -20,10 +20,6 @@ let package = Package(
             dependencies: [
                 .product(name: "SwiftExtensions", package: "swift-extensions")
             ]
-        ),
-        .testTarget(
-            name: "SwiftHUDTests",
-            dependencies: ["SwiftHUD"]
         )
     ]
 )
