@@ -65,7 +65,7 @@ extension HUD.Alert {
     ) throws {
         guard created else {
             inUse = false
-            throw HUD.HUDError.internalInconsistency("Alert class was not created.")
+            throw HUDError.internalInconsistency("Alert class was not created.")
         }
 		
         if inUse {
@@ -161,7 +161,7 @@ extension HUD.Alert {
             // grab first screen
             // (not .main) because .main will reference focused screen if user has "Displays have separate Spaces" enabled in System Preferences -> Mission Control
             guard let nsScreen = NSScreen.main else {
-                throw HUD.HUDError.internalInconsistency(
+                throw HUDError.internalInconsistency(
                     "Can't get reference to main screen."
                 )
             }
@@ -297,7 +297,7 @@ extension HUD.Alert {
             // grab first screen
             // (not .main) because .main will reference focused screen if user has "Displays have separate Spaces" enabled in System Preferences -> Mission Control
             guard let nsScreenFirst = NSScreen.screens.first else {
-                throw HUD.HUDError.internalInconsistency("Can't get reference to main screen.")
+                throw HUDError.internalInconsistency("Can't get reference to main screen.")
             }
 			
             // determine maximum size for alert
