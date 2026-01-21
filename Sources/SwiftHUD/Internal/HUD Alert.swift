@@ -455,11 +455,3 @@ extension HUD.Alert {
         }
     }
 }
-
-// MARK: - Protocol Adoptions
-
-// extension HUD.Alert: Equatable {
-//     static func == (lhs: HUD.Alert, rhs: HUD.Alert) -> Bool {
-//         lhs.uuid == rhs.uuid
-//     }
-// }
