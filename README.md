@@ -2,6 +2,8 @@
 
 A macOS HUD (heads-up-display) alert library written in Swift.
 
+This package simulates macOS system HUD overlays.
+
 ## Note
 
 To enable HUD notifications showing over top of full-screen application windows participating in Spaces, **one of two known methods** will work:
@@ -12,13 +14,15 @@ To enable HUD notifications showing over top of full-screen application windows 
 
      ```swift
      NSApp.setActivationPolicy(.accessory)
-     
-     // Apple documentation:
-     // "The application doesn’t appear in the Dock and doesn’t have a menu bar, but it may be activated programmatically or by clicking on one of its windows. This corresponds to value of the LSUIElement key in the application’s Info.plist being 1."
-     NSApplication.ActivationPolicy.accessory
      ```
+     
+     > Apple Documentation
+     >
+     > `NSApplication.ActivationPolicy.accessory`
+     >
+     > "The application doesn’t appear in the Dock and doesn’t have a menu bar, but it may be activated programmatically or by clicking on one of its windows. This corresponds to value of the LSUIElement key in the application’s Info.plist being 1."
 
-2. Adding info.plist keys
+2. Adding Info.plist keys
 
    - Add the following keys are necessary to be present in your application's info.plist file, using 0 or 1 for presentation mode.
 
@@ -30,7 +34,7 @@ To enable HUD notifications showing over top of full-screen application windows 
      <integer>0</integer>
      ```
 
-## Installation
+## Usage
 
 ### Swift Package Manager (SPM)
 
@@ -57,4 +61,4 @@ let package = Package(
 
 ## Legacy
 
-This repository was formerly known as HUDKit and OTHUD.
+This repository was formerly known as HUDKit, and OTHUD prior to that.
