@@ -6,9 +6,6 @@
 import Foundation
 
 public struct HUDStyle {
-    /// The amount of time for the HUD alert to persist on screen before it is dismissed.
-    public var stickyTime: TimeInterval
-    
     /// Position on screen for the HUD to appear.
     public var position: Position
     
@@ -22,40 +19,51 @@ public struct HUDStyle {
     public var isBordered: Bool
     
     /// Fade-out behavior when the alert is dismissed from the screen.
-    public var fadeOut: Fade
+    public var transitionIn: Transition
+    
+    /// The amount of time for the HUD alert to persist on screen before it is dismissed, not including fade-in or
+    /// fade-out time.
+    public var duration: TimeInterval
+    
+    /// Fade-out behavior when the alert is dismissed from the screen.
+    public var transitionOut: Transition
     
     public init(
-        stickyTime: TimeInterval,
         position: Position,
         size: Size,
         shade: Shade,
         isBordered: Bool,
-        fadeOut: Fade
+        transitionIn: Transition,
+        duration: TimeInterval,
+        transitionOut: Transition
     ) {
-        self.stickyTime = stickyTime
         self.position = position
         self.size = size
         self.shade = shade
         self.isBordered = isBordered
-        self.fadeOut = fadeOut
+        self.transitionIn = transitionIn
+        self.duration = duration
+        self.transitionOut = transitionOut
     }
     
     /// Initializes with custom values, defaulting `nil` parameters to appropriate values for the current platform.
     @_disfavoredOverload
     public init(
-        stickyTime: TimeInterval? = nil,
         position: Position? = nil,
         size: Size? = nil,
         shade: Shade? = nil,
         isBordered: Bool? = nil,
-        fadeOut: Fade? = nil
+        transitionIn: Transition? = nil,
+        duration: TimeInterval? = nil,
+        transitionOut: Transition? = nil
     ) {
-        self.stickyTime = stickyTime ?? Self.currentPlatform.stickyTime
         self.position = position ?? Self.currentPlatform.position
         self.size = size ?? Self.currentPlatform.size
         self.shade = shade ?? Self.currentPlatform.shade
         self.isBordered = isBordered ?? Self.currentPlatform.isBordered
-        self.fadeOut = fadeOut ?? Self.currentPlatform.fadeOut
+        self.transitionIn = transitionIn ?? Self.currentPlatform.transitionIn
+        self.duration = duration ?? Self.currentPlatform.duration
+        self.transitionOut = transitionOut ?? Self.currentPlatform.transitionOut
     }
 }
 

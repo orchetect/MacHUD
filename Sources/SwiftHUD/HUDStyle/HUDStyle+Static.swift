@@ -19,21 +19,23 @@ extension HUDStyle {
     
     /// HUD style matching macOS 10.15 system HUD appearance and behavior.
     public static let macOS10_15: Self = Self(
-        stickyTime: 1.2,
         position: .bottom,
         size: .large,
         shade: .dark,
         isBordered: false,
-        fadeOut: .duration(timeInterval: 0.8)
+        transitionIn: .fade(duration: 0.05),
+        duration: 1.2,
+        transitionOut: .fade(duration: 0.8)
     )
     
     /// HUD style matching macOS 11 through 15 system HUD appearance and behavior.
     public static let macOS11Thru15: Self = Self(
-        stickyTime: 1.2,
         position: .bottom,
         size: .large,
         shade: .dark,
         isBordered: false,
-        fadeOut: .duration(timeInterval: 0.8)
+        transitionIn: .fade(duration: 0.05),
+        duration: 1.2,
+        transitionOut: .fade(duration: 0.8)
     )
 }

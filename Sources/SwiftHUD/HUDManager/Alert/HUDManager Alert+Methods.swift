@@ -42,8 +42,9 @@ extension HUDManager.Alert {
             )
             
             try await _show(
-                stickyTime: style.stickyTime,
-                fadeOut: style.fadeOut
+                transitionIn: style.transitionIn,
+                duration: style.duration,
+                transitionOut: style.transitionOut
             )
         } catch {
             isInUse = false
@@ -52,7 +53,7 @@ extension HUDManager.Alert {
     }
     
     /// Triggers alert dismissal, animating out, and disposing of its resources.
-    func dismiss(fade: HUDStyle.Fade = .default) async throws {
+    func dismiss(transition: HUDStyle.Transition = .default) async throws {
         guard let hudWindow = await hudWindow else {
             throw HUDError.internalInconsistency("Missing HUD alert window.")
         }
@@ -61,7 +62,7 @@ extension HUDManager.Alert {
         }
         
         let fadeTime: TimeInterval
-        switch fade {
+        switch transition {
         case .none:
             // immediately hide window
             await _orderOutWindowAndZeroOutAlpha()
@@ -71,7 +72,7 @@ extension HUDManager.Alert {
         case .default:
             fadeTime = 0.2
             
-        case let .duration(customFadeTime):
+        case let .fade(duration: customFadeTime):
             fadeTime = customFadeTime.clamped(to: 0.01 ... 5.0)
         }
         

@@ -294,34 +294,42 @@ extension HUDManager.Alert {
     /// Shows the alert on screen, animating its appearance using the `fadeIn` parameter. (Default recommended)
     @MainActor
     func _show(
-        fadeIn: TimeInterval = 0.05,
-        stickyTime: TimeInterval = 3.0,
-        fadeOut: HUDStyle.Fade = .default
+        transitionIn: HUDStyle.Transition,
+        duration: TimeInterval,
+        transitionOut: HUDStyle.Transition
     ) async throws {
         guard let hudWindow else {
             throw HUDError.internalInconsistency("Missing HUD alert window.")
         }
         
         // show alert
+        hudWindow.alphaValue = 0
         hudWindow.orderFront(self)
         
-        // NOTE: Animations will not work unless called on main thread/actor
-        
-        // animate alert appearing
-        hudWindow.alphaValue = 0
-        await NSAnimationContext.runAnimationGroup { context in
-            context.duration = fadeIn
-            hudWindow.animator().alphaValue = 1
+        if let fadeInDuration: TimeInterval = switch transitionIn {
+        case .default: 0.05
+        case let .fade(duration: customDuration): customDuration
+        case .none: nil
+        } {
+            // animate alert appearing
+            // NOTE: Animations will not work unless called on main thread/actor
+            await NSAnimationContext.runAnimationGroup { context in
+                context.duration = fadeInDuration
+                hudWindow.animator().alphaValue = 1
+            }
+        } else {
+            // don't animate alert appearing
+            hudWindow.alphaValue = 1
         }
         
         // remain on screen for specified time period; schedule the fade out
         // prevent time values being too small as failsafe
-        let stickyTime = stickyTime.clamped(to: 0.1...)
-        try? await Task.sleep(seconds: stickyTime)
+        let duration = duration.clamped(to: 0.1...)
+        try? await Task.sleep(seconds: duration)
         
         // dismiss
         do {
-            try await dismiss(fade: fadeOut)
+            try await dismiss(transition: transitionOut)
         } catch {
             logger.debug("Error dismissing HUD alert: \(error.localizedDescription)")
         }
