@@ -11,6 +11,10 @@ let package = Package(
             targets: ["SwiftHUD"]
         )
     ],
+    traits: [
+        .trait(name: "Logging", description: "Enables debug logging."),
+        .default(enabledTraits: ["Logging"])
+    ],
     dependencies: [
         .package(url: "https://github.com/orchetect/swift-extensions", from: "2.0.0")
     ],
@@ -19,6 +23,11 @@ let package = Package(
             name: "SwiftHUD",
             dependencies: [
                 .product(name: "SwiftExtensions", package: "swift-extensions")
+            ],
+            swiftSettings: [
+                .enableExperimentalFeature("StrictConcurrency=complete"),
+                .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+                .enableUpcomingFeature("InferIsolatedConformances")
             ]
         )
     ]
