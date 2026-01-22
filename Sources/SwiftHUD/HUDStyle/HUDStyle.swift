@@ -59,8 +59,8 @@ public struct HUDStyle {
     }
 }
 
-extension HUDStyle: Equatable {}
+extension HUDStyle: Equatable { }
 
-extension HUDStyle: Hashable {}
+extension HUDStyle: Hashable { }
 
-extension HUDStyle: Sendable {}
+extension HUDStyle: Sendable { }

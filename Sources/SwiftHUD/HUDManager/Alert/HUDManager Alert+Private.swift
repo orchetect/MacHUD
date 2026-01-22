@@ -9,10 +9,26 @@ internal import SwiftExtensions
 extension HUDManager.Alert {
     /// Creates the initial alert window.
     @MainActor
-    func _create() throws {
-        guard let hudView else {
-            throw HUDError.internalInconsistency("Missing HUD view.")
+    static func windowFactory() throws -> (
+        window: NSWindow,
+        view: NSView,
+        visualEffectView: NSVisualEffectView,
+        blurFilter: CIFilter?,
+        textField: NSTextField
+    ) {
+        let newWindow = NSWindow(
+            contentRect: NSMakeRect(0, 0, 500, 160),
+            styleMask: .borderless,
+            backing: .buffered,
+            defer: true
+        )
+        
+        guard let newView = newWindow.contentView else {
+            throw HUDError.internalInconsistency("Window has no content view.")
         }
+        
+        let newTextField = NSTextField()
+        newView.addSubview(newTextField)
         
         // grab first screen
         // (not .main) because .main will reference focused screen if user has "Displays have separate Spaces" enabled in System Preferences -> Mission Control
@@ -35,108 +51,102 @@ extension HUDManager.Alert {
         
         // set up UI
         
-        hudWindow.styleMask = [.borderless] // already set at window creation, above
-        hudWindow.level = .screenSaver
+        newWindow.styleMask = [.borderless] // already set at window creation, above
+        newWindow.level = .screenSaver
         // hudWindow.canBecomeKey = false // read-only
         // hudWindow.canBecomeMain = false // read-only
-        hudWindow.hidesOnDeactivate = false
+        newWindow.hidesOnDeactivate = false
         
-        hudWindow.ignoresMouseEvents = true
-        hudWindow.isExcludedFromWindowsMenu = true
-        hudWindow.allowsToolTipsWhenApplicationIsInactive = false
+        newWindow.ignoresMouseEvents = true
+        newWindow.isExcludedFromWindowsMenu = true
+        newWindow.allowsToolTipsWhenApplicationIsInactive = false
         // excludes from Exposé
-        hudWindow.collectionBehavior = [
+        newWindow.collectionBehavior = [
             .ignoresCycle, .stationary, .canJoinAllSpaces,
             .fullScreenAuxiliary, .transient
         ]
         
-        hudWindow.isOpaque = false
-        hudWindow.backgroundColor = NSColor.clear
+        newWindow.isOpaque = false
+        newWindow.backgroundColor = NSColor.clear
         
-        hudTextField.preferredMaxLayoutWidth = (nsScreen.visibleFrame.size.width - 50).clamped(to: 1...)
-        hudTextField.isBordered = false
-        hudTextField.isEditable = false
-        hudTextField.isSelectable = false
-        hudTextField.drawsBackground = false
-        hudTextField.alignment = .center
-        hudTextField.usesSingleLineMode = false
-        hudTextField.cell?.wraps = true
+        newTextField.preferredMaxLayoutWidth = (nsScreen.visibleFrame.size.width - 50).clamped(to: 1...)
+        newTextField.isBordered = false
+        newTextField.isEditable = false
+        newTextField.isSelectable = false
+        newTextField.drawsBackground = false
+        newTextField.alignment = .center
+        newTextField.usesSingleLineMode = false
+        newTextField.cell?.wraps = true
         // if alert fills screen, truncate it with ellipsis
-        hudTextField.cell?.truncatesLastVisibleLine = true
-        hudView.autoresizesSubviews = true // doesn't affect anything
+        newTextField.cell?.truncatesLastVisibleLine = true
+        newView.autoresizesSubviews = true // doesn't affect anything
         
-        hudTextField.translatesAutoresizingMaskIntoConstraints = false
-        hudView.addConstraint(.init(
-            item: hudTextField as Any,
+        newTextField.translatesAutoresizingMaskIntoConstraints = false
+        newView.addConstraint(.init(
+            item: newTextField as Any,
             attribute: .centerY,
             relatedBy: .equal,
-            toItem: hudView,
+            toItem: newView,
             attribute: .centerY,
             multiplier: 1,
             constant: 0
         ))
-        hudView.addConstraint(.init(
-            item: hudTextField as Any,
+        newView.addConstraint(.init(
+            item: newTextField as Any,
             attribute: .centerX,
             relatedBy: .equal,
-            toItem: hudView,
+            toItem: newView,
             attribute: .centerX,
             multiplier: 1,
             constant: 0
         ))
-        hudView.addConstraint(.init(
-            item: hudTextField as Any,
+        newView.addConstraint(.init(
+            item: newTextField as Any,
             attribute: .width,
             relatedBy: .equal,
-            toItem: hudTextField,
+            toItem: newTextField,
             attribute: .width,
             multiplier: 1,
             constant: 0
         ))
-        hudView.addConstraint(.init(
-            item: hudTextField as Any,
+        newView.addConstraint(.init(
+            item: newTextField as Any,
             attribute: .height,
             relatedBy: .equal,
-            toItem: hudTextField,
+            toItem: newTextField,
             attribute: .height,
             multiplier: 1,
             constant: 0
         ))
-        hudWindow.maxSize = nsScreen.frame.size
+        newWindow.maxSize = nsScreen.frame.size
         
-        hudView.wantsLayer = true // needed to enable corner radius mask
-        hudView.layer?.masksToBounds = true
-        hudView.layer?.cornerRadius = 20
-        hudView.layerUsesCoreImageFilters = true //  doesn't affect things?
+        newView.wantsLayer = true // needed to enable corner radius mask
+        newView.layer?.masksToBounds = true
+        newView.layer?.cornerRadius = 20
+        newView.layerUsesCoreImageFilters = true //  doesn't affect things?
         
-        hudWindow.contentMaxSize = screenRect.size
-        
-        // ---- snip -----
-        
-        // add soft blur effect behind text ?? - tried this before succeeding with NSVisualEffectView
-        //        if let bfilter = CIFilter(name: "CIGaussianBlur", withInputParameters: [kCIInputRadiusKey : 13]) {
-        //            self.hudView.backgroundFilters.append(bfilter) }
+        newWindow.contentMaxSize = screenRect.size
         
         // Apple's dark translucent blur effect
-        hudWindow.backgroundColor = NSColor.clear
-        let blurEffectView = NSVisualEffectView()
-        hudView_VisualEffectView = blurEffectView
-        hudView.addSubview(blurEffectView, positioned: .below, relativeTo: hudView)
+        newWindow.backgroundColor = NSColor.clear
+        let newBlurEffectView = NSVisualEffectView()
+        newView.addSubview(newBlurEffectView, positioned: .below, relativeTo: newView)
         
-        hudView_VisualEffectView?.state = .active
-        
-        hudView_VisualEffectView?.blendingMode = .behindWindow
-        hudView_VisualEffectView?.frame = hudView.bounds // always fill the view
-        hudView_VisualEffectView?.autoresizingMask = [.width, .height]
+        newBlurEffectView.state = .active
+        newBlurEffectView.blendingMode = .behindWindow
+        newBlurEffectView.frame = newView.bounds // always fill the view
+        newBlurEffectView.autoresizingMask = [.width, .height]
         
         // animating CIFilters needs to be added to the view’s filters array, not the layer’s content or background filters arrays.
-        if let bfilter = CIFilter(
+        let blurFilter = CIFilter(
             name: "CIMotionBlur",
             parameters: [kCIInputRadiusKey: 0]
-        ) {
-            hudView_CIMotionBlur = bfilter
-            hudView.contentFilters.append(bfilter)
+        )
+        if let blurFilter {
+            newView.contentFilters.append(blurFilter)
         }
+        
+        return (window: newWindow, view: newView, visualEffectView: newBlurEffectView, blurFilter: blurFilter, textField: newTextField)
     }
     
     /// Updates the UI with new parameters after ``create()`` has been called.
@@ -148,8 +158,20 @@ extension HUDManager.Alert {
         shade: HUDStyle.Shade = .dark,
         isBordered: Bool = false
     ) throws {
+        guard let hudWindow else {
+            throw HUDError.internalInconsistency("Missing HUD alert window.")
+        }
         guard let hudView else {
-            throw HUDError.internalInconsistency("Missing HUD view.")
+            throw HUDError.internalInconsistency("Missing HUD alert view.")
+        }
+        guard let hudViewVisualEffectView else {
+            throw HUDError.internalInconsistency("Missing HUD alert visual effect view.")
+        }
+        guard let hudViewCIMotionBlur else {
+            throw HUDError.internalInconsistency("Missing HUD alert motion blur filter.")
+        }
+        guard let hudTextField else {
+            throw HUDError.internalInconsistency("Missing HUD alert text field.")
         }
         
         // grab first screen
@@ -203,12 +225,7 @@ extension HUDManager.Alert {
             switch shade {
             case .light, .mediumLight:
                 hudView.layer?.borderWidth = CGFloat(borderWidth)
-                hudView.layer?.borderColor = NSColor(
-                    red: 0.15,
-                    green: 0.16,
-                    blue: 0.17,
-                    alpha: 1.00
-                ).cgColor
+                hudView.layer?.borderColor = NSColor(red: 0.15, green: 0.16, blue: 0.17, alpha: 1.00).cgColor
                 
             case .dark, .ultraDark:
                 hudView.layer?.borderWidth = CGFloat(borderWidth)
@@ -256,22 +273,22 @@ extension HUDManager.Alert {
             display: true
         )
         
-        // hudView_VisualEffectView (NSVisualEffectView)
+        // hudViewVisualEffectView (NSVisualEffectView)
         switch shade {
         case .light:
-            hudView_VisualEffectView?.material = .light
+            hudViewVisualEffectView.material = .light
         case .mediumLight:
-            hudView_VisualEffectView?.material = .mediumLight
+            hudViewVisualEffectView.material = .mediumLight
         case .dark:
-            hudView_VisualEffectView?.material = .dark
+            hudViewVisualEffectView.material = .dark
         case .ultraDark:
-            hudView_VisualEffectView?.material = .ultraDark
+            hudViewVisualEffectView.material = .ultraDark
         }
         
-        // hudView_CIMotionBlur (CIFilter)
+        // hudViewCIMotionBlur (CIFilter)
         
         // reset blur value to default
-        hudView_CIMotionBlur?.setValue(0, forKeyPath: kCIInputRadiusKey)
+        hudViewCIMotionBlur.setValue(0, forKeyPath: kCIInputRadiusKey)
     }
     
     /// Shows the alert on screen, animating its appearance using the `fadeIn` parameter. (Default recommended)
@@ -280,7 +297,11 @@ extension HUDManager.Alert {
         fadeIn: TimeInterval = 0.05,
         stickyTime: TimeInterval = 3.0,
         fadeOut: HUDStyle.Fade = .default
-    ) async {
+    ) async throws {
+        guard let hudWindow else {
+            throw HUDError.internalInconsistency("Missing HUD alert window.")
+        }
+        
         // show alert
         hudWindow.orderFront(self)
         
@@ -290,7 +311,7 @@ extension HUDManager.Alert {
         hudWindow.alphaValue = 0
         await NSAnimationContext.runAnimationGroup { context in
             context.duration = fadeIn
-            self.hudWindow.animator().alphaValue = 1
+            hudWindow.animator().alphaValue = 1
         }
         
         // remain on screen for specified time period; schedule the fade out

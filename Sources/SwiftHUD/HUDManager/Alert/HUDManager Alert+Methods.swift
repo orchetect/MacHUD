@@ -41,7 +41,7 @@ extension HUDManager.Alert {
                 isBordered: style.isBordered
             )
             
-            await _show(
+            try await _show(
                 stickyTime: style.stickyTime,
                 fadeOut: style.fadeOut
             )
@@ -53,8 +53,14 @@ extension HUDManager.Alert {
     
     /// Triggers alert dismissal, animating out, and disposing of its resources.
     func dismiss(fade: HUDStyle.Fade = .default) async throws {
-        let fadeTime: TimeInterval
+        guard let hudWindow = await hudWindow else {
+            throw HUDError.internalInconsistency("Missing HUD alert window.")
+        }
+        guard let hudView = await hudView else {
+            throw HUDError.internalInconsistency("Missing HUD alert view.")
+        }
         
+        let fadeTime: TimeInterval
         switch fade {
         case .none:
             // immediately hide window
@@ -74,10 +80,10 @@ extension HUDManager.Alert {
             NSAnimationContext.runAnimationGroup { context in
                 context.duration = fadeTime
                 context.allowsImplicitAnimation = true // doesn't affect things?
-                self.hudWindow.animator().alphaValue = 0
+                hudWindow.animator().alphaValue = 0
                 
                 // CIMotionBlur does not animate here - have to discover a way to animate CIFilter properties.
-                self.hudView?.animator().contentFilters.first?.setValue(1.5, forKey: kCIInputRadiusKey)
+                hudView.animator().contentFilters.first?.setValue(1.5, forKey: kCIInputRadiusKey)
             } completionHandler: {
                 Task {
                     await self._orderOutWindowAndZeroOutAlpha()
@@ -94,7 +100,7 @@ extension HUDManager.Alert {
     
     @MainActor
     func _orderOutWindowAndZeroOutAlpha() {
-        hudWindow.orderOut(self)
-        self.hudWindow.alphaValue = 0
+        hudWindow?.orderOut(self)
+        hudWindow?.alphaValue = 0
     }
 }

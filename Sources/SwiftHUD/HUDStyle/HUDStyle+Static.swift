@@ -1,5 +1,5 @@
 //
-//  HUD Style+Static.swift
+//  HUDStyle+Static.swift
 //  swift-hud • https://github.com/orchetect/swift-hud
 //
 

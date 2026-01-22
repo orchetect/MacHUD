@@ -10,24 +10,7 @@ extension HUDManager.Alert {
     func setup() async throws {
         guard await !isSetup else { return }
         
-        self.hudWindow = NSWindow(
-            contentRect: NSMakeRect(0, 0, 500, 160),
-            styleMask: .borderless,
-            backing: .buffered,
-            defer: true
-        )
-        
-        guard let contentView = hudWindow.contentView else {
-            throw HUDError.internalInconsistency("Window has no content view.")
-        }
-        
-        self.hudView = contentView
-        
-        let newTextField = NSTextField()
-        self.hudTextField = newTextField
-        hudView?.addSubview(hudTextField)
-        
-        try _create()
+        (hudWindow, hudView, hudViewVisualEffectView, hudViewCIMotionBlur, hudTextField) = try Self.windowFactory()
         
         Task { @HUDManager in
             isSetup = true
