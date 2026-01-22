@@ -4,6 +4,8 @@ A macOS HUD (heads-up-display) alert library written in Swift.
 
 This package simulates macOS system HUD alerts.
 
+Currently the style of HUD found in macOS 11 through 15 is emulated. macOS 26 'notification' style HUD is not yet implemented.
+
 ## Note
 
 To enable HUD notifications showing over top of full-screen application windows participating in Spaces, **one of two known methods** will work:
