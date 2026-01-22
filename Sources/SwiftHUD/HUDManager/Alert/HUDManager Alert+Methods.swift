@@ -77,7 +77,7 @@ extension HUDManager.Alert {
                 self.hudWindow.animator().alphaValue = 0
                 
                 // CIMotionBlur does not animate here - have to discover a way to animate CIFilter properties.
-                self.hudView.animator().contentFilters.first?.setValue(1.5, forKey: kCIInputRadiusKey)
+                self.hudView?.animator().contentFilters.first?.setValue(1.5, forKey: kCIInputRadiusKey)
             } completionHandler: {
                 Task {
                     await self._orderOutWindowAndZeroOutAlpha()

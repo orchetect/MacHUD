@@ -16,8 +16,12 @@ extension HUDManager {
     /// Typically this called at application launch.
     public func warm() async {
         guard alerts.isEmpty else { return }
-        for _ in 0 ..< 5 {
-            await addNewAlert()
+        do {
+            for _ in 0 ..< 5 {
+                _ = try await addNewAlert()
+            }
+        } catch {
+            logger.debug("Error warming the HUDManager: \(error.localizedDescription)")
         }
     }
     
@@ -47,13 +51,13 @@ extension HUDManager {
 
 extension HUDManager {
     @discardableResult
-    func addNewAlert() async -> Alert {
-        let newAlert = await Alert()
+    func addNewAlert() async throws -> Alert {
+        let newAlert = try await Alert()
         alerts.append(newAlert)
         return newAlert
     }
     
-    func getFreeAlert() async -> Alert {
+    func getFreeAlert() async throws -> Alert {
         // return first reusable alert that is inactive, if any
         for alert in alerts {
             if await !alert.isInUse { return alert }
@@ -65,7 +69,7 @@ extension HUDManager {
         }
         
         // add new alert and return it
-        return await addNewAlert()
+        return try await addNewAlert()
     }
     
     /// Trigger a new HID alert being shown on-screen.
@@ -73,10 +77,8 @@ extension HUDManager {
         _ msg: String,
         style: HUDStyle
     ) async {
-        let alert = await getFreeAlert()
-        
-        // trigger alert
         do {
+            let alert = try await getFreeAlert()
             try await alert.show(msg: msg, style: style)
         } catch {
             logger.debug("Error displaying HUD alert: \(error.localizedDescription)")

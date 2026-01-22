@@ -10,6 +10,10 @@ extension HUDManager.Alert {
     /// Creates the initial alert window.
     @MainActor
     func _create() throws {
+        guard let hudView else {
+            throw HUDError.internalInconsistency("Missing HUD view.")
+        }
+        
         // grab first screen
         // (not .main) because .main will reference focused screen if user has "Displays have separate Spaces" enabled in System Preferences -> Mission Control
         guard let nsScreen = NSScreen.main else {
@@ -131,7 +135,7 @@ extension HUDManager.Alert {
             parameters: [kCIInputRadiusKey: 0]
         ) {
             hudView_CIMotionBlur = bfilter
-            self.hudView.contentFilters.append(bfilter)
+            hudView.contentFilters.append(bfilter)
         }
     }
     
@@ -144,6 +148,10 @@ extension HUDManager.Alert {
         shade: HUDStyle.Shade = .dark,
         isBordered: Bool = false
     ) throws {
+        guard let hudView else {
+            throw HUDError.internalInconsistency("Missing HUD view.")
+        }
+        
         // grab first screen
         // (not .main) because .main will reference focused screen if user has "Displays have separate Spaces" enabled in System Preferences -> Mission Control
         guard let nsScreenFirst = NSScreen.screens.first else {

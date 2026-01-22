@@ -7,7 +7,7 @@ import AppKit
 
 extension HUDManager.Alert {
     @MainActor
-    func setup() async {
+    func setup() async throws {
         guard await !isSetup else { return }
         
         self.hudWindow = NSWindow(
@@ -17,24 +17,22 @@ extension HUDManager.Alert {
             defer: true
         )
         
-        self.hudView = hudWindow.contentView
+        guard let contentView = hudWindow.contentView else {
+            throw HUDError.internalInconsistency("Window has no content view.")
+        }
+        
+        self.hudView = contentView
         
         let newTextField = NSTextField()
         self.hudTextField = newTextField
-        hudView.addSubview(hudTextField)
+        hudView?.addSubview(hudTextField)
         
-        hudWindow.contentView? = hudView
+        try _create()
         
-        do {
-            try _create()
-            
-            Task { @HUDManager in
-                isSetup = true
-            }
-            
-            logger.debug("Created HUD alert window.")
-        } catch {
-            logger.debug("Error creating HUD alert window: \(error.localizedDescription)")
+        Task { @HUDManager in
+            isSetup = true
         }
+        
+        logger.debug("Created new reusable HUD alert object.")
     }
 }

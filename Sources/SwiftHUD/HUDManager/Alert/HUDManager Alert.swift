@@ -17,7 +17,7 @@ extension HUDManager {
 		
         @MainActor var hudWindow: NSWindow!
 		
-        @MainActor weak var hudView: NSView!
+        @MainActor weak var hudView: NSView?
         @MainActor weak var hudView_VisualEffectView: NSVisualEffectView?
         @MainActor weak var hudView_CIMotionBlur: CIFilter?
 		
@@ -25,8 +25,8 @@ extension HUDManager {
 		
         // MARK: - Init
 		
-        init() async {
-            await setup()
+        init() async throws {
+            try await setup()
         }
 		
         deinit {
