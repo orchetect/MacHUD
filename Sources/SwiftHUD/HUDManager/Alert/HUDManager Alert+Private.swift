@@ -204,13 +204,13 @@ extension HUDManager.Alert {
             borderWidth = 1
         case .medium:
             hudTextField.font = NSFont(name: hudTextField.font?.fontName ?? "", size: 60)
-            borderWidth = 3
+            borderWidth = 2
         case .large:
             hudTextField.font = NSFont(name: hudTextField.font?.fontName ?? "", size: 100)
-            borderWidth = 5
-        case .superLarge:
+            borderWidth = 3
+        case .extraLarge:
             hudTextField.font = NSFont(name: hudTextField.font?.fontName ?? "", size: 150)
-            borderWidth = 5
+            borderWidth = 4
         }
         
         switch tint {
