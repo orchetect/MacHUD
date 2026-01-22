@@ -33,15 +33,15 @@ extension HUDManager.Alert {
         isInUse = true
         
         do {
-            try await _update(
-                msg: msg,
+            try await _updateWindow(
+                message: msg,
                 position: style.position,
                 size: style.size,
                 shade: style.shade,
                 isBordered: style.isBordered
             )
             
-            try await _show(
+            try await _showWindow(
                 transitionIn: style.transitionIn,
                 duration: style.duration,
                 transitionOut: style.transitionOut

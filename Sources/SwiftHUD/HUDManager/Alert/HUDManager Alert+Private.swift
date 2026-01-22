@@ -7,7 +7,7 @@ import AppKit
 internal import SwiftExtensions
 
 extension HUDManager.Alert {
-    /// Creates the initial alert window.
+    /// Creates a new reusable alert window and configures it.
     @MainActor
     static func windowFactory() throws -> (
         window: NSWindow,
@@ -149,10 +149,10 @@ extension HUDManager.Alert {
         return (window: newWindow, view: newView, visualEffectView: newBlurEffectView, blurFilter: blurFilter, textField: newTextField)
     }
     
-    /// Updates the UI with new parameters after ``create()`` has been called.
+    /// Updates the reusable window with new parameters.
     @MainActor
-    func _update(
-        msg: String,
+    func _updateWindow(
+        message: String,
         position: HUDStyle.Position = .center,
         size: HUDStyle.Size = .medium,
         shade: HUDStyle.Shade = .dark,
@@ -192,7 +192,7 @@ extension HUDManager.Alert {
         )
         
         // set text to display
-        hudTextField.stringValue = msg
+        hudTextField.stringValue = message
         
         // theme / formatting customization
         
@@ -291,9 +291,9 @@ extension HUDManager.Alert {
         hudViewCIMotionBlur.setValue(0, forKeyPath: kCIInputRadiusKey)
     }
     
-    /// Shows the alert on screen, animating its appearance using the `fadeIn` parameter. (Default recommended)
+    /// Shows the alert on screen, optionally animating its appearance and dismissal.
     @MainActor
-    func _show(
+    func _showWindow(
         transitionIn: HUDStyle.Transition,
         duration: TimeInterval,
         transitionOut: HUDStyle.Transition
