@@ -15,7 +15,7 @@ extension HUDManager {
         @MainActor var hudWindow: NSWindow?
         @MainActor weak var hudView: NSView?
         @MainActor weak var hudViewVisualEffectView: NSVisualEffectView?
-        @MainActor weak var hudViewCIMotionBlur: CIFilter?
+        @MainActor weak var hudViewCIMotionBlur: CIFilter? // not currently being used
         @MainActor weak var hudTextField: NSTextField?
 		
         // MARK: - Init

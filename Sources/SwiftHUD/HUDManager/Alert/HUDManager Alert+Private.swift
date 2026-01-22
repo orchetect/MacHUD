@@ -123,7 +123,7 @@ extension HUDManager.Alert {
         newView.wantsLayer = true // needed to enable corner radius mask
         newView.layer?.masksToBounds = true
         newView.layer?.cornerRadius = 20
-        newView.layerUsesCoreImageFilters = true //  doesn't affect things?
+        newView.layerUsesCoreImageFilters = true // doesn't affect things?
         
         newWindow.contentMaxSize = screenRect.size
         
@@ -138,13 +138,14 @@ extension HUDManager.Alert {
         newBlurEffectView.autoresizingMask = [.width, .height]
         
         // animating CIFilters needs to be added to the view’s filters array, not the layer’s content or background filters arrays.
-        let blurFilter = CIFilter(
+        let blurFilter: CIFilter? = nil /* = CIFilter(
             name: "CIMotionBlur",
             parameters: [kCIInputRadiusKey: 0]
         )
         if let blurFilter {
             newView.contentFilters.append(blurFilter)
         }
+        */
         
         return (window: newWindow, view: newView, visualEffectView: newBlurEffectView, blurFilter: blurFilter, textField: newTextField)
     }
@@ -167,9 +168,9 @@ extension HUDManager.Alert {
         guard let hudViewVisualEffectView else {
             throw HUDError.internalInconsistency("Missing HUD alert visual effect view.")
         }
-        guard let hudViewCIMotionBlur else {
-            throw HUDError.internalInconsistency("Missing HUD alert motion blur filter.")
-        }
+        // guard let hudViewCIMotionBlur else {
+        //     throw HUDError.internalInconsistency("Missing HUD alert motion blur filter.")
+        // }
         guard let hudTextField else {
             throw HUDError.internalInconsistency("Missing HUD alert text field.")
         }
@@ -288,7 +289,7 @@ extension HUDManager.Alert {
         // hudViewCIMotionBlur (CIFilter)
         
         // reset blur value to default
-        hudViewCIMotionBlur.setValue(0, forKeyPath: kCIInputRadiusKey)
+        // hudViewCIMotionBlur.setValue(0, forKeyPath: kCIInputRadiusKey)
     }
     
     /// Shows the alert on screen, optionally animating its appearance and dismissal.
