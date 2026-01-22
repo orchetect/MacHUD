@@ -28,13 +28,13 @@ extension HUDManager {
         style: HUDStyle = .currentPlatform
     ) {
         Task {
-            await _newHUDAlert(message, style: style)
+            await newHUDAlert(message, style: style)
         }
     }
     
     /// Returns the number of active HUD alerts on-screen.
     @HUDManager
-    public var count: Int {
+    public var activeCount: Int {
         get async {
             await alerts.reduce(0) {
                 $0 + ($1.isInUse ? 1 : 0)
@@ -53,7 +53,8 @@ extension HUDManager {
         return newAlert
     }
     
-    func getFreeAlert() async -> Alert {        
+    func getFreeAlert() async -> Alert {
+        // return first reusable alert that is inactive, if any
         for alert in alerts {
             if await !alert.isInUse { return alert }
         }
@@ -63,12 +64,12 @@ extension HUDManager {
             return lastAlert
         }
         
-        // add new object and return it
+        // add new alert and return it
         return await addNewAlert()
     }
     
     /// Trigger a new HID alert being shown on-screen.
-    func _newHUDAlert(
+    func newHUDAlert(
         _ msg: String,
         style: HUDStyle
     ) async {
@@ -76,10 +77,7 @@ extension HUDManager {
         
         // trigger alert
         do {
-            try await alert.show(
-                msg: msg,
-                style: style
-            )
+            try await alert.show(msg: msg, style: style)
         } catch {
             logger.debug("Error displaying HUD alert: \(error.localizedDescription)")
         }
