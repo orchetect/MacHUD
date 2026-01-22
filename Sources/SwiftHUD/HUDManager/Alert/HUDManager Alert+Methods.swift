@@ -37,7 +37,7 @@ extension HUDManager.Alert {
                 message: msg,
                 position: style.position,
                 size: style.size,
-                shade: style.shade,
+                tint: style.tint,
                 isBordered: style.isBordered
             )
             

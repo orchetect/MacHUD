@@ -1,12 +1,12 @@
 //
-//  HUDStyle Shade.swift
+//  HUDStyle Tint.swift
 //  swift-hud • https://github.com/orchetect/swift-hud
 //
 
 import Foundation
 
 extension HUDStyle {
-    public enum Shade: Int {
+    public enum Tint: Int {
         case light
         case mediumLight
         case dark
@@ -14,10 +14,10 @@ extension HUDStyle {
     }
 }
 
-extension HUDStyle.Shade: Equatable { }
+extension HUDStyle.Tint: Equatable { }
 
-extension HUDStyle.Shade: Hashable { }
+extension HUDStyle.Tint: Hashable { }
 
-extension HUDStyle.Shade: CaseIterable { }
+extension HUDStyle.Tint: CaseIterable { }
 
-extension HUDStyle.Shade: Sendable { }
+extension HUDStyle.Tint: Sendable { }

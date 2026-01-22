@@ -21,7 +21,7 @@ extension HUDStyle {
     public static let macOS10_15: Self = Self(
         position: .bottom,
         size: .large,
-        shade: .dark,
+        tint: .dark,
         isBordered: false,
         transitionIn: .fade(duration: 0.05),
         duration: 1.2,
@@ -32,7 +32,7 @@ extension HUDStyle {
     public static let macOS11Thru15: Self = Self(
         position: .bottom,
         size: .large,
-        shade: .dark,
+        tint: .dark,
         isBordered: false,
         transitionIn: .fade(duration: 0.05),
         duration: 1.2,

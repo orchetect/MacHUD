@@ -13,7 +13,7 @@ public struct HUDStyle {
     public var size: Size
     
     /// Background visual shading of the HUD alert.
-    public var shade: Shade
+    public var tint: Tint
     
     /// Boolean determining whether the HUD alert will have a visual border.
     public var isBordered: Bool
@@ -31,7 +31,7 @@ public struct HUDStyle {
     public init(
         position: Position,
         size: Size,
-        shade: Shade,
+        tint: Tint,
         isBordered: Bool,
         transitionIn: Transition,
         duration: TimeInterval,
@@ -39,7 +39,7 @@ public struct HUDStyle {
     ) {
         self.position = position
         self.size = size
-        self.shade = shade
+        self.tint = tint
         self.isBordered = isBordered
         self.transitionIn = transitionIn
         self.duration = duration
@@ -51,7 +51,7 @@ public struct HUDStyle {
     public init(
         position: Position? = nil,
         size: Size? = nil,
-        shade: Shade? = nil,
+        tint: Tint? = nil,
         isBordered: Bool? = nil,
         transitionIn: Transition? = nil,
         duration: TimeInterval? = nil,
@@ -59,7 +59,7 @@ public struct HUDStyle {
     ) {
         self.position = position ?? Self.currentPlatform.position
         self.size = size ?? Self.currentPlatform.size
-        self.shade = shade ?? Self.currentPlatform.shade
+        self.tint = tint ?? Self.currentPlatform.tint
         self.isBordered = isBordered ?? Self.currentPlatform.isBordered
         self.transitionIn = transitionIn ?? Self.currentPlatform.transitionIn
         self.duration = duration ?? Self.currentPlatform.duration

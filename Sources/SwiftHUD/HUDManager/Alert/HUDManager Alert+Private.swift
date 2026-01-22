@@ -155,7 +155,7 @@ extension HUDManager.Alert {
         message: String,
         position: HUDStyle.Position = .center,
         size: HUDStyle.Size = .medium,
-        shade: HUDStyle.Shade = .dark,
+        tint: HUDStyle.Tint = .dark,
         isBordered: Bool = false
     ) throws {
         guard let hudWindow else {
@@ -213,7 +213,7 @@ extension HUDManager.Alert {
             borderWidth = 5
         }
         
-        switch shade {
+        switch tint {
         case .light, .mediumLight:
             hudTextField.textColor = #colorLiteral(red: 0.08749181937, green: 0.08749181937, blue: 0.08749181937, alpha: 1)
             
@@ -222,7 +222,7 @@ extension HUDManager.Alert {
         }
         
         if isBordered {
-            switch shade {
+            switch tint {
             case .light, .mediumLight:
                 hudView.layer?.borderWidth = CGFloat(borderWidth)
                 hudView.layer?.borderColor = NSColor(red: 0.15, green: 0.16, blue: 0.17, alpha: 1.00).cgColor
@@ -274,7 +274,7 @@ extension HUDManager.Alert {
         )
         
         // hudViewVisualEffectView (NSVisualEffectView)
-        switch shade {
+        switch tint {
         case .light:
             hudViewVisualEffectView.material = .light
         case .mediumLight:
