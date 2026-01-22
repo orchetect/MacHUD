@@ -4,6 +4,7 @@
 //
 
 import AppKit
+import SwiftUI
 
 extension HUDManager {
     /// Represents a HUD alert object which can be shown and hidden.
@@ -16,13 +17,13 @@ extension HUDManager {
         @MainActor weak var hudView: NSView?
         @MainActor weak var hudViewVisualEffectView: NSVisualEffectView?
         @MainActor weak var hudViewCIMotionBlur: CIFilter? // not currently being used
-        @MainActor weak var hudTextField: NSTextField?
+        @MainActor weak var contentView: NSHostingView<HUDManager.Alert.ContentView>?
 		
         // MARK: - Init
 		
         init() async throws {
             _ = try await Task { @MainActor in
-                (hudWindow, hudView, hudViewVisualEffectView, hudViewCIMotionBlur, hudTextField) = try Self.windowFactory()
+                (hudWindow, hudView, hudViewVisualEffectView, hudViewCIMotionBlur, contentView) = try Self.windowFactory()
             }.value
             
             logger.debug("Created new reusable HUD alert object.")

@@ -30,10 +30,7 @@ extension HUDManager.Alert {
         do {
             try await _updateWindow(
                 content: content,
-                position: style.position,
-                size: style.size,
-                tint: style.tint,
-                isBordered: style.isBordered
+                style: style
             )
             
             try await _showWindow(

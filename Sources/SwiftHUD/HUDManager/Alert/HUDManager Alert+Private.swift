@@ -4,6 +4,7 @@
 //
 
 import AppKit
+import SwiftUI
 internal import SwiftExtensions
 
 extension HUDManager.Alert {
@@ -14,7 +15,7 @@ extension HUDManager.Alert {
         view: NSView,
         visualEffectView: NSVisualEffectView,
         blurFilter: CIFilter?,
-        textField: NSTextField
+        contentView: NSHostingView<HUDManager.Alert.ContentView>
     ) {
         let newWindow = NSWindow(
             contentRect: NSMakeRect(0, 0, 500, 160),
@@ -27,63 +28,38 @@ extension HUDManager.Alert {
             throw HUDError.internalInconsistency("Window has no content view.")
         }
         
-        let newTextField = NSTextField()
-        newView.addSubview(newTextField)
+        let newContentView = NSHostingView(rootView: ContentView())
+        // newContentView.sizingOptions = [.intrinsicContentSize] // macOS 13+ only
         
-        // grab first screen
-        // (not .main) because .main will reference focused screen if user has "Displays have separate Spaces" enabled in System Preferences -> Mission Control
-        guard let nsScreen = NSScreen.main else {
-            throw HUDError.internalInconsistency(
-                "Can't get reference to main screen."
-            )
-        }
+        newView.addSubview(newContentView)
         
-        // determine maximum size for alert
-        let screenMainFrame = nsScreen.visibleFrame
+        // grab screen
+        let alertScreen = try alertScreen
         
         // origin is bottom left of screen. Y axis goes up, X axis goes right.
-        let screenRect = NSRect(
-            x:      screenMainFrame.origin.x + 50, // to right
-            y:      screenMainFrame.origin.y + 50, // up
-            width:  screenMainFrame.width   - 100,
-            height: screenMainFrame.height  - 100
-        )
+        let screenRect = try getEffectiveAlertScreenRect()
         
         // set up UI
         
         newWindow.styleMask = [.borderless] // already set at window creation, above
         newWindow.level = .screenSaver
-        // hudWindow.canBecomeKey = false // read-only
-        // hudWindow.canBecomeMain = false // read-only
         newWindow.hidesOnDeactivate = false
-        
         newWindow.ignoresMouseEvents = true
         newWindow.isExcludedFromWindowsMenu = true
         newWindow.allowsToolTipsWhenApplicationIsInactive = false
-        // excludes from Exposé
         newWindow.collectionBehavior = [
-            .ignoresCycle, .stationary, .canJoinAllSpaces,
-            .fullScreenAuxiliary, .transient
+            .ignoresCycle, .stationary, .canJoinAllSpaces, .fullScreenAuxiliary, .transient
         ]
+        if #available(macOS 13, *) {
+            newWindow.collectionBehavior.insert(.auxiliary)
+        }
         
         newWindow.isOpaque = false
-        newWindow.backgroundColor = NSColor.clear
+        newWindow.backgroundColor = .clear
         
-        newTextField.preferredMaxLayoutWidth = (nsScreen.visibleFrame.size.width - 50).clamped(to: 1...)
-        newTextField.isBordered = false
-        newTextField.isEditable = false
-        newTextField.isSelectable = false
-        newTextField.drawsBackground = false
-        newTextField.alignment = .center
-        newTextField.usesSingleLineMode = false
-        newTextField.cell?.wraps = true
-        // if alert fills screen, truncate it with ellipsis
-        newTextField.cell?.truncatesLastVisibleLine = true
-        newView.autoresizesSubviews = true // doesn't affect anything
-        
-        newTextField.translatesAutoresizingMaskIntoConstraints = false
+        newContentView.translatesAutoresizingMaskIntoConstraints = false
         newView.addConstraint(.init(
-            item: newTextField as Any,
+            item: newContentView as Any,
             attribute: .centerY,
             relatedBy: .equal,
             toItem: newView,
@@ -92,7 +68,7 @@ extension HUDManager.Alert {
             constant: 0
         ))
         newView.addConstraint(.init(
-            item: newTextField as Any,
+            item: newContentView as Any,
             attribute: .centerX,
             relatedBy: .equal,
             toItem: newView,
@@ -101,31 +77,31 @@ extension HUDManager.Alert {
             constant: 0
         ))
         newView.addConstraint(.init(
-            item: newTextField as Any,
+            item: newContentView as Any,
             attribute: .width,
             relatedBy: .equal,
-            toItem: newTextField,
+            toItem: newContentView,
             attribute: .width,
             multiplier: 1,
             constant: 0
         ))
         newView.addConstraint(.init(
-            item: newTextField as Any,
+            item: newContentView as Any,
             attribute: .height,
             relatedBy: .equal,
-            toItem: newTextField,
+            toItem: newContentView,
             attribute: .height,
             multiplier: 1,
             constant: 0
         ))
-        newWindow.maxSize = nsScreen.frame.size
+        newWindow.maxSize = screenRect.size
+        newWindow.contentMaxSize = screenRect.size
         
         newView.wantsLayer = true // needed to enable corner radius mask
         newView.layer?.masksToBounds = true
         newView.layer?.cornerRadius = 20
-        newView.layerUsesCoreImageFilters = true // doesn't affect things?
-        
-        newWindow.contentMaxSize = screenRect.size
+        newView.layerUsesCoreImageFilters = true // doesn't have any effect?
+        newView.autoresizesSubviews = true // doesn't have any effect?
         
         // Apple's dark translucent blur effect
         newWindow.backgroundColor = NSColor.clear
@@ -147,17 +123,14 @@ extension HUDManager.Alert {
         }
         */
         
-        return (window: newWindow, view: newView, visualEffectView: newBlurEffectView, blurFilter: blurFilter, textField: newTextField)
+        return (window: newWindow, view: newView, visualEffectView: newBlurEffectView, blurFilter: blurFilter, contentView: newContentView)
     }
     
     /// Updates the reusable window with new parameters.
     @MainActor
     func _updateWindow(
         content: HUDManager.AlertContent,
-        position: HUDStyle.Position = .center,
-        size: HUDStyle.Size = .medium,
-        tint: HUDStyle.Tint = .dark,
-        isBordered: Bool = false
+        style: HUDStyle
     ) throws {
         guard let hudWindow else {
             throw HUDError.internalInconsistency("Missing HUD alert window.")
@@ -171,66 +144,31 @@ extension HUDManager.Alert {
         // guard let hudViewCIMotionBlur else {
         //     throw HUDError.internalInconsistency("Missing HUD alert motion blur filter.")
         // }
-        guard let hudTextField else {
-            throw HUDError.internalInconsistency("Missing HUD alert text field.")
+        guard let contentView else {
+            throw HUDError.internalInconsistency("Missing HUD alert content view.")
         }
         
-        // grab first screen
-        // (not .main) because .main will reference focused screen if user has "Displays have separate Spaces" enabled in System Preferences -> Mission Control
-        guard let nsScreenFirst = NSScreen.screens.first else {
-            throw HUDError.internalInconsistency("Can't get reference to main screen.")
-        }
-        
-        // determine maximum size for alert
-        let screenMainFrame = nsScreenFirst.visibleFrame
+        // get screen for alert
+        let alertScreen = try Self.alertScreen
         
         // origin is bottom left of screen. Y axis goes up, X axis goes right.
-        let screenRect = NSRect(
-            x:      screenMainFrame.origin.x + 50, // to right
-            y:      screenMainFrame.origin.y + 50, // up
-            width:  screenMainFrame.width   - 100,
-            height: screenMainFrame.height  - 100
-        )
+        let screenRect = try Self.getEffectiveAlertScreenRect()
         
         // set content to display
-        switch content {
-        case let .text(string):
-            hudTextField.stringValue = string
-        case let .image(systemName: systemName):
-            hudTextField.stringValue = ""
-            // TODO: finish this
-        case let .textAndImage(string, systemName: systemName):
-            hudTextField.stringValue = string
-            // TODO: finish this
-        }
+        contentView.rootView = .init(content: content, style: style)
+        hudWindow.setContentSize(contentView.frame.size)
         
         // theme / formatting customization
         
-        let fontSize: CGFloat = switch size {
-        case .small: 20
-        case .medium: 60
-        case .large: 100
-        case .extraLarge: 150
-        }
-        hudTextField.font = NSFont(name: hudTextField.font?.fontName ?? "", size: fontSize)
-        
-        let borderWidth: Int = switch size {
-        case .small: 1
-        case .medium: 2
-        case .large: 3
-        case .extraLarge: 4
-        }
-        
-        switch tint {
-        case .light, .mediumLight:
-            hudTextField.textColor = #colorLiteral(red: 0.08749181937, green: 0.08749181937, blue: 0.08749181937, alpha: 1)
+        if style.isBordered {
+            let borderWidth: Int = switch style.size {
+            case .small: 1
+            case .medium: 2
+            case .large: 3
+            case .extraLarge: 4
+            }
             
-        case .dark, .ultraDark:
-            hudTextField.textColor = #colorLiteral(red: 0.7602152824, green: 0.7601925135, blue: 0.7602053881, alpha: 1)
-        }
-        
-        if isBordered {
-            switch tint {
+            switch style.tint {
             case .light, .mediumLight:
                 hudView.layer?.borderWidth = CGFloat(borderWidth)
                 hudView.layer?.borderColor = NSColor(red: 0.15, green: 0.16, blue: 0.17, alpha: 1.00).cgColor
@@ -243,43 +181,28 @@ extension HUDManager.Alert {
             hudView.layer?.borderWidth = 0
         }
         
-        // prepare text object's initial size
-        hudTextField.sizeToFit()
-        
-        // constrain size to fit inside main screen
-        if hudTextField.frame.width > screenRect.width {
-            hudTextField
-                .setFrameSize(NSSize(width: screenRect.width, height: hudTextField.frame.width))
+        let topOrBottomOffset: CGFloat = 140.0
+        let y: CGFloat = switch style.position {
+        case .bottom: topOrBottomOffset
+        case .center: (screenRect.size.height - contentView.frame.size.height) * 0.5
+        case .top: (screenRect.size.height - contentView.frame.size.height - topOrBottomOffset)
         }
-        if hudTextField.frame.height > screenRect.height {
-            hudTextField
-                .setFrameSize(NSSize(
-                    width: hudTextField.frame.width,
-                    height: screenRect.height
-                ))
-        }
-        
-        var displayBounds = NSMakeRect(
-            (screenMainFrame.size.width - hudTextField.frame.size.width - 40) * 0.5,
-            0,
-            hudTextField.frame.size.width + 40,
-            hudTextField.frame.size.height + 40
+        let displayBounds = NSMakeRect(
+            (screenRect.size.width - contentView.frame.size.width) * 0.5,
+            y,
+            contentView.frame.size.width,
+            contentView.frame.size.height
         )
-        displayBounds.origin.y = switch position {
-        case .bottom: 150
-        case .center: (screenMainFrame.size.height - hudTextField.frame.size.height - 40) * 0.5
-        case .top: (screenMainFrame.size.height - hudTextField.frame.size.height - 40 - 150)
-        }
         
         // apply sizes
         hudWindow.setFrame(displayBounds, display: true)
         hudWindow.setFrame(
-            hudWindow.constrainFrameRect(hudWindow.frame, to: nsScreenFirst),
+            hudWindow.constrainFrameRect(hudWindow.frame, to: alertScreen),
             display: true
         )
         
         // hudViewVisualEffectView (NSVisualEffectView)
-        hudViewVisualEffectView.material = switch tint {
+        hudViewVisualEffectView.material = switch style.tint {
         case .light: .light
         case .mediumLight: .mediumLight
         case .dark: .dark
@@ -334,5 +257,41 @@ extension HUDManager.Alert {
         } catch {
             logger.debug("Error dismissing HUD alert: \(error.localizedDescription)")
         }
+    }
+    
+    static var alertScreen: NSScreen {
+        get throws {
+            // grab first screen (not main).
+            // main will reference focused screen if user has "Displays have separate Spaces"
+            // enabled in System Preferences -> Mission Control.
+            guard let screen = NSScreen.screens.first else {
+                throw HUDError.internalInconsistency("Can't get reference to main screen.")
+            }
+            return screen
+        }
+    }
+    
+    static func getEffectiveAlertScreenRect() throws -> NSRect {
+        // grab screen
+        let alertScreen = try alertScreen
+        
+        // determine maximum size for alert
+        let screenRect = alertScreen.visibleFrame
+        
+        return screenRect
+    }
+    
+    static func textOnlyAlertFontSize() -> CGFloat {
+        do {
+            let screen = try getEffectiveAlertScreenRect()
+            return textOnlyAlertFontSize(forScreenSize: screen.size)
+        } catch {
+            // provide a reasonable default
+            return textOnlyAlertFontSize(forScreenSize: CGSize(width: 1920, height: 1080))
+        }
+    }
+    
+    static func textOnlyAlertFontSize(forScreenSize screenSize: CGSize) -> CGFloat {
+        screenSize.width / 40
     }
 }
