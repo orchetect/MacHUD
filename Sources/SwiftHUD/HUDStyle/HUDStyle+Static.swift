@@ -1,21 +1,20 @@
 //
 //  HUDStyle+Static.swift
 //  swift-hud • https://github.com/orchetect/swift-hud
+//  © 2018-2026 Steffan Andrews • Licensed under MIT License
 //
 
 import Foundation
 
 extension HUDStyle {
     /// HUD style matching the current system HUD appearance and behavior.
-    public static let currentPlatform: Self = {
-        if #available(macOS 11.0, *) {
-            return macOS11Thru15
-        } else if #available(macOS 10.15, *) {
-            return macOS10_15
-        } else {
-            return macOS10_15
-        }
-    }()
+    public static let currentPlatform: Self = if #available(macOS 11.0, *) {
+        macOS11Thru15
+    } else if #available(macOS 10.15, *) {
+        macOS10_15
+    } else {
+        macOS10_15
+    }
     
     /// HUD style matching macOS 10.15 system HUD appearance and behavior.
     public static let macOS10_15: Self = Self(

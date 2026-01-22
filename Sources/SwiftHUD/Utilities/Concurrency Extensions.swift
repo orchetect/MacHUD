@@ -1,11 +1,12 @@
 //
 //  Concurrency Extensions.swift
 //  swift-hud • https://github.com/orchetect/swift-hud
+//  © 2018-2026 Steffan Andrews • Licensed under MIT License
 //
 
 import Foundation
 
-fileprivate let maxSeconds = TimeInterval(UInt64.max) / TimeInterval(NSEC_PER_SEC)
+private let maxSeconds = TimeInterval(UInt64.max) / TimeInterval(NSEC_PER_SEC)
 
 @available(macOS 10.15, iOS 13.0, watchOS 6.0, tvOS 13.0, *)
 extension Task where Success == Never, Failure == Never {

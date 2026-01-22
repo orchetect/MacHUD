@@ -1,6 +1,7 @@
 //
 //  Logging.swift
 //  swift-hud • https://github.com/orchetect/swift-hud
+//  © 2018-2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if Logging
@@ -30,7 +31,7 @@ protocol LogBackend: Sendable {
 }
 
 struct NoOpLogBackend: LogBackend {
-    func debug(_ message: String) {}
+    func debug(_ message: String) { }
 }
 
 let logger: any LogBackend = {

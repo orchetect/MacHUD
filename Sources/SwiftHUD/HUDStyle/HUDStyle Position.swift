@@ -1,6 +1,7 @@
 //
 //  HUDStyle Position.swift
 //  swift-hud • https://github.com/orchetect/swift-hud
+//  © 2018-2026 Steffan Andrews • Licensed under MIT License
 //
 
 import Foundation

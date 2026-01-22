@@ -1,6 +1,7 @@
 //
 //  HUDManager Methods.swift
 //  swift-hud • https://github.com/orchetect/swift-hud
+//  © 2018-2026 Steffan Andrews • Licensed under MIT License
 //
 
 import Foundation
@@ -27,8 +28,7 @@ extension HUDManager {
     }
     
     /// Display a HUD alert on the screen asynchronously.
-    nonisolated
-    public func displayAlert(
+    public nonisolated func displayAlert(
         _ content: AlertContent,
         style: HUDStyle = .currentPlatform
     ) {
@@ -38,8 +38,7 @@ extension HUDManager {
     }
     
     /// Display a HUD alert on the screen and wait until the alert is fully dismissed before returning.
-    nonisolated
-    public func displayAlert(
+    public nonisolated func displayAlert(
         _ content: AlertContent,
         style: HUDStyle = .currentPlatform
     ) async {
