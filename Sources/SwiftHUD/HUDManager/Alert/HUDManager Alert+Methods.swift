@@ -12,11 +12,6 @@ extension HUDManager.Alert {
     /// Creates the alert window and shows it on screen.
     @HUDManager
     func show(msg: String, style: HUDStyle) async throws {
-        guard isSetup else {
-            isInUse = false
-            throw HUDError.internalInconsistency("HUD alert class did not setup correctly.")
-        }
-		
         if isInUse {
             // do a basic reset of the window if it's currently in use
             await Task { @MainActor in

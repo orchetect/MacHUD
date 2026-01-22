@@ -8,7 +8,6 @@ import AppKit
 extension HUDManager {
     /// Represents a HUD alert object which can be shown and hidden.
     final class Alert: Sendable {
-        @HUDManager var isSetup = false
         @HUDManager var isInUse = false
 		
         // MARK: - UI
@@ -22,11 +21,15 @@ extension HUDManager {
         // MARK: - Init
 		
         init() async throws {
-            try await setup()
+            try await Task { @MainActor in
+                (hudWindow, hudView, hudViewVisualEffectView, hudViewCIMotionBlur, hudTextField) = try await Self.windowFactory()
+            }
+            
+            logger.debug("Created new reusable HUD alert object.")
         }
 		
         deinit {
-            logger.debug("HUD Alert instance deinit")
+            logger.debug("HUD alert object instance deinit")
         }
     }
 }
