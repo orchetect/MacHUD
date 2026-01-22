@@ -2,7 +2,7 @@
 
 A macOS HUD (heads-up-display) alert library written in Swift.
 
-This package simulates macOS system HUD overlays.
+This package simulates macOS system HUD alerts.
 
 ## Note
 
