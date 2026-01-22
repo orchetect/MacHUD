@@ -21,9 +21,9 @@ extension HUDManager {
         // MARK: - Init
 		
         init() async throws {
-            try await Task { @MainActor in
-                (hudWindow, hudView, hudViewVisualEffectView, hudViewCIMotionBlur, hudTextField) = try await Self.windowFactory()
-            }
+            _ = try await Task { @MainActor in
+                (hudWindow, hudView, hudViewVisualEffectView, hudViewCIMotionBlur, hudTextField) = try Self.windowFactory()
+            }.value
             
             logger.debug("Created new reusable HUD alert object.")
         }

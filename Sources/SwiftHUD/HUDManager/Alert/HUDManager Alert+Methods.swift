@@ -71,22 +71,19 @@ extension HUDManager.Alert {
             fadeTime = customFadeTime.clamped(to: 0.01 ... 5.0)
         }
         
-        Task { @MainActor in
+        _ = await Task { @MainActor in
             // begin async animation event
-            NSAnimationContext.runAnimationGroup { context in
+            await NSAnimationContext.runAnimationGroup { context in
                 context.duration = fadeTime
                 context.allowsImplicitAnimation = true // doesn't affect things?
                 hudWindow.animator().alphaValue = 0
                 
                 // CIMotionBlur does not animate here - have to discover a way to animate CIFilter properties.
                 hudView.animator().contentFilters.first?.setValue(1.5, forKey: kCIInputRadiusKey)
-            } completionHandler: {
-                Task {
-                    await self._orderOutWindowAndZeroOutAlpha()
-                    await self._resetInUse()
-                }
             }
-        }
+            await self._orderOutWindowAndZeroOutAlpha()
+            await self._resetInUse()
+        }.value
     }
     
     @HUDManager

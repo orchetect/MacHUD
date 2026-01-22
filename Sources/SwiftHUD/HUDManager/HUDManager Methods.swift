@@ -16,6 +16,7 @@ extension HUDManager {
     /// Typically this called at application launch.
     public func warm() async {
         guard alerts.isEmpty else { return }
+        
         do {
             for _ in 0 ..< 5 {
                 _ = try await addNewAlert()
@@ -25,7 +26,7 @@ extension HUDManager {
         }
     }
     
-    /// Display a HUD alert on the screen.
+    /// Display a HUD alert on the screen asynchronously.
     nonisolated
     public func displayAlert(
         _ content: AlertContent,
@@ -34,6 +35,15 @@ extension HUDManager {
         Task {
             await newHUDAlert(content: content, style: style)
         }
+    }
+    
+    /// Display a HUD alert on the screen and wait until the alert is fully dismissed before returning.
+    nonisolated
+    public func displayAlert(
+        _ content: AlertContent,
+        style: HUDStyle = .currentPlatform
+    ) async {
+        await newHUDAlert(content: content, style: style)
     }
     
     /// Returns the number of active HUD alerts on-screen.
