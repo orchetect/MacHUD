@@ -18,7 +18,7 @@ extension HUDManager.Alert {
         contentView: NSHostingView<HUDManager.Alert.ContentView>
     ) {
         let newWindow = NSWindow(
-            contentRect: NSMakeRect(0, 0, 500, 160),
+            contentRect: NSMakeRect(0, 0, 200, 200),
             styleMask: .borderless,
             backing: .buffered,
             defer: true
@@ -156,6 +156,7 @@ extension HUDManager.Alert {
         
         // set content to display
         contentView.rootView = .init(content: content, style: style)
+        hudWindow.setContentSize(.zero) // prevents window from remaining too large if previously shown at a larger content size
         hudWindow.setContentSize(contentView.frame.size)
         
         // theme / formatting customization
