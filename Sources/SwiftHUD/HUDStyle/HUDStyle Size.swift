@@ -10,7 +10,7 @@ extension HUDStyle {
         case small
         case medium
         case large
-        case superLarge
+        case extraLarge
     }
 }
 
