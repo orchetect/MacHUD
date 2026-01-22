@@ -153,7 +153,7 @@ extension HUDManager.Alert {
     /// Updates the reusable window with new parameters.
     @MainActor
     func _updateWindow(
-        message: String,
+        content: HUDManager.AlertContent,
         position: HUDStyle.Position = .center,
         size: HUDStyle.Size = .medium,
         tint: HUDStyle.Tint = .dark,
@@ -192,26 +192,33 @@ extension HUDManager.Alert {
             height: screenMainFrame.height  - 100
         )
         
-        // set text to display
-        hudTextField.stringValue = message
+        // set content to display
+        switch content {
+        case let .text(string):
+            hudTextField.stringValue = string
+        case let .image(systemName: systemName):
+            hudTextField.stringValue = ""
+            // TODO: finish this
+        case let .textAndImage(string, systemName: systemName):
+            hudTextField.stringValue = string
+            // TODO: finish this
+        }
         
         // theme / formatting customization
         
-        var borderWidth = 0
+        let fontSize: CGFloat = switch size {
+        case .small: 20
+        case .medium: 60
+        case .large: 100
+        case .extraLarge: 150
+        }
+        hudTextField.font = NSFont(name: hudTextField.font?.fontName ?? "", size: fontSize)
         
-        switch size {
-        case .small:
-            hudTextField.font = NSFont(name: hudTextField.font?.fontName ?? "", size: 20)
-            borderWidth = 1
-        case .medium:
-            hudTextField.font = NSFont(name: hudTextField.font?.fontName ?? "", size: 60)
-            borderWidth = 2
-        case .large:
-            hudTextField.font = NSFont(name: hudTextField.font?.fontName ?? "", size: 100)
-            borderWidth = 3
-        case .extraLarge:
-            hudTextField.font = NSFont(name: hudTextField.font?.fontName ?? "", size: 150)
-            borderWidth = 4
+        let borderWidth: Int = switch size {
+        case .small: 1
+        case .medium: 2
+        case .large: 3
+        case .extraLarge: 4
         }
         
         switch tint {
@@ -258,13 +265,10 @@ extension HUDManager.Alert {
             hudTextField.frame.size.width + 40,
             hudTextField.frame.size.height + 40
         )
-        switch position {
-        case .bottom:
-            displayBounds.origin.y = 150
-        case .center:
-            displayBounds.origin.y = (screenMainFrame.size.height - hudTextField.frame.size.height - 40) * 0.5
-        case .top:
-            displayBounds.origin.y = (screenMainFrame.size.height - hudTextField.frame.size.height - 40 - 150)
+        displayBounds.origin.y = switch position {
+        case .bottom: 150
+        case .center: (screenMainFrame.size.height - hudTextField.frame.size.height - 40) * 0.5
+        case .top: (screenMainFrame.size.height - hudTextField.frame.size.height - 40 - 150)
         }
         
         // apply sizes
@@ -275,15 +279,11 @@ extension HUDManager.Alert {
         )
         
         // hudViewVisualEffectView (NSVisualEffectView)
-        switch tint {
-        case .light:
-            hudViewVisualEffectView.material = .light
-        case .mediumLight:
-            hudViewVisualEffectView.material = .mediumLight
-        case .dark:
-            hudViewVisualEffectView.material = .dark
-        case .ultraDark:
-            hudViewVisualEffectView.material = .ultraDark
+        hudViewVisualEffectView.material = switch tint {
+        case .light: .light
+        case .mediumLight: .mediumLight
+        case .dark: .dark
+        case .ultraDark: .ultraDark
         }
         
         // hudViewCIMotionBlur (CIFilter)

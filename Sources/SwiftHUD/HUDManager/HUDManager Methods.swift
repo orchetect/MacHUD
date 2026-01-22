@@ -28,11 +28,11 @@ extension HUDManager {
     /// Display a HUD alert on the screen.
     nonisolated
     public func displayAlert(
-        _ message: String,
+        _ content: AlertContent,
         style: HUDStyle = .currentPlatform
     ) {
         Task {
-            await newHUDAlert(message, style: style)
+            await newHUDAlert(content: content, style: style)
         }
     }
     
@@ -74,12 +74,12 @@ extension HUDManager {
     
     /// Trigger a new HID alert being shown on-screen.
     func newHUDAlert(
-        _ msg: String,
+        content: AlertContent,
         style: HUDStyle
     ) async {
         do {
             let alert = try await getFreeAlert()
-            try await alert.show(msg: msg, style: style)
+            try await alert.show(content: content, style: style)
         } catch {
             logger.debug("Error displaying HUD alert: \(error.localizedDescription)")
         }

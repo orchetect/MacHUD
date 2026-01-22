@@ -11,7 +11,7 @@ internal import SwiftExtensions
 extension HUDManager.Alert {
     /// Creates the alert window and shows it on screen.
     @HUDManager
-    func show(msg: String, style: HUDStyle) async throws {
+    func show(content: HUDManager.AlertContent, style: HUDStyle) async throws {
         if isInUse {
             // do a basic reset of the window if it's currently in use
             await Task { @MainActor in
@@ -29,7 +29,7 @@ extension HUDManager.Alert {
         
         do {
             try await _updateWindow(
-                message: msg,
+                content: content,
                 position: style.position,
                 size: style.size,
                 tint: style.tint,
