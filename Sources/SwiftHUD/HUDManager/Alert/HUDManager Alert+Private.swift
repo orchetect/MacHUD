@@ -148,72 +148,74 @@ extension HUDManager.Alert {
             throw HUDError.internalInconsistency("Missing HUD alert content view.")
         }
         
-        // get screen for alert
-        let alertScreen = try Self.alertScreen
-        
-        // origin is bottom left of screen. Y axis goes up, X axis goes right.
-        let screenRect = try Self.getEffectiveAlertScreenRect()
-        
-        // set content to display
-        contentView.rootView = .init(content: content, style: style)
-        hudWindow.setContentSize(.zero) // prevents window from remaining too large if previously shown at a larger content size
-        hudWindow.setContentSize(contentView.frame.size)
-        
-        // theme / formatting customization
-        
-        if style.isBordered {
-            let borderWidth: Int = switch style.size {
-            case .small: 1
-            case .medium: 2
-            case .large: 3
-            case .extraLarge: 4
+        try autoreleasepool {
+            // get screen for alert
+            let alertScreen = try Self.alertScreen
+            
+            // origin is bottom left of screen. Y axis goes up, X axis goes right.
+            let screenRect = try Self.getEffectiveAlertScreenRect()
+            
+            // set content to display
+            contentView.rootView = .init(content: content, style: style)
+            hudWindow.setContentSize(.zero) // prevents window from remaining too large if previously shown at a larger content size
+            hudWindow.setContentSize(contentView.frame.size)
+            
+            // theme / formatting customization
+            
+            if style.isBordered {
+                let borderWidth: Int = switch style.size {
+                case .small: 1
+                case .medium: 2
+                case .large: 3
+                case .extraLarge: 4
+                }
+                
+                switch style.tint {
+                case .light, .mediumLight:
+                    hudView.layer?.borderWidth = CGFloat(borderWidth)
+                    hudView.layer?.borderColor = NSColor(red: 0.15, green: 0.16, blue: 0.17, alpha: 1.00).cgColor
+                    
+                case .dark, .ultraDark:
+                    hudView.layer?.borderWidth = CGFloat(borderWidth)
+                    hudView.layer?.borderColor = NSColor.white.cgColor
+                }
+            } else {
+                hudView.layer?.borderWidth = 0
             }
             
-            switch style.tint {
-            case .light, .mediumLight:
-                hudView.layer?.borderWidth = CGFloat(borderWidth)
-                hudView.layer?.borderColor = NSColor(red: 0.15, green: 0.16, blue: 0.17, alpha: 1.00).cgColor
-                
-            case .dark, .ultraDark:
-                hudView.layer?.borderWidth = CGFloat(borderWidth)
-                hudView.layer?.borderColor = NSColor.white.cgColor
+            let topOrBottomOffset: CGFloat = 140.0
+            let y: CGFloat = switch style.position {
+            case .bottom: topOrBottomOffset
+            case .center: (screenRect.size.height - contentView.frame.size.height) * 0.5
+            case .top: (screenRect.size.height - contentView.frame.size.height - topOrBottomOffset)
             }
-        } else {
-            hudView.layer?.borderWidth = 0
+            let displayBounds = NSMakeRect(
+                (screenRect.size.width - contentView.frame.size.width) * 0.5,
+                y,
+                contentView.frame.size.width,
+                contentView.frame.size.height
+            )
+            
+            // apply sizes
+            hudWindow.setFrame(displayBounds, display: true)
+            hudWindow.setFrame(
+                hudWindow.constrainFrameRect(hudWindow.frame, to: alertScreen),
+                display: true
+            )
+            
+            // hudViewVisualEffectView (NSVisualEffectView)
+            hudViewVisualEffectView.material = switch style.tint {
+            case .light: .light
+            case .mediumLight: .mediumLight
+            case .dark: .dark
+            case .ultraDark: .ultraDark
+            }
+            
+            // hudViewCIMotionBlur (CIFilter)
+            
+            // reset blur value to default
+            // hudViewCIMotionBlur.setValue(0, forKeyPath: kCIInputRadiusKey)
         }
-        
-        let topOrBottomOffset: CGFloat = 140.0
-        let y: CGFloat = switch style.position {
-        case .bottom: topOrBottomOffset
-        case .center: (screenRect.size.height - contentView.frame.size.height) * 0.5
-        case .top: (screenRect.size.height - contentView.frame.size.height - topOrBottomOffset)
-        }
-        let displayBounds = NSMakeRect(
-            (screenRect.size.width - contentView.frame.size.width) * 0.5,
-            y,
-            contentView.frame.size.width,
-            contentView.frame.size.height
-        )
-        
-        // apply sizes
-        hudWindow.setFrame(displayBounds, display: true)
-        hudWindow.setFrame(
-            hudWindow.constrainFrameRect(hudWindow.frame, to: alertScreen),
-            display: true
-        )
-        
-        // hudViewVisualEffectView (NSVisualEffectView)
-        hudViewVisualEffectView.material = switch style.tint {
-        case .light: .light
-        case .mediumLight: .mediumLight
-        case .dark: .dark
-        case .ultraDark: .ultraDark
-        }
-        
-        // hudViewCIMotionBlur (CIFilter)
-        
-        // reset blur value to default
-        // hudViewCIMotionBlur.setValue(0, forKeyPath: kCIInputRadiusKey)
     }
     
     /// Shows the alert on screen, optionally animating its appearance and dismissal.
@@ -228,8 +230,10 @@ extension HUDManager.Alert {
         }
         
         // show alert
-        hudWindow.alphaValue = 0
-        hudWindow.orderFront(self)
+        try autoreleasepool {
+            hudWindow.alphaValue = 0
+            hudWindow.orderFront(self)
+        }
         
         if let fadeInDuration: TimeInterval = switch transitionIn {
         case .default: 0.05
@@ -240,11 +244,15 @@ extension HUDManager.Alert {
             // NOTE: Animations will not work unless called on main thread/actor
             await NSAnimationContext.runAnimationGroup { context in
                 context.duration = fadeInDuration
-                hudWindow.animator().alphaValue = 1
+                autoreleasepool {
+                    hudWindow.animator().alphaValue = 1
+                }
             }
         } else {
             // don't animate alert appearing
-            hudWindow.alphaValue = 1
+            autoreleasepool {
+                hudWindow.alphaValue = 1
+            }
         }
         
         // remain on screen for specified time period; schedule the fade out

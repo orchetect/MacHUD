@@ -74,10 +74,13 @@ extension HUDManager.Alert {
             await NSAnimationContext.runAnimationGroup { context in
                 context.duration = fadeTime
                 context.allowsImplicitAnimation = true // doesn't affect things?
-                hudWindow.animator().alphaValue = 0
                 
-                // CIMotionBlur does not animate here - have to discover a way to animate CIFilter properties.
-                hudView.animator().contentFilters.first?.setValue(1.5, forKey: kCIInputRadiusKey)
+                autoreleasepool {
+                    hudWindow.animator().alphaValue = 0
+                    
+                    // CIMotionBlur does not animate here - have to discover a way to animate CIFilter properties.
+                    hudView.animator().contentFilters.first?.setValue(1.5, forKey: kCIInputRadiusKey)
+                }
             }
             await self._orderOutWindowAndZeroOutAlpha()
             await self._resetInUse()
@@ -91,7 +94,9 @@ extension HUDManager.Alert {
     
     @MainActor
     func _orderOutWindowAndZeroOutAlpha() {
-        hudWindow?.orderOut(self)
-        hudWindow?.alphaValue = 0
+        autoreleasepool {
+            hudWindow?.orderOut(self)
+            hudWindow?.alphaValue = 0
+        }
     }
 }
