@@ -13,7 +13,7 @@ struct DemoApp: App {
         WindowGroup {
             ContentView()
                 .task {
-                    await HUDManager.shared.warm()
+                    await HUDManager.shared.prewarm()
                 }
         }
         .defaultSize(width: 650, height: 800)

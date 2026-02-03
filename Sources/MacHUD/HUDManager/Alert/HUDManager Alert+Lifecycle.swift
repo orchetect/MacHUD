@@ -1,5 +1,5 @@
 //
-//  HUDManager Alert+Methods.swift
+//  HUDManager Alert+Lifecycle.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
 //  © 2018-2026 Steffan Andrews • Licensed under MIT License
 //
@@ -14,7 +14,7 @@ internal import SwiftExtensions
 extension HUDManager.Alert {
     /// Creates the alert window and shows it on screen.
     @HUDManager
-    func show(content: HUDManager.AlertContent, style: HUDStyle) async throws {
+    func show(content: HUDAlertContent, style: AnyHUDStyle) async throws {
         if isInUse {
             // do a basic reset of the window if it's currently in use
             await Task { @MainActor in
@@ -37,9 +37,9 @@ extension HUDManager.Alert {
             )
             
             try await _showWindow(
-                transitionIn: style.transitionIn,
-                duration: style.duration,
-                transitionOut: style.transitionOut
+                transitionIn: style.base.transitionIn,
+                duration: style.base.duration,
+                transitionOut: style.base.transitionOut
             )
         } catch {
             isInUse = false
@@ -48,12 +48,9 @@ extension HUDManager.Alert {
     }
     
     /// Triggers alert dismissal, animating out, and disposing of its resources.
-    func dismiss(transition: HUDStyle.Transition = .default) async throws {
-        guard let hudWindow = await hudWindow else {
+    func dismiss(transition: HUDTransition = .default) async throws {
+        guard let window = await window else {
             throw HUDError.internalInconsistency("Missing HUD alert window.")
-        }
-        guard let hudView = await hudView else {
-            throw HUDError.internalInconsistency("Missing HUD alert view.")
         }
         
         let fadeTime: TimeInterval
@@ -78,10 +75,10 @@ extension HUDManager.Alert {
                 context.allowsImplicitAnimation = true // doesn't affect things?
                 
                 autoreleasepool {
-                    hudWindow.animator().alphaValue = 0
+                    window.animator().alphaValue = 0
                     
                     // CIMotionBlur does not animate here - have to discover a way to animate CIFilter properties.
-                    hudView.animator().contentFilters.first?.setValue(1.5, forKey: kCIInputRadiusKey)
+                    // contentView.animator().contentFilters.first?.setValue(1.5, forKey: kCIInputRadiusKey)
                 }
             }
             self._orderOutWindowAndZeroOutAlpha()
@@ -97,8 +94,8 @@ extension HUDManager.Alert {
     @MainActor
     func _orderOutWindowAndZeroOutAlpha() {
         autoreleasepool {
-            hudWindow?.orderOut(self)
-            hudWindow?.alphaValue = 0
+            window?.orderOut(self)
+            window?.alphaValue = 0
         }
     }
 }

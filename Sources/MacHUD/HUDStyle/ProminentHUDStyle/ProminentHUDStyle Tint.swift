@@ -1,5 +1,5 @@
 //
-//  HUDStyle Tint.swift
+//  ProminentHUDStyle Tint.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
 //  © 2018-2026 Steffan Andrews • Licensed under MIT License
 //
@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension HUDStyle {
+extension ProminentHUDStyle {
     public enum Tint: Int {
         case light
         case mediumLight
@@ -17,12 +17,12 @@ extension HUDStyle {
     }
 }
 
-extension HUDStyle.Tint: Equatable { }
+extension ProminentHUDStyle.Tint: Equatable { }
 
-extension HUDStyle.Tint: Hashable { }
+extension ProminentHUDStyle.Tint: Hashable { }
 
-extension HUDStyle.Tint: CaseIterable { }
+extension ProminentHUDStyle.Tint: CaseIterable { }
 
-extension HUDStyle.Tint: Sendable { }
+extension ProminentHUDStyle.Tint: Sendable { }
 
 #endif

@@ -12,8 +12,8 @@ import Foundation
     /// Shared singleton instance.
     public static let shared = HUDManager()
     
-    /// Pool of alerts.
-    var alerts: [Alert] = []
+    /// Pool of reusable alert windows.
+    var alerts: [HUDStyleID: [Alert]] = [:]
     
     private init() { }
 }

@@ -1,5 +1,5 @@
 //
-//  HUDStyle Size.swift
+//  ProminentHUDStyle Size.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
 //  © 2018-2026 Steffan Andrews • Licensed under MIT License
 //
@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension HUDStyle {
+extension ProminentHUDStyle {
     public enum Size: Int {
         case small
         case medium
@@ -17,12 +17,12 @@ extension HUDStyle {
     }
 }
 
-extension HUDStyle.Size: Equatable { }
+extension ProminentHUDStyle.Size: Equatable { }
 
-extension HUDStyle.Size: Hashable { }
+extension ProminentHUDStyle.Size: Hashable { }
 
-extension HUDStyle.Size: CaseIterable { }
+extension ProminentHUDStyle.Size: CaseIterable { }
 
-extension HUDStyle.Size: Sendable { }
+extension ProminentHUDStyle.Size: Sendable { }
 
 #endif

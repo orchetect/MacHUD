@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var text = "Volume"
     @State private var image: SampleImage = .speakerVolumeHigh
-    @State private var style: HUDStyle = .currentPlatform
+    @State private var style: ProminentHUDStyle = .default()
     
     @State private var isContinuous: Bool = false
     @State private var continuousTask: Task<Void, any Error>?
@@ -21,19 +21,19 @@ struct ContentView: View {
             Form {
                 Section("Style") {
                     Picker("Position on Screen", selection: $style.position) {
-                        ForEach(HUDStyle.Position.allCases) { position in
+                        ForEach(ProminentHUDStyle.Position.allCases) { position in
                             Text(position.name).tag(position)
                         }
                     }
                     
                     Picker("Size", selection: $style.size) {
-                        ForEach(HUDStyle.Size.allCases) { size in
+                        ForEach(ProminentHUDStyle.Size.allCases) { size in
                             Text(size.name).tag(size)
                         }
                     }
                     
                     Picker("Tint", selection: $style.tint) {
-                        ForEach(HUDStyle.Tint.allCases) { tint in
+                        ForEach(ProminentHUDStyle.Tint.allCases) { tint in
                             Text(tint.name).tag(tint)
                         }
                     }
@@ -41,7 +41,7 @@ struct ContentView: View {
                     Toggle("Bordered", isOn: $style.isBordered)
                     
                     Picker("Transition In", selection: $style.transitionIn) {
-                        ForEach(HUDStyle.Transition.allCases) { transition in
+                        ForEach(HUDTransition.allCases) { transition in
                             Text(transition.name).tag(transition)
                         }
                     }
@@ -51,7 +51,7 @@ struct ContentView: View {
                     }
                     
                     Picker("Transition Out", selection: $style.transitionOut) {
-                        ForEach(HUDStyle.Transition.allCases) { transition in
+                        ForEach(HUDTransition.allCases) { transition in
                             Text(transition.name).tag(transition)
                         }
                     }

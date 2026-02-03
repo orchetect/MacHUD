@@ -1,5 +1,5 @@
 //
-//  HUDStyle Extensions.swift
+//  MacHUD Extensions.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
 //  © 2018-2026 Steffan Andrews • Licensed under MIT License
 //
@@ -7,13 +7,13 @@
 import Foundation
 import MacHUD
 
-// MARK: - Position
+// MARK: - ProminentHUDStyle Position
 
-extension HUDStyle.Position: @retroactive Identifiable {
+extension ProminentHUDStyle.Position: @retroactive Identifiable {
     public var id: Self { self }
 }
 
-extension HUDStyle.Position {
+extension ProminentHUDStyle.Position {
     var name: String {
         switch self {
         case .top:
@@ -26,13 +26,13 @@ extension HUDStyle.Position {
     }
 }
 
-// MARK: - Size
+// MARK: - ProminentHUDStyle Size
 
-extension HUDStyle.Size: @retroactive Identifiable {
+extension ProminentHUDStyle.Size: @retroactive Identifiable {
     public var id: Self { self }
 }
 
-extension HUDStyle.Size {
+extension ProminentHUDStyle.Size {
     var name: String {
         switch self {
         case .small:
@@ -47,13 +47,13 @@ extension HUDStyle.Size {
     }
 }
 
-// MARK: - Tint
+// MARK: - ProminentHUDStyle Tint
 
-extension HUDStyle.Tint: @retroactive Identifiable {
+extension ProminentHUDStyle.Tint: @retroactive Identifiable {
     public var id: Self { self }
 }
 
-extension HUDStyle.Tint {
+extension ProminentHUDStyle.Tint {
     var name: String {
         switch self {
         case .light:
@@ -70,11 +70,11 @@ extension HUDStyle.Tint {
 
 // MARK: - Transition
 
-extension HUDStyle.Transition: @retroactive Identifiable {
+extension HUDTransition: @retroactive Identifiable {
     public var id: Self { self }
 }
 
-extension HUDStyle.Transition {
+extension HUDTransition {
     var name: String {
         switch self {
         case .default:
@@ -87,8 +87,8 @@ extension HUDStyle.Transition {
     }
 }
 
-extension HUDStyle.Transition: @retroactive CaseIterable {
-    public static var allCases: [HUDStyle.Transition] {
+extension HUDTransition: @retroactive CaseIterable {
+    public static var allCases: [HUDTransition] {
         [.default, .fade(duration: 0.05), .fade(duration: 0.8), .fade(duration: 2.0), .none]
     }
 }

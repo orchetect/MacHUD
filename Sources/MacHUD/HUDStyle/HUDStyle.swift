@@ -6,74 +6,55 @@
 
 #if os(macOS)
 
+import AppKit
 import Foundation
+import SwiftUI
 
-public struct HUDStyle {
-    /// Position on screen for the HUD to appear.
-    public var position: Position
+/// HUD alert style defining an alert's window presentation and design.
+public protocol HUDStyle: Equatable, Hashable, Sendable, SendableMetatype where ContentView.Style == Self {
+    // MARK: - Static Constructors
     
-    /// HUD size.
-    public var size: Size
+    /// Default style properties for the current platform.
+    static func `default`() -> Self
     
-    /// Background visual shading of the HUD alert.
-    public var tint: Tint
+    // MARK: - Common properties
     
-    /// Boolean determining whether the HUD alert will have a visual border.
-    public var isBordered: Bool
+    var transitionIn: HUDTransition { get }
+    var duration: TimeInterval { get }
+    var transitionOut: HUDTransition { get }
     
-    /// Fade-out behavior when the alert is dismissed from the screen.
-    public var transitionIn: Transition
+    // MARK: - Window and View Content
     
-    /// The amount of time for the HUD alert to persist on screen before it is dismissed, not including fade-in or
-    /// fade-out time.
-    public var duration: TimeInterval
+    /// The view displayed in the HUD alert.
+    associatedtype ContentView: HUDView
     
-    /// Fade-out behavior when the alert is dismissed from the screen.
-    public var transitionOut: Transition
+    /// Initial setup when the alert window is first created.
+    ///
+    /// This method is not called every time an alert is displayed. Instead, it is only called when
+    /// a new window is needed. Windows are cached and preserved for reuse with subsequent alerts.
+    @MainActor func setupWindow(context: HUDWindowContext)
     
-    public init(
-        position: Position,
-        size: Size,
-        tint: Tint,
-        isBordered: Bool,
-        transitionIn: Transition,
-        duration: TimeInterval,
-        transitionOut: Transition
-    ) {
-        self.position = position
-        self.size = size
-        self.tint = tint
-        self.isBordered = isBordered
-        self.transitionIn = transitionIn
-        self.duration = duration
-        self.transitionOut = transitionOut
-    }
-    
-    /// Initializes with custom values, defaulting `nil` parameters to appropriate values for the current platform.
-    @_disfavoredOverload
-    public init(
-        position: Position? = nil,
-        size: Size? = nil,
-        tint: Tint? = nil,
-        isBordered: Bool? = nil,
-        transitionIn: Transition? = nil,
-        duration: TimeInterval? = nil,
-        transitionOut: Transition? = nil
-    ) {
-        self.position = position ?? Self.currentPlatform.position
-        self.size = size ?? Self.currentPlatform.size
-        self.tint = tint ?? Self.currentPlatform.tint
-        self.isBordered = isBordered ?? Self.currentPlatform.isBordered
-        self.transitionIn = transitionIn ?? Self.currentPlatform.transitionIn
-        self.duration = duration ?? Self.currentPlatform.duration
-        self.transitionOut = transitionOut ?? Self.currentPlatform.transitionOut
-    }
+    /// This method is called when the alert window is first created after calling ``setupWindow(context:)``,
+    /// and then also every time an alert is displayed.
+    ///
+    /// Implement this method if there are specific window modifications that need to be made based on
+    /// the HUD alert content.
+    ///
+    /// For general window modifications that are only required for the HUD style, these can be performed
+    /// by implementing the ``setupWindow(window:contentView:)`` method.
+    @MainActor func updateWindow(context: HUDWindowContext)
 }
 
-extension HUDStyle: Equatable { }
+// MARK: - Default Implementation
 
-extension HUDStyle: Hashable { }
-
-extension HUDStyle: Sendable { }
+extension HUDStyle {
+    @MainActor public func setupWindow(context: HUDWindowContext) {
+        // empty default implementation
+    }
+    
+    @MainActor public func updateWindow(context: HUDWindowContext) {
+        // empty default implementation
+    }
+}
 
 #endif

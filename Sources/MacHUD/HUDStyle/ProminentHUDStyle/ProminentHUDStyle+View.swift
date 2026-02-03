@@ -1,68 +1,47 @@
 //
-//  HUDManager Alert ContentView.swift
+//  ProminentHUDStyle+View.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
 //  © 2018-2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
 
-import AppKit
-import Combine
+import Foundation
 import SwiftUI
-internal import SwiftExtensions
 
-extension HUDManager.Alert {
-    struct ContentView: View {
-        let content: HUDManager.AlertContent?
-        let style: HUDStyle
-        
-        init(content: HUDManager.AlertContent? = nil, style: HUDStyle = .currentPlatform) {
-            self.content = content
-            self.style = style
-        }
-        
-        var body: some View {
-            InnerContentView(content: content, style: style)
-                .padding(20)
-                .allowsHitTesting(false)
-        }
-    }
-}
-
-extension HUDManager.Alert {
-    struct InnerContentView: View {
+extension ProminentHUDStyle {
+    public struct ContentView: View, HUDView {
         let text: String?
-        let imageSource: HUDManager.AlertContent.ImageSource?
-        let style: HUDStyle
+        let imageSource: HUDAlertContent.ImageSource?
+        let style: ProminentHUDStyle
         
-        init(text: String? = nil, imageSource: HUDManager.AlertContent.ImageSource? = nil, style: HUDStyle = .currentPlatform) {
+        public init(
+            text: String? = nil,
+            imageSource: HUDAlertContent.ImageSource? = nil,
+            style: ProminentHUDStyle
+        ) {
             self.text = text
             self.imageSource = imageSource
             self.style = style
         }
         
-        init(content: HUDManager.AlertContent?, style: HUDStyle = .currentPlatform) {
-            if let content {
-                switch content {
-                case let .text(string):
-                    text = string
-                    imageSource = nil
-                case let .image(imageSource):
-                    text = nil
-                    self.imageSource = imageSource
-                case let .textAndImage(text: string, image: imageSource):
-                    text = string
-                    self.imageSource = imageSource
-                }
-            } else {
-                text = nil
+        public init(content: HUDAlertContent, style: ProminentHUDStyle) {
+            switch content {
+            case let .text(string):
+                text = string
                 imageSource = nil
+            case let .image(imageSource):
+                text = nil
+                self.imageSource = imageSource
+            case let .textAndImage(text: string, image: imageSource):
+                text = string
+                self.imageSource = imageSource
             }
             
             self.style = style
         }
         
-        var body: some View {
+        public var body: some View {
             VStack(spacing: 20) {
                 if let conditionalImageView, let textView {
                     conditionalImageView
@@ -78,6 +57,7 @@ extension HUDManager.Alert {
             }
             .aspectRatio(isImagePresent ? 1.0 : nil, contentMode: .fit)
             .frame(minWidth: minSize, minHeight: minSize)
+            .padding(20)
         }
         
         @ViewBuilder
@@ -128,18 +108,30 @@ extension HUDManager.Alert {
                 return image
             }
         }
-        
-        private var isTextPresent: Bool {
-            text != nil
-        }
-        
-        private var isImagePresent: Bool {
-            imageSource != nil
+    }
+}
+
+// MARK: - Geometry
+
+extension ProminentHUDStyle.ContentView {
+    private var minSize: CGFloat? {
+        if isImagePresent, isTextPresent {
+            imageSize * 1.35
+        } else if isImagePresent {
+            imageSize * 1.3
+        } else {
+            nil
         }
     }
 }
 
-extension HUDManager.Alert.InnerContentView {
+// MARK: - Text
+
+extension ProminentHUDStyle.ContentView {
+    private var isTextPresent: Bool {
+        text != nil
+    }
+    
     private var textFontSize: CGFloat {
         if image == nil {
             textOnlyFontSize
@@ -149,7 +141,13 @@ extension HUDManager.Alert.InnerContentView {
     }
     
     private var textOnlyFontSize: CGFloat {
-        HUDManager.Alert.textOnlyAlertFontSize()
+        let screenSize = (try? NSScreen.alertScreen.effectiveAlertScreenRect.size)
+            ?? CGSize(width: 1920, height: 1080) // provide a reasonable default
+        return textOnlyAlertFontSize(forScreenSize: screenSize)
+    }
+    
+    private func textOnlyAlertFontSize(forScreenSize screenSize: CGSize) -> CGFloat {
+        screenSize.width / 40
     }
     
     private var textWithImageFontSize: CGFloat {
@@ -161,7 +159,13 @@ extension HUDManager.Alert.InnerContentView {
     }
 }
 
-extension HUDManager.Alert.InnerContentView {
+// MARK: - Image
+
+extension ProminentHUDStyle.ContentView {
+    private var isImagePresent: Bool {
+        imageSource != nil
+    }
+    
     private var imageSize: CGFloat {
         switch style.size {
         case .small: 80.0
@@ -181,74 +185,76 @@ extension HUDManager.Alert.InnerContentView {
     }
 }
 
-extension HUDManager.Alert.InnerContentView {
-    private var minSize: CGFloat? {
-        if isImagePresent, isTextPresent {
-            imageSize * 1.35
-        } else if isImagePresent {
-            imageSize * 1.3
-        } else {
-            nil
-        }
-    }
-}
+// MARK: - Xcode Previews
 
 #if DEBUG
 #Preview("Text") {
-    HUDManager.Alert.ContentView(content: .text("Test"))
+    ProminentHUDStyle.ContentView(
+        content: .text("Test"),
+        style: .prominent()
+    )
 }
 
 #Preview("Text (Long)") {
-    HUDManager.Alert.ContentView(content: .text("This is a very long test of a text-only HUD message."))
+    ProminentHUDStyle.ContentView(
+        content: .text("This is a very long test of a text-only HUD message."),
+        style: .prominent()
+    )
 }
 
 #Preview("Image (Large) (Default)") {
-    HUDManager.Alert.ContentView(content: .image(.systemName("speaker.wave.3.fill")))
+    ProminentHUDStyle.ContentView(
+        content: .image(.systemName("speaker.wave.3.fill")),
+        style: .prominent()
+    )
 }
 
 #Preview("Image (Small)") {
-    HUDManager.Alert.ContentView(
+    ProminentHUDStyle.ContentView(
         content: .image(.systemName("speaker.wave.3.fill")),
-        style: .currentPlatform.size(.small)
+        style: .prominent().size(.small)
     )
 }
 
 #Preview("Image (Medium)") {
-    HUDManager.Alert.ContentView(
+    ProminentHUDStyle.ContentView(
         content: .image(.systemName("speaker.wave.3.fill")),
-        style: .currentPlatform.size(.medium)
+        style: .prominent().size(.medium)
     )
 }
 
 #Preview("Image (Extra Large)") {
-    HUDManager.Alert.ContentView(
+    ProminentHUDStyle.ContentView(
         content: .image(.systemName("speaker.wave.3.fill")),
-        style: .currentPlatform.size(.extraLarge)
+        style: .prominent().size(.extraLarge)
     )
 }
 
 #Preview("Text & Image (Large) (Default)") {
-    HUDManager.Alert.ContentView(content: .textAndImage(text: "Volume", image: .systemName("speaker.wave.3.fill")))
+    ProminentHUDStyle.ContentView(
+        content: .textAndImage(text: "Volume", image: .systemName("speaker.wave.3.fill")),
+        style: .prominent()
+    )
 }
 
 #Preview("Text & Image (Small)") {
-    HUDManager.Alert.ContentView(
+    ProminentHUDStyle.ContentView(
         content: .textAndImage(text: "Volume", image: .systemName("speaker.wave.3.fill")),
-        style: .currentPlatform.size(.small)
+        style: .prominent().size(.small)
     )
 }
 
 #Preview("Text & Image (Medium)") {
-    HUDManager.Alert.ContentView(
+    ProminentHUDStyle.ContentView(
         content: .textAndImage(text: "Volume", image: .systemName("speaker.wave.3.fill")),
-        style: .currentPlatform.size(.medium)
+        style: .prominent().size(.medium)
     )
 }
 
 #Preview("Text & Image (Extra Large)") {
-    HUDManager.Alert.ContentView(
+    ProminentHUDStyle.ContentView(
         content: .textAndImage(text: "Volume", image: .systemName("speaker.wave.3.fill")),
-        style: .currentPlatform.size(.extraLarge)
+        style: .prominent().size(.extraLarge)
     )
 }
 #endif
