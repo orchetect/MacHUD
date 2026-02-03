@@ -12,6 +12,10 @@ struct ContentView: View {
     @State private var image: SampleImage = .speakerVolumeHigh
     @State private var style: HUDStyle = .currentPlatform
     
+    @State private var isContinuous: Bool = false
+    @State private var continuousTask: Task<Void, any Error>?
+    @State private var notificationCount: Int = 0
+    
     var body: some View {
         VStack {
             Form {
@@ -74,9 +78,35 @@ struct ContentView: View {
                         HUDManager.shared.displayAlert(.textAndImage(text, systemName: image.rawValue), style: style)
                     }
                 }
+                
+                Section("Generate HUD Alerts Automatically") {
+                    LabeledContent("Count", value: "\(notificationCount)")
+                    
+                    Toggle("Show Continuously (Stress Test)", isOn: $isContinuous)
+                        .onChange(of: isContinuous) { newValue in
+                            newValue ? startContinuousTask() : stopContinuousTask()
+                        }
+                }
             }
             .formStyle(.grouped)
         }
         .padding()
+    }
+    
+    private func startContinuousTask() {
+        stopContinuousTask()
+        
+        continuousTask = Task {
+            while !Task.isCancelled {
+                HUDManager.shared.displayAlert(.text(UUID().uuidString), style: style)
+                notificationCount += 1
+                try await Task.sleep(for: .milliseconds(500))
+            }
+        }
+    }
+    
+    private func stopContinuousTask() {
+        continuousTask?.cancel()
+        continuousTask = nil
     }
 }
