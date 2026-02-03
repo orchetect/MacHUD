@@ -82,7 +82,7 @@ extension HUDManager.Alert {
                     hudView.animator().contentFilters.first?.setValue(1.5, forKey: kCIInputRadiusKey)
                 }
             }
-            await self._orderOutWindowAndZeroOutAlpha()
+            self._orderOutWindowAndZeroOutAlpha()
             await self._resetInUse()
         }.value
     }

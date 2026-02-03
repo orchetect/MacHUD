@@ -33,9 +33,6 @@ extension HUDManager.Alert {
         
         newView.addSubview(newContentView)
         
-        // grab screen
-        let alertScreen = try alertScreen
-        
         // origin is bottom left of screen. Y axis goes up, X axis goes right.
         let screenRect = try getEffectiveAlertScreenRect()
         
@@ -230,7 +227,7 @@ extension HUDManager.Alert {
         }
         
         // show alert
-        try autoreleasepool {
+        autoreleasepool {
             hudWindow.alphaValue = 0
             hudWindow.orderFront(self)
         }
