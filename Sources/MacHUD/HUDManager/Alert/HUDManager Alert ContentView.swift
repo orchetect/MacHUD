@@ -32,12 +32,12 @@ extension HUDManager.Alert {
 extension HUDManager.Alert {
     struct InnerContentView: View {
         let text: String?
-        let imageSystemName: String?
+        let imageSource: HUDManager.AlertContent.ImageSource?
         let style: HUDStyle
         
-        init(text: String? = nil, imageSystemName: String? = nil, style: HUDStyle = .currentPlatform) {
+        init(text: String? = nil, imageSource: HUDManager.AlertContent.ImageSource? = nil, style: HUDStyle = .currentPlatform) {
             self.text = text
-            self.imageSystemName = imageSystemName
+            self.imageSource = imageSource
             self.style = style
         }
         
@@ -46,17 +46,17 @@ extension HUDManager.Alert {
                 switch content {
                 case let .text(string):
                     text = string
-                    imageSystemName = nil
-                case let .image(systemName: systemName):
+                    imageSource = nil
+                case let .image(imageSource):
                     text = nil
-                    imageSystemName = systemName
-                case let .textAndImage(string, systemName: systemName):
+                    self.imageSource = imageSource
+                case let .textAndImage(text: string, image: imageSource):
                     text = string
-                    imageSystemName = systemName
+                    self.imageSource = imageSource
                 }
             } else {
                 text = nil
-                imageSystemName = nil
+                imageSource = nil
             }
             
             self.style = style
@@ -114,18 +114,27 @@ extension HUDManager.Alert {
         }
         
         private var image: Image? {
-            guard let imageSystemName else { return nil }
+            guard let imageSource else { return nil }
             
-            if #available(macOS 11, *) {
-                return Image(systemName: imageSystemName)
-            } else {
-                // TODO: needs implementation on macOS 10.15
-                return nil
+            switch imageSource {
+            case let .systemName(systemName):
+                if #available(macOS 11, *) {
+                    return Image(systemName: systemName)
+                } else {
+                    // TODO: needs implementation on macOS 10.15
+                    return nil
+                }
+            case let .image(image):
+                return image
             }
         }
         
+        private var isTextPresent: Bool {
+            text != nil
+        }
+        
         private var isImagePresent: Bool {
-            imageSystemName != nil
+            imageSource != nil
         }
     }
 }
@@ -174,9 +183,9 @@ extension HUDManager.Alert.InnerContentView {
 
 extension HUDManager.Alert.InnerContentView {
     private var minSize: CGFloat? {
-        if imageSystemName != nil, text != nil {
+        if isImagePresent, isTextPresent {
             imageSize * 1.35
-        } else if imageSystemName != nil {
+        } else if isImagePresent {
             imageSize * 1.3
         } else {
             nil
@@ -194,51 +203,51 @@ extension HUDManager.Alert.InnerContentView {
 }
 
 #Preview("Image (Large) (Default)") {
-    HUDManager.Alert.ContentView(content: .image(systemName: "speaker.wave.3.fill"))
+    HUDManager.Alert.ContentView(content: .image(.systemName("speaker.wave.3.fill")))
 }
 
 #Preview("Image (Small)") {
     HUDManager.Alert.ContentView(
-        content: .image(systemName: "speaker.wave.3.fill"),
+        content: .image(.systemName("speaker.wave.3.fill")),
         style: .currentPlatform.size(.small)
     )
 }
 
 #Preview("Image (Medium)") {
     HUDManager.Alert.ContentView(
-        content: .image(systemName: "speaker.wave.3.fill"),
+        content: .image(.systemName("speaker.wave.3.fill")),
         style: .currentPlatform.size(.medium)
     )
 }
 
 #Preview("Image (Extra Large)") {
     HUDManager.Alert.ContentView(
-        content: .image(systemName: "speaker.wave.3.fill"),
+        content: .image(.systemName("speaker.wave.3.fill")),
         style: .currentPlatform.size(.extraLarge)
     )
 }
 
 #Preview("Text & Image (Large) (Default)") {
-    HUDManager.Alert.ContentView(content: .textAndImage("Volume", systemName: "speaker.wave.3.fill"))
+    HUDManager.Alert.ContentView(content: .textAndImage(text: "Volume", image: .systemName("speaker.wave.3.fill")))
 }
 
 #Preview("Text & Image (Small)") {
     HUDManager.Alert.ContentView(
-        content: .textAndImage("Volume", systemName: "speaker.wave.3.fill"),
+        content: .textAndImage(text: "Volume", image: .systemName("speaker.wave.3.fill")),
         style: .currentPlatform.size(.small)
     )
 }
 
 #Preview("Text & Image (Medium)") {
     HUDManager.Alert.ContentView(
-        content: .textAndImage("Volume", systemName: "speaker.wave.3.fill"),
+        content: .textAndImage(text: "Volume", image: .systemName("speaker.wave.3.fill")),
         style: .currentPlatform.size(.medium)
     )
 }
 
 #Preview("Text & Image (Extra Large)") {
     HUDManager.Alert.ContentView(
-        content: .textAndImage("Volume", systemName: "speaker.wave.3.fill"),
+        content: .textAndImage(text: "Volume", image: .systemName("speaker.wave.3.fill")),
         style: .currentPlatform.size(.extraLarge)
     )
 }

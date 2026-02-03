@@ -71,11 +71,17 @@ struct ContentView: View {
                     }
                     
                     Button("Show Image-Only Alert") {
-                        HUDManager.shared.displayAlert(.image(systemName: image.rawValue), style: style)
+                        HUDManager.shared.displayAlert(
+                            .image(.systemName(image.rawValue)),
+                            style: style
+                        )
                     }
                     
                     Button("Show Image & Text Alert") {
-                        HUDManager.shared.displayAlert(.textAndImage(text, systemName: image.rawValue), style: style)
+                        HUDManager.shared.displayAlert(
+                            .textAndImage(text: text, image: .systemName(image.rawValue)),
+                            style: style
+                        )
                     }
                 }
                 
