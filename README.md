@@ -80,7 +80,7 @@ Licensed under the MIT license. See [LICENSE](https://github.com/orchetect/MacHU
 
 ## Sponsoring
 
-If you enjoy using MacControlCenterUI and want to contribute to open-source financially, GitHub sponsorship is much appreciated. Feedback and code contributions are also welcome.
+If you enjoy using MacHUD and want to contribute to open-source financially, GitHub sponsorship is much appreciated. Feedback and code contributions are also welcome.
 
 ## Community & Support
 
