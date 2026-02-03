@@ -4,6 +4,8 @@
 //  © 2018-2026 Steffan Andrews • Licensed under MIT License
 //
 
+#if os(macOS)
+
 import Foundation
 
 private let maxSeconds = TimeInterval(UInt64.max) / TimeInterval(NSEC_PER_SEC)
@@ -21,3 +23,5 @@ extension Task where Success == Never, Failure == Never {
         try await sleep(nanoseconds: nanoseconds)
     }
 }
+
+#endif

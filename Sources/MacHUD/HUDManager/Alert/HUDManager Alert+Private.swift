@@ -3,6 +3,8 @@
 //  MacHUD • https://github.com/orchetect/MacHUD
 //
 
+#if os(macOS)
+
 import AppKit
 import SwiftUI
 internal import SwiftExtensions
@@ -301,3 +303,5 @@ extension HUDManager.Alert {
         screenSize.width / 40
     }
 }
+
+#endif

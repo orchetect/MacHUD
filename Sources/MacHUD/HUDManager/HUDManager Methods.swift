@@ -4,6 +4,8 @@
 //  © 2018-2026 Steffan Andrews • Licensed under MIT License
 //
 
+#if os(macOS)
+
 import Foundation
 
 // MARK: - Public
@@ -93,3 +95,5 @@ extension HUDManager {
         }
     }
 }
+
+#endif

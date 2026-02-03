@@ -4,6 +4,8 @@
 //  © 2018-2026 Steffan Andrews • Licensed under MIT License
 //
 
+#if os(macOS)
+
 import Foundation
 
 public struct HUDStyle {
@@ -73,3 +75,5 @@ extension HUDStyle: Equatable { }
 extension HUDStyle: Hashable { }
 
 extension HUDStyle: Sendable { }
+
+#endif

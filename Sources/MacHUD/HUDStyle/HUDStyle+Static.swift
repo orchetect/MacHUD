@@ -4,6 +4,8 @@
 //  © 2018-2026 Steffan Andrews • Licensed under MIT License
 //
 
+#if os(macOS)
+
 import Foundation
 
 extension HUDStyle {
@@ -91,3 +93,5 @@ extension HUDStyle {
         return copy
     }
 }
+
+#endif

@@ -4,6 +4,8 @@
 //  © 2018-2026 Steffan Andrews • Licensed under MIT License
 //
 
+#if os(macOS)
+
 import Foundation
 
 extension HUDStyle {
@@ -21,3 +23,5 @@ extension HUDStyle.Position: Hashable { }
 extension HUDStyle.Position: CaseIterable { }
 
 extension HUDStyle.Position: Sendable { }
+
+#endif

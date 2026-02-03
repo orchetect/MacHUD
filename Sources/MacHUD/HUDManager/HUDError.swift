@@ -4,6 +4,8 @@
 //  © 2018-2026 Steffan Andrews • Licensed under MIT License
 //
 
+#if os(macOS)
+
 import Foundation
 
 public enum HUDError: Error {
@@ -18,3 +20,5 @@ extension HUDError: LocalizedError {
         }
     }
 }
+
+#endif

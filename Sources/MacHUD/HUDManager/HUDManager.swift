@@ -4,6 +4,8 @@
 //  © 2018-2026 Steffan Andrews • Licensed under MIT License
 //
 
+#if os(macOS)
+
 import Foundation
 
 @globalActor public actor HUDManager {
@@ -15,3 +17,5 @@ import Foundation
     
     private init() { }
 }
+
+#endif

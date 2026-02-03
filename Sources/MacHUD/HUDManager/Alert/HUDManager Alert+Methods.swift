@@ -4,6 +4,8 @@
 //  © 2018-2026 Steffan Andrews • Licensed under MIT License
 //
 
+#if os(macOS)
+
 import AppKit
 internal import SwiftExtensions
 
@@ -100,3 +102,5 @@ extension HUDManager.Alert {
         }
     }
 }
+
+#endif
