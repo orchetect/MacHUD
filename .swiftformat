@@ -23,7 +23,7 @@
 --funcattributes prev-line
 --groupedextension "MARK: %c"
 --guardelse auto
---header "\n {file}\n swift-hud • https://github.com/orchetect/swift-hud\n © 2018-{year} Steffan Andrews • Licensed under MIT License\n"
+--header "\n {file}\n MacHUD • https://github.com/orchetect/MacHUD\n © 2018-{year} Steffan Andrews • Licensed under MIT License\n"
 --hexgrouping 4,8
 --hexliteralcase uppercase
 --ifdef no-indent

@@ -1,6 +1,6 @@
 //
 //  HUDError.swift
-//  swift-hud • https://github.com/orchetect/swift-hud
+//  MacHUD • https://github.com/orchetect/MacHUD
 //  © 2018-2026 Steffan Andrews • Licensed under MIT License
 //
 

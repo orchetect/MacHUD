@@ -1,10 +1,12 @@
-# swift-hud
+# MacHUD
 
 A macOS HUD (heads-up-display) alert library written in Swift.
 
 This package simulates macOS system HUD alerts.
 
-Currently the style of HUD found in macOS 11 through 15 is emulated. macOS 26 'notification' style HUD is not yet implemented.
+> [!NOTE]
+>
+> Currently the style of HUD found in macOS 11 through 15 is emulated. The macOS 26 'notification' HUD style is not yet implemented but may be added in a future release.
 
 ## Note
 
@@ -42,19 +44,19 @@ To enable HUD notifications showing over top of full-screen application windows 
 
 To add this package to an Xcode app project, use:
 
- `https://github.com/orchetect/swift-hud` as the URL.
+ `https://github.com/orchetect/MacHUD` as the URL.
 
 To add this package to a Swift package, add the dependency to your package and target in Package.swift:
 
 ```swift
 let package = Package(
     dependencies: [
-        .package(url: "https://github.com/orchetect/swift-hud", from: "0.3.0")
+        .package(url: "https://github.com/orchetect/MacHUD", from: "0.3.0")
     ],
     targets: [
         .target(
             dependencies: [
-                .product(name: "SwiftHUD", package: "swift-hud")
+                "MacHUD"
             ]
         )
     ]

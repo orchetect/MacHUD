@@ -1,6 +1,6 @@
 //
 //  Logging.swift
-//  swift-hud • https://github.com/orchetect/swift-hud
+//  MacHUD • https://github.com/orchetect/MacHUD
 //  © 2018-2026 Steffan Andrews • Licensed under MIT License
 //
 
@@ -11,7 +11,7 @@ import os.log
 
 @available(macOS 11.0, iOS 14.0, watchOS 7.0, tvOS 14.0, *)
 struct LoggerLogBackend: LogBackend {
-    let logger = Logger(subsystem: "swift-hud", category: "General")
+    let logger = Logger(subsystem: "MacHUD", category: "General")
 
     func debug(_ message: String) {
         logger.debug("\(message)")

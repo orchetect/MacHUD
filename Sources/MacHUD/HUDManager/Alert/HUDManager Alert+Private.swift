@@ -1,6 +1,6 @@
 //
 //  HUDManager Alert+Private.swift
-//  swift-hud • https://github.com/orchetect/swift-hud
+//  MacHUD • https://github.com/orchetect/MacHUD
 //
 
 import AppKit

@@ -7,9 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E2F97CB52F219694009C09A2 /* SwiftHUD in Frameworks */ = {isa = PBXBuildFile; productRef = E2F97CB42F219694009C09A2 /* SwiftHUD */; };
-		E2F97CD72F21C648009C09A2 /* SwiftHUD in Frameworks */ = {isa = PBXBuildFile; productRef = E2F97CD62F21C648009C09A2 /* SwiftHUD */; };
-		E2F97CE22F21C7B4009C09A2 /* SwiftHUD in Frameworks */ = {isa = PBXBuildFile; productRef = E2F97CE12F21C7B4009C09A2 /* SwiftHUD */; };
+		E221D4652F31871500533AF9 /* MacHUD in Frameworks */ = {isa = PBXBuildFile; productRef = E221D4642F31871500533AF9 /* MacHUD */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,9 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E2F97CE22F21C7B4009C09A2 /* SwiftHUD in Frameworks */,
-				E2F97CD72F21C648009C09A2 /* SwiftHUD in Frameworks */,
-				E2F97CB52F219694009C09A2 /* SwiftHUD in Frameworks */,
+				E221D4652F31871500533AF9 /* MacHUD in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -74,9 +70,7 @@
 			);
 			name = Demo;
 			packageProductDependencies = (
-				E2F97CB42F219694009C09A2 /* SwiftHUD */,
-				E2F97CD62F21C648009C09A2 /* SwiftHUD */,
-				E2F97CE12F21C7B4009C09A2 /* SwiftHUD */,
+				E221D4642F31871500533AF9 /* MacHUD */,
 			);
 			productName = Demo;
 			productReference = E2F97C962F2194CE009C09A2 /* Demo.app */;
@@ -107,7 +101,7 @@
 			mainGroup = E2F97C8D2F2194CE009C09A2;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				E2F97CE02F21C7B4009C09A2 /* XCLocalSwiftPackageReference "../../swift-hud" */,
+				E221D4632F31871500533AF9 /* XCLocalSwiftPackageReference "../../MacHUD" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E2F97C972F2194CE009C09A2 /* Products */;
@@ -374,24 +368,16 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		E2F97CE02F21C7B4009C09A2 /* XCLocalSwiftPackageReference "../../swift-hud" */ = {
+		E221D4632F31871500533AF9 /* XCLocalSwiftPackageReference "../../MacHUD" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = "../../swift-hud";
+			relativePath = ../../MacHUD;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E2F97CB42F219694009C09A2 /* SwiftHUD */ = {
+		E221D4642F31871500533AF9 /* MacHUD */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = SwiftHUD;
-		};
-		E2F97CD62F21C648009C09A2 /* SwiftHUD */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SwiftHUD;
-		};
-		E2F97CE12F21C7B4009C09A2 /* SwiftHUD */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = SwiftHUD;
+			productName = MacHUD;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

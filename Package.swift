@@ -3,12 +3,12 @@
 import PackageDescription
 
 let package = Package(
-    name: "swift-hud",
+    name: "MacHUD",
     platforms: [.macOS(.v10_15)],
     products: [
         .library(
-            name: "SwiftHUD",
-            targets: ["SwiftHUD"]
+            name: "MacHUD",
+            targets: ["MacHUD"]
         )
     ],
     traits: [
@@ -20,7 +20,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "SwiftHUD",
+            name: "MacHUD",
             dependencies: [
                 .product(name: "SwiftExtensions", package: "swift-extensions")
             ],
