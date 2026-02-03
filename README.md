@@ -1,12 +1,44 @@
 # MacHUD
 
-A macOS HUD (heads-up-display) alert library written in Swift.
+[![Platforms | macOS 10.15+](https://img.shields.io/badge/platforms-macOS%2010.15+-blue.svg?style=flat)](https://developer.apple.com/swift) [![Xcode 16](https://img.shields.io/badge/Xcode-16-blue.svg?style=flat)](https://developer.apple.com/swift) [![License: MIT](http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat)](https://github.com/orchetect/MacHUD/blob/main/LICENSE)
 
-This package simulates macOS system HUD alerts.
+A heads-up-display (HUD) library written in Swift that simulates macOS system HUD alerts.
+
+## Overview
+
+Apple does not provide a public API to display system HUD alerts (such as those that appear when adjusting the system volume or screen brightness). However, in very specific cases it may be appropriate for an application to display an alert of this style.
+
+These type of on-screen alerts are useful for conveying sparse, concise status information that may not be appropriate for a Notification Center notification.
+
+These alerts are ephemerally displayed only for a few seconds as feedback in direct response to a user action (such as global keyboard shortcut or other input event) that changes a system or application setting. As such, these alerts should only be used sparsely and only for the most crucial status updates. Visual noise and other content including text should be kept to a bare minimum.
 
 > [!NOTE]
 >
-> Currently the style of HUD found in macOS 11 through 15 is emulated. The macOS 26 'notification' HUD style is not yet implemented but may be added in a future release.
+> Currently the style of HUD found in macOS 11 through 15 is emulated.
+>
+> As of macOS 26, Apple has moved these alerts from being presented in the lower center portion of a user's screen to being pseudo-notification overlays in the upper right corner of the screen. These macOS 26 'notification' style alerts are not yet implemented in this library but may be added in a future release.
+
+## Getting Started
+
+### Swift Package Manager (SPM)
+
+To add this package to an Xcode app project, use:
+
+ `https://github.com/orchetect/MacHUD` as the URL.
+
+1. To add this package to a Swift package, add the dependency to your package and target in Package.swift:
+
+   ```swift
+   .package(url: "https://github.com/orchetect/MacHUD", from: "0.4.1")
+   ```
+
+2. Import the library:
+
+   ```swift
+   import MacHUD
+   ```
+
+3. Try the [Demo](Demo) example project to see the library in action.
 
 ## Note
 
@@ -38,31 +70,25 @@ To enable HUD notifications showing over top of full-screen application windows 
      <integer>0</integer>
      ```
 
-## Usage
+## Author
 
-### Swift Package Manager (SPM)
+Coded by a bunch of 🐹 hamsters in a trenchcoat that calls itself [@orchetect](https://github.com/orchetect).
 
-To add this package to an Xcode app project, use:
+## License
 
- `https://github.com/orchetect/MacHUD` as the URL.
+Licensed under the MIT license. See [LICENSE](https://github.com/orchetect/MacHUD/blob/master/LICENSE) for details.
 
-To add this package to a Swift package, add the dependency to your package and target in Package.swift:
+## Sponsoring
 
-```swift
-let package = Package(
-    dependencies: [
-        .package(url: "https://github.com/orchetect/MacHUD", from: "0.3.0")
-    ],
-    targets: [
-        .target(
-            dependencies: [
-                "MacHUD"
-            ]
-        )
-    ]
-)
-```
+If you enjoy using MacControlCenterUI and want to contribute to open-source financially, GitHub sponsorship is much appreciated. Feedback and code contributions are also welcome.
 
-## Legacy
+## Community & Support
 
-This repository was formerly known as HUDKit, and OTHUD prior to that.
+Please do not email maintainers for technical support. Several options are available for issues and questions:
+
+- Questions and feature ideas can be posted to [Discussions](https://github.com/orchetect/MacHUD/discussions).
+- If an issue is a verifiable bug with reproducible steps it may be posted in [Issues](https://github.com/orchetect/MacHUD/issues).
+
+## Contributions
+
+Contributions are welcome. Posting in [Discussions](https://github.com/orchetect/MacHUD/discussions) first prior to new submitting PRs for features or modifications is encouraged.
