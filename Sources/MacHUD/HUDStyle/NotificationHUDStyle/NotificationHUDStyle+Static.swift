@@ -26,8 +26,8 @@ extension NotificationHUDStyle {
         // if #available(macOS 27.0, *) {
         //    .macOS27
         // } else {
-            .macOS26
-        //}
+        .macOS26
+        // }
     }
     
     /// Prominent HUD style matching macOS 10.15 system HUD appearance and behavior.

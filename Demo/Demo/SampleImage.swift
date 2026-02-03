@@ -14,7 +14,9 @@ enum SampleImage: String {
 extension SampleImage: CaseIterable { }
 
 extension SampleImage: Identifiable {
-    var id: String { rawValue }
+    var id: String {
+        rawValue
+    }
 }
 
 extension SampleImage: Sendable { }

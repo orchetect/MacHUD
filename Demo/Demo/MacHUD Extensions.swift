@@ -10,7 +10,9 @@ import MacHUD
 // MARK: - ProminentHUDStyle Position
 
 extension ProminentHUDStyle.Position: @retroactive Identifiable {
-    public var id: Self { self }
+    public var id: Self {
+        self
+    }
 }
 
 extension ProminentHUDStyle.Position {
@@ -29,7 +31,9 @@ extension ProminentHUDStyle.Position {
 // MARK: - ProminentHUDStyle Size
 
 extension ProminentHUDStyle.Size: @retroactive Identifiable {
-    public var id: Self { self }
+    public var id: Self {
+        self
+    }
 }
 
 extension ProminentHUDStyle.Size {
@@ -50,7 +54,9 @@ extension ProminentHUDStyle.Size {
 // MARK: - ProminentHUDStyle Tint
 
 extension ProminentHUDStyle.Tint: @retroactive Identifiable {
-    public var id: Self { self }
+    public var id: Self {
+        self
+    }
 }
 
 extension ProminentHUDStyle.Tint {
@@ -71,7 +77,9 @@ extension ProminentHUDStyle.Tint {
 // MARK: - Transition
 
 extension HUDTransition: @retroactive Identifiable {
-    public var id: Self { self }
+    public var id: Self {
+        self
+    }
 }
 
 extension HUDTransition {

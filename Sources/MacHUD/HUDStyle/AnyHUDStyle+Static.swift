@@ -12,9 +12,9 @@ extension AnyHUDStyle {
     /// HUD style appropriate for the current platform version.
     public static func currentPlatform() -> Self {
         if #available(macOS 26.0, *) {
-            return AnyHUDStyle(.notification())
+            AnyHUDStyle(.notification())
         } else {
-            return AnyHUDStyle(.prominent())
+            AnyHUDStyle(.prominent())
         }
     }
 }

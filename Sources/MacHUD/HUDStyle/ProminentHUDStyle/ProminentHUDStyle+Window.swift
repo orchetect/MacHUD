@@ -10,12 +10,14 @@ import Foundation
 import SwiftUI
 
 extension ProminentHUDStyle {
-    @MainActor public func setupWindow(context: HUDWindowContext) {
+    @MainActor
+    public func setupWindow(context: HUDWindowContext) {
         context.setCornerRadius(radius: 20)
         context.applyVisualEffect()
     }
     
-    @MainActor public func updateWindow(context: HUDWindowContext) {
+    @MainActor
+    public func updateWindow(context: HUDWindowContext) {
         guard let contentView = context.window.contentView else { return }
         
         // apply style
@@ -82,13 +84,12 @@ extension ProminentHUDStyle {
         case .top: (effectiveScreenSize.height - contentViewSize.height - Self.topOrBottomScreenOffset)
         }
         
-        let windowFrame = NSMakeRect(
+        return NSMakeRect(
             (effectiveScreenSize.width - contentViewSize.width) * 0.5,
             y,
             contentViewSize.width,
             contentViewSize.height
         )
-        return windowFrame
     }
 }
 

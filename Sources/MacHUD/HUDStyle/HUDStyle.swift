@@ -32,7 +32,8 @@ public protocol HUDStyle: Equatable, Hashable, Sendable, SendableMetatype where 
     ///
     /// This method is not called every time an alert is displayed. Instead, it is only called when
     /// a new window is needed. Windows are cached and preserved for reuse with subsequent alerts.
-    @MainActor func setupWindow(context: HUDWindowContext)
+    @MainActor
+    func setupWindow(context: HUDWindowContext)
     
     /// This method is called when the alert window is first created after calling ``setupWindow(context:)``,
     /// and then also every time an alert is displayed.
@@ -42,17 +43,20 @@ public protocol HUDStyle: Equatable, Hashable, Sendable, SendableMetatype where 
     ///
     /// For general window modifications that are only required for the HUD style, these can be performed
     /// by implementing the ``setupWindow(window:contentView:)`` method.
-    @MainActor func updateWindow(context: HUDWindowContext)
+    @MainActor
+    func updateWindow(context: HUDWindowContext)
 }
 
 // MARK: - Default Implementation
 
 extension HUDStyle {
-    @MainActor public func setupWindow(context: HUDWindowContext) {
+    @MainActor
+    public func setupWindow(context: HUDWindowContext) {
         // empty default implementation
     }
     
-    @MainActor public func updateWindow(context: HUDWindowContext) {
+    @MainActor
+    public func updateWindow(context: HUDWindowContext) {
         // empty default implementation
     }
 }

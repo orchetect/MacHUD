@@ -21,11 +21,11 @@ extension ProminentHUDStyle {
     /// HUD style appropriate for the current platform version.
     public static func `default`() -> Self {
         if #available(macOS 11.0, *) {
-            return macOS11Thru15
+            macOS11Thru15
         } else if #available(macOS 10.15, *) {
-            return macOS10_15
+            macOS10_15
         } else {
-            return macOS10_15
+            macOS10_15
         }
     }
     
