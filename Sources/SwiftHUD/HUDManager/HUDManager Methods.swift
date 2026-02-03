@@ -27,7 +27,7 @@ extension HUDManager {
         }
     }
     
-    /// Display a HUD alert on the screen asynchronously.
+    /// Display a HUD alert on the screen asynchronously and returns without waiting for the alert to dismiss.
     public nonisolated func displayAlert(
         _ content: AlertContent,
         style: HUDStyle = .currentPlatform
@@ -38,7 +38,7 @@ extension HUDManager {
     }
     
     /// Display a HUD alert on the screen and wait until the alert is fully dismissed before returning.
-    public nonisolated func displayAlert(
+    public nonisolated func displayAlertAndWaitUntilDismissed(
         _ content: AlertContent,
         style: HUDStyle = .currentPlatform
     ) async {
