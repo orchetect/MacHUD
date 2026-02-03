@@ -11,8 +11,7 @@ import Foundation
 extension HUDManager {
     /// Pre-warms the HUD manager by populating the internal alert window pool with a few HUD alert windows. (Optional)
     ///
-    /// This will reduce the amount of time required before the application's first alert window shows the first time
-    /// an alert is requested to be shown.
+    /// This will reduce the amount of preparation time required before the first alert shows.
     ///
     /// Typically this called at application launch.
     public func warm() async {
