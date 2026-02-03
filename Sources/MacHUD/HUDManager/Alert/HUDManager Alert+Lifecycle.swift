@@ -53,19 +53,18 @@ extension HUDManager.Alert {
             throw HUDError.internalInconsistency("Missing HUD alert window.")
         }
         
-        let fadeTime: TimeInterval
-        switch transition {
-        case .none:
+        guard let transition else {
             // immediately hide window
             await _orderOutWindowAndZeroOutAlpha()
             await _resetInUse()
             return
-            
+        }
+        
+        let fadeTime: TimeInterval = switch transition {
         case .default:
-            fadeTime = 0.2
-            
+            0.2
         case let .fade(duration: customFadeTime):
-            fadeTime = customFadeTime.clamped(to: 0.01 ... 5.0)
+            customFadeTime.clamped(to: 0.01 ... 5.0)
         }
         
         _ = await Task { @MainActor in
