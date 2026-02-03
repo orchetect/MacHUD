@@ -70,6 +70,12 @@ To enable HUD notifications showing over top of full-screen application windows 
      <integer>0</integer>
      ```
 
+## Customization
+
+The included HUD alert styles have a fair degree of customizability as-is. However, it is possible to define custom alert window styles easily by conforming a struct to the `HUDStyle` protocol.
+
+See the included `ProminentHUDStyle` and `NotificationHUDStyle` HUD styles for examples on how to implement a custom HUD style.
+
 ## Author
 
 Coded by a bunch of 🐹 hamsters in a trenchcoat that calls itself [@orchetect](https://github.com/orchetect).
