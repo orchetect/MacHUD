@@ -21,6 +21,8 @@ func isAVisibleAppInFullScreenMode() -> Bool {
         return false
     }
     
+    var dockCount = 0
+    
     for case let windowInfo as NSDictionary in (windowsInfo as NSArray)
     where windowInfo[kCGWindowOwnerName] as? String == "Dock"
     {
@@ -28,7 +30,10 @@ func isAVisibleAppInFullScreenMode() -> Bool {
         if let layerValue = windowLayer as? Int64,
            layerValue < 0
         {
-            return true
+            dockCount += 1
+            if dockCount > 1 {
+                return true
+            }
         }
     }
     
