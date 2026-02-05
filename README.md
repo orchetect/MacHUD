@@ -12,12 +12,6 @@ These type of on-screen alerts are useful for conveying sparse, concise status i
 
 These alerts are ephemerally displayed only for a few seconds as feedback in direct response to a user action (such as global keyboard shortcut or other input event) that changes a system or application setting. As such, these alerts should only be used sparsely and only for the most crucial status updates. Visual noise and other content including text should be kept to a bare minimum.
 
-> [!NOTE]
->
-> Currently the style of HUD found in macOS 11 through 15 is emulated.
->
-> As of macOS 26, Apple has moved these alerts from being presented in the lower center portion of a user's screen to being pseudo-notification overlays in the upper right corner of the screen. These macOS 26 'notification' style alerts are not yet implemented in this library but may be added in a future release.
-
 ## Getting Started
 
 ### Swift Package Manager (SPM)
@@ -42,7 +36,7 @@ To add this package to an Xcode app project, use:
 
 ## Note
 
-To enable HUD notifications showing over top of full-screen application windows participating in Spaces, **one of two known methods** will work:
+To enable HUD alerts showing over top of full-screen application windows participating in Spaces, **one of two known methods** will work:
 
 1. Activation Policy API
 
@@ -74,7 +68,7 @@ To enable HUD notifications showing over top of full-screen application windows 
 
 The included HUD alert styles have a fair degree of customizability as-is. However, it is possible to define custom alert window styles easily by conforming a struct to the `HUDStyle` protocol.
 
-See the included `ProminentHUDStyle` and `NotificationHUDStyle` HUD styles for examples on how to implement a custom HUD style.
+See the included `ProminentHUDStyle` and `MenuPopoverHUDStyle` HUD styles for examples on how to implement a custom HUD style.
 
 ## Author
 
