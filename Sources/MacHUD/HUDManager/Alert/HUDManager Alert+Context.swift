@@ -25,7 +25,14 @@ extension HUDManager.Alert {
         reusableView: NSHostingView<HUDManager.AlertBaseContentView>
     ) throws -> HUDWindowContext {
         let screen = try NSScreen.alertScreen
-        return HUDWindowContext(window: window, reusableView: reusableView, screen: screen)
+        
+        // since we don't have SwiftUI environment, we have to get system color scheme manually
+        return HUDWindowContext(
+            colorScheme: systemColorScheme(),
+            window: window,
+            reusableView: reusableView,
+            screen: screen
+        )
     }
 }
 

@@ -23,7 +23,7 @@ extension ProminentHUDStyle {
         // apply style
         if isBordered {
             contentView.layer?.borderWidth = borderWidth
-            contentView.layer?.borderColor = borderColor
+            contentView.layer?.borderColor = borderColor(colorScheme: context.colorScheme)
         } else {
             contentView.layer?.borderWidth = 0.0
         }
@@ -34,13 +34,6 @@ extension ProminentHUDStyle {
             effectiveScreenSize: context.effectiveAlertScreenRect.size
         )
         context.window.setFrame(displayBounds, display: true)
-        
-        // update NSVisualEffectView
-        if let visualEffectView = context.visualEffectView {
-            visualEffectView.material = visualEffectViewMaterial
-        } else {
-            assertionFailure("Can't find HUD alert window's visual effect view while attempting to update window.")
-        }
     }
 }
 
@@ -54,34 +47,28 @@ extension ProminentHUDStyle {
         }
     }
     
-    var borderColor: CGColor {
-        switch tint {
-        case .light, .mediumLight:
-            NSColor(red: 0.15, green: 0.16, blue: 0.17, alpha: 1.00)
+    func borderColor(colorScheme: ColorScheme) -> CGColor {
+        switch colorScheme {
+        case .light:
+            return NSColor(red: 0.15, green: 0.16, blue: 0.17, alpha: 1.00)
                 .cgColor
             
-        case .dark, .ultraDark:
-            NSColor.white
+        case .dark:
+            return NSColor.white
                 .cgColor
+        @unknown default:
+            assertionFailure("Unhandled color scheme: \(colorScheme).")
+            return borderColor(colorScheme: .light)
         }
     }
     
-    var visualEffectViewMaterial: NSVisualEffectView.Material {
-        switch tint {
-        case .light: .light
-        case .mediumLight: .mediumLight
-        case .dark: .dark
-        case .ultraDark: .ultraDark
-        }
-    }
-    
-    static let topOrBottomScreenOffset: CGFloat = 140.0
+    static let topOrBottomScreenEdgeOffset: CGFloat = 140.0
     
     func windowFrame(contentViewSize: CGSize, effectiveScreenSize: CGSize) -> NSRect {
         let y: CGFloat = switch position {
-        case .bottom: Self.topOrBottomScreenOffset
+        case .bottom: Self.topOrBottomScreenEdgeOffset
         case .center: (effectiveScreenSize.height - contentViewSize.height) * 0.5
-        case .top: (effectiveScreenSize.height - contentViewSize.height - Self.topOrBottomScreenOffset)
+        case .top: (effectiveScreenSize.height - contentViewSize.height - Self.topOrBottomScreenEdgeOffset)
         }
         
         return NSMakeRect(

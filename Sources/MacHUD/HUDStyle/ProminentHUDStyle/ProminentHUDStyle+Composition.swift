@@ -25,13 +25,6 @@ extension ProminentHUDStyle {
         return copy
     }
     
-    /// Returns the style updating the ``tint`` property value.
-    public func tint(_ value: Tint) -> Self {
-        var copy = self
-        copy.tint = value
-        return copy
-    }
-    
     /// Returns the style updating the ``isBordered`` property value.
     public func isBordered(_ value: Bool) -> Self {
         var copy = self

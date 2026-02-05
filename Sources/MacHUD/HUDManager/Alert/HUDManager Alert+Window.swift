@@ -29,10 +29,13 @@ extension HUDManager.Alert {
         }
         
         let reusableView = NSHostingView(rootView: HUDManager.AlertBaseContentView())
+        contentView.autoresizesSubviews = false
         contentView.addSubview(reusableView)
         
         // set up UI
         
+        window.titleVisibility = .hidden
+        window.titlebarAppearsTransparent = true
         window.level = .screenSaver
         window.hidesOnDeactivate = false
         window.ignoresMouseEvents = true
@@ -46,43 +49,8 @@ extension HUDManager.Alert {
         }
         
         // newContentView.sizingOptions = [.intrinsicContentSize] // macOS 13+ only
-        reusableView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addConstraint(.init(
-            item: reusableView as Any,
-            attribute: .centerY,
-            relatedBy: .equal,
-            toItem: contentView,
-            attribute: .centerY,
-            multiplier: 1,
-            constant: 0
-        ))
-        contentView.addConstraint(.init(
-            item: reusableView as Any,
-            attribute: .centerX,
-            relatedBy: .equal,
-            toItem: contentView,
-            attribute: .centerX,
-            multiplier: 1,
-            constant: 0
-        ))
-        contentView.addConstraint(.init(
-            item: reusableView as Any,
-            attribute: .width,
-            relatedBy: .equal,
-            toItem: reusableView,
-            attribute: .width,
-            multiplier: 1,
-            constant: 0
-        ))
-        contentView.addConstraint(.init(
-            item: reusableView as Any,
-            attribute: .height,
-            relatedBy: .equal,
-            toItem: reusableView,
-            attribute: .height,
-            multiplier: 1,
-            constant: 0
-        ))
+        // reusableView.frame = contentView.bounds
+        reusableView.addFrameConstraints(toParent: contentView)
         
         // style formatting
         let context = try context(window: window, reusableView: reusableView)

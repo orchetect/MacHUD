@@ -34,6 +34,7 @@ extension HUDManager {
         
         public var body: some View {
             AnyView(style.base.createView(content: content))
+                .fixedSize()
                 .allowsHitTesting(false)
         }
     }

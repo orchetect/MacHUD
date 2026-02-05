@@ -16,9 +16,6 @@ public struct ProminentHUDStyle: HUDStyle {
     /// HUD size.
     public var size: Size
     
-    /// Background visual shading of the HUD alert.
-    public var tint: Tint
-    
     /// Boolean determining whether the HUD alert will have a visual border.
     public var isBordered: Bool
     
@@ -35,7 +32,6 @@ public struct ProminentHUDStyle: HUDStyle {
     public init(
         position: Position,
         size: Size,
-        tint: Tint,
         isBordered: Bool,
         transitionIn: HUDTransition,
         duration: TimeInterval,
@@ -43,7 +39,6 @@ public struct ProminentHUDStyle: HUDStyle {
     ) {
         self.position = position
         self.size = size
-        self.tint = tint
         self.isBordered = isBordered
         self.transitionIn = transitionIn
         self.duration = duration
@@ -55,7 +50,6 @@ public struct ProminentHUDStyle: HUDStyle {
     public init(
         position: Position? = nil,
         size: Size? = nil,
-        tint: Tint? = nil,
         isBordered: Bool? = nil,
         transitionIn: HUDTransition? = nil,
         duration: TimeInterval? = nil,
@@ -63,7 +57,6 @@ public struct ProminentHUDStyle: HUDStyle {
     ) {
         self.position = position ?? Self.default().position
         self.size = size ?? Self.default().size
-        self.tint = tint ?? Self.default().tint
         self.isBordered = isBordered ?? Self.default().isBordered
         self.transitionIn = transitionIn ?? Self.default().transitionIn
         self.duration = duration ?? Self.default().duration

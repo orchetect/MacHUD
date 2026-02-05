@@ -11,6 +11,8 @@ import SwiftUI
 
 extension ProminentHUDStyle {
     public struct ContentView: View, HUDView {
+        @Environment(\.colorScheme) private var colorScheme
+        
         let text: String?
         let imageSource: HUDAlertContent.ImageSource?
         let style: ProminentHUDStyle
@@ -178,9 +180,14 @@ extension ProminentHUDStyle.ContentView {
     private var imageColor: Color {
         // .primary.opacity(0.8)
         
-        switch style.tint {
-        case .light, .mediumLight: Color(#colorLiteral(red: 0.08749181937, green: 0.08749181937, blue: 0.08749181937, alpha: 1))
-        case .dark, .ultraDark: Color(#colorLiteral(red: 0.7602152824, green: 0.7601925135, blue: 0.7602053881, alpha: 1))
+        switch colorScheme {
+        case .light:
+            return Color(#colorLiteral(red: 0.08749181937, green: 0.08749181937, blue: 0.08749181937, alpha: 1))
+        case .dark:
+            return Color(#colorLiteral(red: 0.7602152824, green: 0.7601925135, blue: 0.7602053881, alpha: 1))
+        @unknown default:
+            assertionFailure("Unhandled color scheme: \(colorScheme).")
+            return Color(#colorLiteral(red: 0.08749181937, green: 0.08749181937, blue: 0.08749181937, alpha: 1))
         }
     }
 }
