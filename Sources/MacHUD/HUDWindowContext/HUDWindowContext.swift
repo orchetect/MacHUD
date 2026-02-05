@@ -26,7 +26,7 @@ public class HUDWindowContext {
     public let screen: NSScreen
     
     /// This property will be `true` if the user has entered full screen mode in an application on the main screen.
-    public let isAppFullScreen: Bool
+    public let isFullScreenMode: Bool
     
     init(
         colorScheme: ColorScheme,
@@ -38,7 +38,7 @@ public class HUDWindowContext {
         self.window = window
         self.reusableView = reusableView
         self.screen = screen
-        isAppFullScreen = isAVisibleAppInFullScreenMode()
+        isFullScreenMode = isAVisibleAppInFullScreenMode()
     }
 }
 

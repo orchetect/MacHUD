@@ -29,32 +29,34 @@ extension NotificationHUDStyle {
         
         let displayBounds = windowFrame(
             contentViewSize: contentView.frame.size,
-            effectiveScreenSize: context.effectiveAlertScreenRect.size,
-            isFullScreen: context.isAppFullScreen
+            effectiveScreenRect: context.effectiveAlertScreenRect,
+            isFullScreen: context.isFullScreenMode
         )
         context.window.setFrame(displayBounds, display: true)
     }
     
     // These values are current as of macOS 26
-    static let screenEdgeTopOffset: CGFloat = 15.0
-    static let screenEdgeSideOffset: CGFloat = 100.0
+    static let screenEdgeTopOffset: CGFloat = 10.0
+    static let screenEdgeSideOffset: CGFloat = 50.0
     
     func windowFrame(
         contentViewSize: CGSize,
-        effectiveScreenSize: CGSize,
+        effectiveScreenRect: CGRect,
         isFullScreen: Bool
     ) -> NSRect {
+        let screenSize = effectiveScreenRect.size
+        
         let x: CGFloat = if isFullScreen {
             // top center of screen
-            (effectiveScreenSize.width - contentViewSize.width) * 0.5
+            (screenSize.width - contentViewSize.width) * 0.5
         } else {
             // top right corner of screen
-            (effectiveScreenSize.width - contentViewSize.width - Self.screenEdgeSideOffset)
+            (screenSize.width - contentViewSize.width - Self.screenEdgeSideOffset)
         }
         
         return NSMakeRect(
-            x,
-            effectiveScreenSize.height - Self.screenEdgeTopOffset,
+            effectiveScreenRect.origin.x + x,
+            effectiveScreenRect.origin.y + screenSize.height - contentViewSize.height - Self.screenEdgeTopOffset,
             contentViewSize.width,
             contentViewSize.height
         )
