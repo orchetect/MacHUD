@@ -57,15 +57,13 @@ extension HUDWindowContext {
 extension HUDWindowContext {
     @available(macOS 26.0, *)
     struct GlassView: View {
+        let cornerRadius: CGFloat
+        
         var body: some View {
-            ZStack {
-                Color.clear
-                
-                RoundedRectangle(cornerSize: CGSize(width: 30, height: 30), style: .continuous)
-                    .fill(.clear)
-                    // .fill(.white.opacity(0.05))
-                    .glassEffect(.clear, in: .rect(cornerRadius: 30, style: .continuous))
-            }
+            RoundedRectangle(cornerSize: CGSize(width: cornerRadius, height: cornerRadius), style: .continuous)
+                .fill(.clear)
+                .glassEffect(.clear, in: .rect(cornerRadius: cornerRadius, style: .continuous))
+                .background(.white.opacity(0.05))
         }
     }
     
@@ -77,7 +75,7 @@ extension HUDWindowContext {
         window.isOpaque = false
         window.backgroundColor = .clear
         
-        let newEffectView = NSHostingView(rootView: GlassView())
+        let newEffectView = NSHostingView(rootView: GlassView(cornerRadius: cornerRadius))
         contentView.addSubview(newEffectView, positioned: .below, relativeTo: contentView)
         newEffectView.addFrameConstraints(toParent: contentView)
     }

@@ -15,12 +15,14 @@ extension NotificationHUDStyle {
         [.fullSizeContentView]
     }
     
+    static let cornerRadius: CGFloat = 25.0
+    
     @MainActor
     public func setupWindow(context: HUDWindowContext) {
         // context.window.hasShadow = false // this also disables window border 🙁
-        context.setCornerRadius(radius: 30)
-        context.applyLiquidGlassEffect(cornerRadius: 30)
-        // context.applyVisualEffect()
+        
+        context.setCornerRadius(radius: Self.cornerRadius)
+        context.applyLiquidGlassEffect(cornerRadius: Self.cornerRadius)
     }
     
     @MainActor
@@ -41,8 +43,8 @@ extension NotificationHUDStyle {
     }
     
     // These values are current as of macOS 26
-    static let screenEdgeTopOffset: CGFloat = 10.0
-    static let screenEdgeSideOffset: CGFloat = 50.0
+    static let size: CGSize = CGSize(width: 292, height: 64)
+    static let screenEdgeOffset: CGFloat = 10.0
     
     func windowFrame(
         contentViewSize: CGSize,
@@ -56,12 +58,12 @@ extension NotificationHUDStyle {
             (screenSize.width - contentViewSize.width) * 0.5
         } else {
             // top right corner of screen
-            (screenSize.width - contentViewSize.width - Self.screenEdgeSideOffset)
+            (screenSize.width - contentViewSize.width - Self.screenEdgeOffset)
         }
         
         return NSMakeRect(
             effectiveScreenRect.origin.x + x,
-            effectiveScreenRect.origin.y + screenSize.height - contentViewSize.height - Self.screenEdgeTopOffset,
+            effectiveScreenRect.origin.y + screenSize.height - contentViewSize.height - Self.screenEdgeOffset,
             contentViewSize.width,
             contentViewSize.height
         )
