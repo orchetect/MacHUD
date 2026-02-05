@@ -17,9 +17,10 @@ extension HUDManager.Alert {
         window: NSWindow,
         reusableView: NSHostingView<HUDManager.AlertBaseContentView>
     ) {
+        // Note: style mask `.hudWindow` only applies to NSPanel, not NSWindow
         let window = NSWindow(
             contentRect: NSMakeRect(0, 0, 200, 200),
-            styleMask: [.borderless],
+            styleMask: style.base.windowStyleMask(),
             backing: .buffered,
             defer: true
         )
@@ -41,6 +42,7 @@ extension HUDManager.Alert {
         window.ignoresMouseEvents = true
         window.isExcludedFromWindowsMenu = true
         window.allowsToolTipsWhenApplicationIsInactive = false
+        window.isMovableByWindowBackground = false
         window.collectionBehavior = [
             .ignoresCycle, .stationary, .canJoinAllSpaces, .fullScreenAuxiliary, .transient
         ]

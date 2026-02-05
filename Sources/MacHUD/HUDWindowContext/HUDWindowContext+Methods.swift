@@ -20,6 +20,7 @@ extension HUDWindowContext {
         assert(window.contentView?.layer != nil)
         window.contentView?.layer?.cornerRadius = radius
         window.contentView?.layer?.masksToBounds = true
+        window.contentView?.layer?.allowsEdgeAntialiasing = true
     }
 }
 
@@ -29,7 +30,7 @@ extension HUDWindowContext {
         guard visualEffectView == nil else { return } // don't apply more than once
         guard let contentView = window.contentView else { return }
         
-        window.isOpaque = false // TODO: ?
+        window.isOpaque = false
         window.backgroundColor = .clear
         
         let newEffectView = NSVisualEffectView()
@@ -38,7 +39,7 @@ extension HUDWindowContext {
         
         newEffectView.state = .active
         newEffectView.blendingMode = .behindWindow
-        newEffectView.material = .hudWindow
+        newEffectView.material = .hudWindow // .hudWindow
     }
     
     /// If ``applyVisualEffect()`` was called to apply an effect to the window, this property will return
@@ -54,22 +55,31 @@ extension HUDWindowContext {
 }
 
 extension HUDWindowContext {
+    @available(macOS 26.0, *)
+    struct GlassView: View {
+        var body: some View {
+            ZStack {
+                Color.clear
+                
+                RoundedRectangle(cornerSize: CGSize(width: 30, height: 30), style: .continuous)
+                    .fill(.clear)
+                    // .fill(.white.opacity(0.05))
+                    .glassEffect(.clear, in: .rect(cornerRadius: 30, style: .continuous))
+            }
+        }
+    }
+    
     /// Applies liquid glass visual effect to the window.
     @available(macOS 26.0, *)
     public func applyLiquidGlassEffect(cornerRadius: CGFloat) {
         guard let contentView = window.contentView else { return }
         
-        // window.isOpaque = false // TODO: ?
-        // window.backgroundColor = .clear
+        window.isOpaque = false
+        window.backgroundColor = .clear
         
-        let newEffectView = NSGlassEffectView()
-        contentView.addSubview(newEffectView, positioned: .above, relativeTo: contentView)
-        newEffectView.frame = contentView.bounds
+        let newEffectView = NSHostingView(rootView: GlassView())
+        contentView.addSubview(newEffectView, positioned: .below, relativeTo: contentView)
         newEffectView.addFrameConstraints(toParent: contentView)
-        
-        newEffectView.cornerRadius = cornerRadius
-        newEffectView.style = .clear
-        newEffectView.tintColor = .gray
     }
     
     /// If ``applyLiquidGlassEffect(cornerRadius:)`` was called to apply an effect to the window, this

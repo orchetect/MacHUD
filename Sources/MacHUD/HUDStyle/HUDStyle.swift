@@ -28,6 +28,13 @@ public protocol HUDStyle: Equatable, Hashable, Sendable, SendableMetatype where 
     /// The view displayed in the HUD alert.
     associatedtype ContentView: HUDView
     
+    /// Optionally override the window's style mask.
+    ///
+    /// This style mask is passed into the window's initializer. This is useful since certain elements
+    /// have different effects when a window is first initialized with them versus setting the mask after
+    /// window creation.
+    func windowStyleMask() -> NSWindow.StyleMask
+    
     /// Initial setup when the alert window is first created.
     ///
     /// This method is not called every time an alert is displayed. Instead, it is only called when
@@ -50,6 +57,10 @@ public protocol HUDStyle: Equatable, Hashable, Sendable, SendableMetatype where 
 // MARK: - Default Implementation
 
 extension HUDStyle {
+    public func windowStyleMask() -> NSWindow.StyleMask {
+        [.borderless]
+    }
+    
     @MainActor
     public func setupWindow(context: HUDWindowContext) {
         // empty default implementation

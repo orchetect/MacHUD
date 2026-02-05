@@ -11,11 +11,16 @@ import SwiftUI
 
 @available(macOS 26.0, *)
 extension NotificationHUDStyle {
+    public func windowStyleMask() -> NSWindow.StyleMask {
+        [.fullSizeContentView]
+    }
+    
     @MainActor
     public func setupWindow(context: HUDWindowContext) {
-        context.setCornerRadius(radius: 20)
-//        context.applyLiquidGlassEffect(cornerRadius: 20)
-        // context.window.alphaValue = 0.8
+        // context.window.hasShadow = false // this also disables window border 🙁
+        context.setCornerRadius(radius: 30)
+        context.applyLiquidGlassEffect(cornerRadius: 30)
+        // context.applyVisualEffect()
     }
     
     @MainActor

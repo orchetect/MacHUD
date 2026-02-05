@@ -10,8 +10,13 @@ import Foundation
 import SwiftUI
 
 extension ProminentHUDStyle {
+    public func windowStyleMask() -> NSWindow.StyleMask {
+        [.borderless]
+    }
+    
     @MainActor
     public func setupWindow(context: HUDWindowContext) {
+        context.window.hasShadow = false
         context.setCornerRadius(radius: 20)
         context.applyVisualEffect()
     }

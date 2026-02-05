@@ -9,6 +9,10 @@
 // MARK: - Helpers
 
 extension AnyHUDStyle {
+    var concreteType: any HUDStyle.Type {
+        type(of: base)
+    }
+    
     /// Returns all available HUD style concrete types.
     static func hudStyleTypes(customHUDStyles: [any HUDStyle.Type] = []) -> [any HUDStyle.Type] {
         // internal style types
