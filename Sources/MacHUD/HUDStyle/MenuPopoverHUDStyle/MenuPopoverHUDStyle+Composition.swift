@@ -1,5 +1,5 @@
 //
-//  NotificationHUDStyle+Composition.swift
+//  MenuPopoverHUDStyle+Composition.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
 //  © 2018-2026 Steffan Andrews • Licensed under MIT License
 //
@@ -11,7 +11,7 @@ import Foundation
 // MARK: - Composable/Chainable Methods
 
 @available(macOS 26.0, *)
-extension NotificationHUDStyle {
+extension MenuPopoverHUDStyle {
     /// Returns the style updating the ``transitionIn`` property value.
     public func transitionIn(_ value: HUDTransition) -> Self {
         var copy = self

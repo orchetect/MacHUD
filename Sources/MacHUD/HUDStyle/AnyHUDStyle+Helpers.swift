@@ -19,7 +19,7 @@ extension AnyHUDStyle {
         var hudStyles: [any HUDStyle.Type] = []
         hudStyles.append(ProminentHUDStyle.self)
         if #available(macOS 26.0, *) {
-            hudStyles.append(NotificationHUDStyle.self)
+            hudStyles.append(MenuPopoverHUDStyle.self)
         }
         
         // custom style types

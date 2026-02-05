@@ -1,5 +1,5 @@
 //
-//  NotificationHUDStyle.swift
+//  MenuPopoverHUDStyle.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
 //  © 2018-2026 Steffan Andrews • Licensed under MIT License
 //
@@ -8,9 +8,12 @@
 
 import Foundation
 
-/// Notification HUD style (macOS 26+).
+/// Menu popover HUD style (macOS 26+).
+///
+/// These alerts present as popovers below a menubar extra.
+/// While in full screen mode, these alerts are centered at the top of the screen instead.
 @available(macOS 26.0, *)
-public struct NotificationHUDStyle: HUDStyle {
+public struct MenuPopoverHUDStyle: HUDStyle {
     /// Fade-out behavior when the alert is dismissed from the screen.
     public var transitionIn: HUDTransition
     
@@ -45,12 +48,12 @@ public struct NotificationHUDStyle: HUDStyle {
 }
 
 @available(macOS 26.0, *)
-extension NotificationHUDStyle: Equatable { }
+extension MenuPopoverHUDStyle: Equatable { }
 
 @available(macOS 26.0, *)
-extension NotificationHUDStyle: Hashable { }
+extension MenuPopoverHUDStyle: Hashable { }
 
 @available(macOS 26.0, *)
-extension NotificationHUDStyle: Sendable { }
+extension MenuPopoverHUDStyle: Sendable { }
 
 #endif

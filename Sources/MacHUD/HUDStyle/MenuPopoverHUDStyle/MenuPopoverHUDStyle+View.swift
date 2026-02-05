@@ -1,5 +1,5 @@
 //
-//  NotificationHUDStyle+View.swift
+//  MenuPopoverHUDStyle+View.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
 //  © 2018-2026 Steffan Andrews • Licensed under MIT License
 //
@@ -10,12 +10,12 @@ import Foundation
 import SwiftUI
 
 @available(macOS 26.0, *)
-extension NotificationHUDStyle {
+extension MenuPopoverHUDStyle {
     public struct ContentView: View, HUDView {
         let content: HUDAlertContent
-        let style: NotificationHUDStyle
+        let style: MenuPopoverHUDStyle
         
-        public init(content: HUDAlertContent, style: NotificationHUDStyle) {
+        public init(content: HUDAlertContent, style: MenuPopoverHUDStyle) {
             self.content = content
             self.style = style
         }
@@ -59,7 +59,7 @@ extension NotificationHUDStyle {
             }
             .padding([.top, .bottom], 12)
             .padding([.leading, .trailing], 15)
-            .frame(width: NotificationHUDStyle.size.width /* , height: NotificationHUDStyle.size.height */)
+            .frame(width: MenuPopoverHUDStyle.size.width /* , height: MenuPopoverHUDStyle.size.height */)
         }
         
         private var text: String? {
@@ -173,8 +173,8 @@ private struct MockHUDView<Content: View>: View {
     
     var body: some View {
         ZStack {
-            HUDWindowContext.GlassView(cornerRadius: NotificationHUDStyle.cornerRadius)
-                .frame(width: NotificationHUDStyle.size.width)
+            HUDWindowContext.GlassView(cornerRadius: MenuPopoverHUDStyle.cornerRadius)
+                .frame(width: MenuPopoverHUDStyle.size.width)
             
             content()
         }
@@ -186,14 +186,14 @@ private struct MockHUDView<Content: View>: View {
 #Preview("Example") {
     VStack(spacing: 20) {
         MockHUDView {
-            NotificationHUDStyle.ContentView(
+            MenuPopoverHUDStyle.ContentView(
                 content: .text("MacBook Pro Speakers"),
                 style: .default()
             )
         }
         
         MockHUDView {
-            NotificationHUDStyle.ContentView(
+            MenuPopoverHUDStyle.ContentView(
                 content: .image(.systemName("square.fill")),
                 style: .default()
             )

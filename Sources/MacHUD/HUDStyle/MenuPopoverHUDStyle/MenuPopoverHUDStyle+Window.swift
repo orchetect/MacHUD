@@ -1,5 +1,5 @@
 //
-//  NotificationHUDStyle+Window.swift
+//  MenuPopoverHUDStyle+Window.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
 //  © 2018-2026 Steffan Andrews • Licensed under MIT License
 //
@@ -10,7 +10,7 @@ import Foundation
 import SwiftUI
 
 @available(macOS 26.0, *)
-extension NotificationHUDStyle {
+extension MenuPopoverHUDStyle {
     public func windowStyleMask() -> NSWindow.StyleMask {
         [.fullSizeContentView]
     }
