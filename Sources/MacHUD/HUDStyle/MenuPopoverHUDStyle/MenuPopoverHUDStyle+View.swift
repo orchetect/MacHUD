@@ -12,10 +12,11 @@ import SwiftUI
 @available(macOS 26.0, *)
 extension MenuPopoverHUDStyle {
     public struct ContentView: View, HUDView {
-        let content: HUDAlertContent
-        let style: MenuPopoverHUDStyle
+        public typealias Style = MenuPopoverHUDStyle
+        let style: Style
+        let content: Style.AlertContent
         
-        public init(content: HUDAlertContent, style: MenuPopoverHUDStyle) {
+        public init(style: Style, content: Style.AlertContent) {
             self.content = content
             self.style = style
         }
@@ -37,6 +38,10 @@ extension MenuPopoverHUDStyle {
                         .resizable()
                         .scaledToFit()
                         .frame(height: 12)
+                    
+                    // Unfortunately, ProgressView and Slider have native behavior that makes their infill bar
+                    // fade to a lighter color due to the fact that our HUD windows are not technically "in focus".
+                    // This means we have to design our own custom 'progress view' to make up for that shortfall.
                     
                     // ProgressView(value: 0.6, total: 1.0, label: { Text("") })
                     //     .progressViewStyle(.linear)
@@ -67,7 +72,7 @@ extension MenuPopoverHUDStyle {
             case let .text(text),
                  let .textAndImage(text: text, image: _):
                 text
-            case let .image(imageSource):
+            case .image(_):
                 nil
             }
         }
@@ -77,89 +82,7 @@ extension MenuPopoverHUDStyle {
             case .text(_): nil
             case let .image(imageSource),
                  let .textAndImage(text: _, image: imageSource):
-                switch imageSource {
-                case let .systemName(systemName): Image(systemName: systemName)
-                case let .image(image): image
-                }
-            }
-        }
-        
-        struct AmountView<Value: BinaryFloatingPoint>: View {
-            @Environment(\.controlSize) private var controlSize
-            
-            let amount: Value
-            let range: ClosedRange<Value>
-            let step: Value?
-            
-            @State private var width: CGFloat = 0
-            
-            init(amount: Value, range: ClosedRange<Value> = 0.0 ... 1.0, step: Value? = nil) {
-                self.amount = amount
-                self.range = range
-                self.step = step
-            }
-            
-            public var body: some View {
-                ZStack {
-                    ZStack(alignment: .leading) {
-                        RoundedRectangle(cornerRadius: 2)
-                            .fill(.quaternary)
-                            .onGeometryChange(for: CGFloat.self, of: { $0.size.width }) { width = $0 }
-                        
-                        RoundedRectangle(cornerRadius: 2)
-                            .fill(.primary)
-                            .frame(width: progressWidth)
-                    }
-                    .offset(y: dividerCount != nil ? -1 : 0)
-                    
-                    if let dividerCount {
-                        HStack {
-                            ForEach(0 ..< dividerCount) { _ in
-                                Circle()
-                                    .fill(.quaternary)
-                                    .frame(height: 2)
-                                    .frame(maxWidth: .infinity)
-                            }
-                        }
-                        .frame(width: width)
-                        .offset(y: height)
-                    }
-                }
-                .frame(height: height)
-                
-            }
-            
-            private var height: CGFloat {
-                switch controlSize {
-                case .mini: 2
-                case .small: 3
-                case .regular: 4
-                case .large: 5
-                case .extraLarge: 6
-                @unknown default: 4
-                }
-            }
-            
-            private var progressWidth: CGFloat {
-                width * percentage
-            }
-            
-            private var percentage: CGFloat {
-                let safeAmount = amount.clamped(to: range)
-                
-                // avoid division by zero
-                guard range.upperBound > range.lowerBound else { return 1.0 }
-                
-                return CGFloat((safeAmount - range.lowerBound) / (range.upperBound - range.lowerBound))
-            }
-            
-            private var dividerCount: Int? {
-                guard let step else { return nil }
-                let safeStep = step.clamped(to: 0.0...)
-                guard safeStep > 0.0 else { return nil }
-                let count = (Int((range.upperBound - range.lowerBound) / safeStep) - 1)
-                    .clamped(to: 2 ... 100)
-                return count
+                imageSource.image
             }
         }
     }
@@ -183,19 +106,19 @@ private struct MockHUDView<Content: View>: View {
 
 #if DEBUG
 @available(macOS 26.0, *)
-#Preview("Example") {
+#Preview("Examples") { // TODO: add more previews once additional alert content parameters have been implemented
     VStack(spacing: 20) {
         MockHUDView {
             MenuPopoverHUDStyle.ContentView(
-                content: .text("MacBook Pro Speakers"),
-                style: .default()
+                style: .default(),
+                content: .text("MacBook Pro Speakers")
             )
         }
         
         MockHUDView {
             MenuPopoverHUDStyle.ContentView(
-                content: .image(.systemName("square.fill")),
-                style: .default()
+                style: .default(),
+                content: .image(.systemName("square.fill"))
             )
         }
         

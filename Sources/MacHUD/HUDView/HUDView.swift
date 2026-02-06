@@ -14,7 +14,7 @@ import SwiftUI
 public protocol HUDView: View {
     associatedtype Style: HUDStyle
     
-    init(content: HUDAlertContent, style: Style)
+    init(style: Style, content: Style.AlertContent)
 }
 
 #endif

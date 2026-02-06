@@ -27,6 +27,7 @@ public protocol HUDStyle: Equatable, Hashable, Sendable, SendableMetatype where 
     
     /// The view displayed in the HUD alert.
     associatedtype ContentView: HUDView
+    associatedtype AlertContent: HUDAlertContent
     
     /// Optionally override the window's style mask.
     ///

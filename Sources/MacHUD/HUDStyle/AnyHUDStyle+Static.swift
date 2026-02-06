@@ -9,13 +9,9 @@
 // MARK: - Static Constructors
 
 extension AnyHUDStyle {
-    /// HUD style appropriate for the current platform version.
-    public static func currentPlatform() -> Self {
-        if #available(macOS 26.0, *) {
-            AnyHUDStyle(.menuPopover())
-        } else {
-            AnyHUDStyle(.prominent())
-        }
+    /// Default HUD style appropriate for the current platform version.
+    static func platformDefault() -> Self {
+        AnyHUDStyle(.platformDefault())
     }
 }
 

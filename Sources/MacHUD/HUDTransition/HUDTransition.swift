@@ -14,7 +14,7 @@ public enum HUDTransition {
     case `default`
     
     /// Opacity fade.
-    case fade(duration: TimeInterval)
+    case opacity(duration: TimeInterval)
     
     /// No transition. (Immediate)
     case none

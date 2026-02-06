@@ -11,28 +11,30 @@ import SwiftUI
 
 extension HUDManager {
     /// Represents a reusable HUD alert object which can be shown and hidden.
-    final class Alert: Sendable {
-        nonisolated let style: AnyHUDStyle
+    final class Alert<Style: HUDStyle>: HUDAlertProtocol, Sendable {
+        nonisolated let style: Style
+        
+        // MARK: - State
+        
         @HUDManager var isInUse = false
 		
         // MARK: - UI
 		
         @MainActor var window: NSWindow?
-        @MainActor weak var reusableView: NSHostingView<AlertBaseContentView>?
 		
         // MARK: - Init
 		
-        init(style: AnyHUDStyle) async throws {
+        init(style: Style) async throws {
             self.style = style
             _ = try await Task { @MainActor in
-                (window, reusableView) = try Self.windowFactory(style: style)
+                window = try windowFactory()
             }.value
             
-            logger.debug("Created new reusable \(style.concreteType) HUD alert object.")
+            logger.debug("Created new reusable \(type(of: style)) HUD alert object.")
         }
 		
         deinit {
-            logger.debug("\(style.concreteType) HUD alert object instance deinit")
+            logger.debug("\(type(of: style)) HUD alert object instance deinit")
         }
     }
 }

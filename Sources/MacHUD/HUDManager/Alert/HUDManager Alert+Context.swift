@@ -12,27 +12,30 @@ import SwiftUI
 extension HUDManager.Alert {
     @MainActor
     func context() throws -> HUDWindowContext {
-        guard let window,
-              let reusableView
-        else { throw HUDError.internalInconsistency("Could not generate HUD alert window context.") }
+        guard let window else {
+            throw HUDError.internalInconsistency("Could not generate HUD alert window context.")
+        }
         
-        return try Self.context(window: window, reusableView: reusableView)
+        return try Self.context(window: window)
     }
     
     @MainActor
-    static func context(
-        window: NSWindow,
-        reusableView: NSHostingView<HUDManager.AlertBaseContentView>
-    ) throws -> HUDWindowContext {
+    static func context(window: NSWindow) throws -> HUDWindowContext {
         let screen = try NSScreen.alertScreen
         
         // since we don't have SwiftUI environment, we have to get system color scheme manually
         return HUDWindowContext(
             colorScheme: systemColorScheme(),
             window: window,
-            reusableView: reusableView,
             screen: screen
         )
+    }
+    
+    @MainActor
+    func getHostingView() -> NSHostingView<BaseContentView>? {
+        window?.contentView?.subviews
+            .compactMap { $0 as? NSHostingView<BaseContentView> }
+            .first
     }
 }
 

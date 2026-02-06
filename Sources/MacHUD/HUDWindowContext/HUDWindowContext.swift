@@ -19,9 +19,6 @@ public class HUDWindowContext {
     /// Reference to the HUD window.
     public let window: NSWindow
     
-    /// Reference to the HUD window's inner reusable SwiftUI view.
-    public let reusableView: NSHostingView<HUDManager.AlertBaseContentView>
-    
     /// The screen where the HUD window will appear.
     public let screen: NSScreen
     
@@ -31,12 +28,10 @@ public class HUDWindowContext {
     init(
         colorScheme: ColorScheme,
         window: NSWindow,
-        reusableView: NSHostingView<HUDManager.AlertBaseContentView>,
         screen: NSScreen
     ) {
         self.colorScheme = colorScheme
         self.window = window
-        self.reusableView = reusableView
         self.screen = screen
         isFullScreenMode = isAVisibleAppInFullScreenMode()
     }

@@ -21,8 +21,8 @@ extension HUDStyle {
     
     /// Creates a new instance of the HUD view.
     @MainActor
-    func createView(content: HUDAlertContent) -> some View {
-        ContentView(content: content, style: self)
+    func createView(content: AlertContent) -> some View {
+        ContentView(style: self, content: content)
     }
 }
 

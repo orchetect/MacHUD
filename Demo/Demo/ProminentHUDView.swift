@@ -61,20 +61,20 @@ struct ProminentHUDView: View {
                     TextField("HUD Text", text: $text)
                     
                     Button("Show Text-Only Alert") {
-                        HUDManager.shared.displayAlert(.text(text), style: prominentStyle)
+                        HUDManager.shared.displayAlert(style: prominentStyle, content: .text(text))
                     }
                     
                     Button("Show Image-Only Alert") {
                         HUDManager.shared.displayAlert(
-                            .image(.systemName(image.rawValue)),
-                            style: prominentStyle
+                            style: prominentStyle,
+                            content: .image(.systemName(image.rawValue))
                         )
                     }
                     
                     Button("Show Image & Text Alert") {
                         HUDManager.shared.displayAlert(
-                            .textAndImage(text: text, image: .systemName(image.rawValue)),
-                            style: prominentStyle
+                            style: prominentStyle,
+                            content: .textAndImage(text: text, image: .systemName(image.rawValue))
                         )
                     }
                 }
@@ -98,7 +98,7 @@ struct ProminentHUDView: View {
         
         continuousTask = Task {
             while !Task.isCancelled {
-                HUDManager.shared.displayAlert(.text(UUID().uuidString), style: prominentStyle)
+                HUDManager.shared.displayAlert(style: prominentStyle, content: .text(UUID().uuidString))
                 alertCount += 1
                 try await Task.sleep(for: .milliseconds(500))
             }

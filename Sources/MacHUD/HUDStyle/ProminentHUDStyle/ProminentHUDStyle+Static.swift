@@ -35,9 +35,9 @@ extension ProminentHUDStyle {
             position: .bottom,
             size: .large,
             isBordered: false,
-            transitionIn: .fade(duration: 0.05),
+            transitionIn: .opacity(duration: 0.05),
             duration: 1.2,
-            transitionOut: .fade(duration: 0.8)
+            transitionOut: .opacity(duration: 0.8)
         )
     }
     
@@ -47,9 +47,9 @@ extension ProminentHUDStyle {
             position: .bottom,
             size: .large,
             isBordered: false,
-            transitionIn: .fade(duration: 0.05),
+            transitionIn: .opacity(duration: 0.05),
             duration: 1.2,
-            transitionOut: .fade(duration: 0.8)
+            transitionOut: .opacity(duration: 0.8)
         )
     }
 }

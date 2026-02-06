@@ -41,6 +41,7 @@ func isAVisibleAppInFullScreenMode() -> Bool {
 }
 
 /// Returns the current system color scheme.
+@MainActor
 func systemColorScheme() -> ColorScheme {
     switch NSApplication.shared.effectiveAppearance.name {
     case .darkAqua, .vibrantDark: return .dark

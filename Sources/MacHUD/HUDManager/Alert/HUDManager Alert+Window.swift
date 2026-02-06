@@ -13,14 +13,11 @@ internal import SwiftExtensions
 extension HUDManager.Alert {
     /// Creates a new reusable alert window and configures it.
     @MainActor
-    static func windowFactory(style: AnyHUDStyle) throws -> (
-        window: NSWindow,
-        reusableView: NSHostingView<HUDManager.AlertBaseContentView>
-    ) {
+    func windowFactory() throws -> NSWindow {
         // Note: style mask `.hudWindow` only applies to NSPanel, not NSWindow
         let window = NSWindow(
             contentRect: NSMakeRect(0, 0, 200, 200),
-            styleMask: style.base.windowStyleMask(),
+            styleMask: style.windowStyleMask(),
             backing: .buffered,
             defer: true
         )
@@ -29,7 +26,7 @@ extension HUDManager.Alert {
             throw HUDError.internalInconsistency("Window has no content view.")
         }
         
-        let reusableView = NSHostingView(rootView: HUDManager.AlertBaseContentView())
+        let reusableView = NSHostingView(rootView: BaseContentView())
         contentView.autoresizesSubviews = false
         contentView.addSubview(reusableView)
         
@@ -55,22 +52,21 @@ extension HUDManager.Alert {
         reusableView.addFrameConstraints(toParent: contentView)
         
         // style formatting
-        let context = try context(window: window, reusableView: reusableView)
-        style.base.setupWindow(context: context)
+        let context = try Self.context(window: window)
+        style.setupWindow(context: context)
         
-        return (window: window, reusableView: reusableView)
+        return window
     }
     
     /// Updates the reusable window with new parameters.
     @MainActor
     func _updateWindow(
-        content: HUDAlertContent,
-        style: AnyHUDStyle
+        content: Style.AlertContent
     ) throws {
         guard let window else {
             throw HUDError.internalInconsistency("Missing HUD alert window.")
         }
-        guard let reusableView else {
+        guard let reusableView = getHostingView() else {
             throw HUDError.internalInconsistency("Missing HUD alert reusable content view.")
         }
         
@@ -91,7 +87,7 @@ extension HUDManager.Alert {
             
             // style formatting
             let context = try context()
-            style.base.updateWindow(context: context)
+            style.updateWindow(context: context)
             
             // constrain to available screen area if needed
             window.setFrame(
@@ -103,11 +99,7 @@ extension HUDManager.Alert {
     
     /// Shows the alert on screen, optionally animating its appearance and dismissal.
     @MainActor
-    func _showWindow(
-        transitionIn: HUDTransition,
-        duration: TimeInterval,
-        transitionOut: HUDTransition
-    ) async throws {
+    func _showWindow() async throws {
         guard let window else {
             throw HUDError.internalInconsistency("Missing HUD alert window.")
         }
@@ -118,9 +110,9 @@ extension HUDManager.Alert {
             window.orderFront(self)
         }
         
-        if let fadeInDuration: TimeInterval = switch transitionIn {
+        if let fadeInDuration: TimeInterval = switch style.transitionIn {
         case .default: 0.05
-        case let .fade(duration: customDuration): customDuration
+        case let .opacity(duration: customDuration): customDuration
         case .none: nil
         } {
             // animate alert appearing
@@ -140,12 +132,12 @@ extension HUDManager.Alert {
         
         // remain on screen for specified time period; schedule the fade out
         // prevent time values being too small as failsafe
-        let duration = duration.clamped(to: 0.1...)
+        let duration = style.duration.clamped(to: 0.1...)
         try? await Task.sleep(seconds: duration)
         
         // dismiss
         do {
-            try await dismiss(transition: transitionOut)
+            try await dismiss(transition: style.transitionOut)
         } catch {
             logger.debug("Error dismissing HUD alert: \(error.localizedDescription)")
         }

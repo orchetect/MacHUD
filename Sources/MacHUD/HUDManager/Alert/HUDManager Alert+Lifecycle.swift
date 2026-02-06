@@ -14,7 +14,7 @@ internal import SwiftExtensions
 extension HUDManager.Alert {
     /// Creates the alert window and shows it on screen.
     @HUDManager
-    func show(content: HUDAlertContent, style: AnyHUDStyle) async throws {
+    func show(content: Style.AlertContent, style: Style) async throws {
         if isInUse {
             // do a basic reset of the window if it's currently in use
             await Task { @MainActor in
@@ -31,16 +31,8 @@ extension HUDManager.Alert {
         isInUse = true
         
         do {
-            try await _updateWindow(
-                content: content,
-                style: style
-            )
-            
-            try await _showWindow(
-                transitionIn: style.base.transitionIn,
-                duration: style.base.duration,
-                transitionOut: style.base.transitionOut
-            )
+            try await _updateWindow(content: content)
+            try await _showWindow()
         } catch {
             isInUse = false
             throw error
@@ -57,7 +49,7 @@ extension HUDManager.Alert {
         switch transition {
         case .default:
             fadeTime = 0.2
-        case let .fade(duration: customFadeTime):
+        case let .opacity(duration: customFadeTime):
             fadeTime = customFadeTime.clamped(to: 0.01 ... 5.0)
         case .none:
             // immediately hide window

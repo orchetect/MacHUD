@@ -64,8 +64,8 @@ extension HUDTransition {
         switch self {
         case .default:
             "Default"
-        case let .fade(duration: duration):
-            "Fade \(duration.formatted(.number.precision(.fractionLength(1 ... 2)))) seconds"
+        case let .opacity(duration: duration):
+            "Opacity fade \(duration.formatted(.number.precision(.fractionLength(1 ... 2)))) seconds"
         case .none:
             "None"
         }
@@ -74,6 +74,6 @@ extension HUDTransition {
 
 extension HUDTransition: @retroactive CaseIterable {
     public static var allCases: [HUDTransition] {
-        [.default, .fade(duration: 0.05), .fade(duration: 0.8), .fade(duration: 2.0), .none]
+        [.default, .opacity(duration: 0.05), .opacity(duration: 0.8), .opacity(duration: 2.0), .none]
     }
 }

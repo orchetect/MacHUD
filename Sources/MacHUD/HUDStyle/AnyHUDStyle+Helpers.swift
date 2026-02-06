@@ -12,21 +12,6 @@ extension AnyHUDStyle {
     var concreteType: any HUDStyle.Type {
         type(of: base)
     }
-    
-    /// Returns all available HUD style concrete types.
-    static func hudStyleTypes(customHUDStyles: [any HUDStyle.Type] = []) -> [any HUDStyle.Type] {
-        // internal style types
-        var hudStyles: [any HUDStyle.Type] = []
-        hudStyles.append(ProminentHUDStyle.self)
-        if #available(macOS 26.0, *) {
-            hudStyles.append(MenuPopoverHUDStyle.self)
-        }
-        
-        // custom style types
-        hudStyles.append(contentsOf: customHUDStyles)
-        
-        return hudStyles
-    }
 }
 
 #endif

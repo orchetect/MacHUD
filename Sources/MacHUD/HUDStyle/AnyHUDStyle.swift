@@ -6,7 +6,8 @@
 
 #if os(macOS)
 
-public struct AnyHUDStyle {
+/// Type-erased box containing a concrete HUD style instance.
+struct AnyHUDStyle {
     public var base: any HUDStyle
     
     public init(_ base: any HUDStyle) {
@@ -15,13 +16,13 @@ public struct AnyHUDStyle {
 }
 
 extension AnyHUDStyle: Equatable {
-    public static func == (lhs: AnyHUDStyle, rhs: AnyHUDStyle) -> Bool {
+    static func == (lhs: AnyHUDStyle, rhs: AnyHUDStyle) -> Bool {
         AnyHashable(lhs.base) == AnyHashable(rhs.base)
     }
 }
 
 extension AnyHUDStyle: Hashable {
-    public func hash(into hasher: inout Hasher) {
+    func hash(into hasher: inout Hasher) {
         hasher.combine(base)
     }
 }

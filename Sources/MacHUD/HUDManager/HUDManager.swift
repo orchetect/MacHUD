@@ -13,7 +13,7 @@ import Foundation
     public static let shared = HUDManager()
     
     /// Pool of reusable alert windows.
-    var alerts: [HUDStyleID: [Alert]] = [:]
+    var alerts: [HUDStyleID: [any HUDAlertProtocol]] = [:]
     
     private init() { }
 }

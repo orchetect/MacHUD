@@ -13,13 +13,14 @@ extension ProminentHUDStyle {
     public struct ContentView: View, HUDView {
         @Environment(\.colorScheme) private var colorScheme
         
+        public typealias Style = ProminentHUDStyle
+        let style: Style
         let text: String?
-        let imageSource: HUDAlertContent.ImageSource?
-        let style: ProminentHUDStyle
+        let imageSource: HUDImageSource?
         
         public init(
             text: String? = nil,
-            imageSource: HUDAlertContent.ImageSource? = nil,
+            imageSource: HUDImageSource? = nil,
             style: ProminentHUDStyle
         ) {
             self.text = text
@@ -27,7 +28,7 @@ extension ProminentHUDStyle {
             self.style = style
         }
         
-        public init(content: HUDAlertContent, style: ProminentHUDStyle) {
+        public init(style: Style, content: Style.AlertContent) {
             switch content {
             case let .text(string):
                 text = string
@@ -96,19 +97,7 @@ extension ProminentHUDStyle {
         }
         
         private var image: Image? {
-            guard let imageSource else { return nil }
-            
-            switch imageSource {
-            case let .systemName(systemName):
-                if #available(macOS 11, *) {
-                    return Image(systemName: systemName)
-                } else {
-                    // TODO: needs implementation on macOS 10.15
-                    return nil
-                }
-            case let .image(image):
-                return image
-            }
+            imageSource?.image
         }
     }
 }
@@ -194,74 +183,76 @@ extension ProminentHUDStyle.ContentView {
 
 // MARK: - Xcode Previews
 
+// TODO: add more previews once additional alert content parameters have been implemented
+
 #if DEBUG
 #Preview("Text") {
     ProminentHUDStyle.ContentView(
-        content: .text("Test"),
-        style: .prominent()
+        style: .prominent(),
+        content: .text("Test")
     )
 }
 
 #Preview("Text (Long)") {
     ProminentHUDStyle.ContentView(
-        content: .text("This is a very long test of a text-only HUD message."),
-        style: .prominent()
+        style: .prominent(),
+        content: .text("This is a very long test of a text-only HUD message.")
     )
 }
 
 #Preview("Image (Large) (Default)") {
     ProminentHUDStyle.ContentView(
-        content: .image(.systemName("speaker.wave.3.fill")),
-        style: .prominent()
+        style: .prominent(),
+        content: .image(.systemName("speaker.wave.3.fill"))
     )
 }
 
 #Preview("Image (Small)") {
     ProminentHUDStyle.ContentView(
-        content: .image(.systemName("speaker.wave.3.fill")),
-        style: .prominent().size(.small)
+        style: .prominent().size(.small),
+        content: .image(.systemName("speaker.wave.3.fill"))
     )
 }
 
 #Preview("Image (Medium)") {
     ProminentHUDStyle.ContentView(
-        content: .image(.systemName("speaker.wave.3.fill")),
-        style: .prominent().size(.medium)
+        style: .prominent().size(.medium),
+        content: .image(.systemName("speaker.wave.3.fill"))
     )
 }
 
 #Preview("Image (Extra Large)") {
     ProminentHUDStyle.ContentView(
-        content: .image(.systemName("speaker.wave.3.fill")),
-        style: .prominent().size(.extraLarge)
+        style: .prominent().size(.extraLarge),
+        content: .image(.systemName("speaker.wave.3.fill"))
     )
 }
 
 #Preview("Text & Image (Large) (Default)") {
     ProminentHUDStyle.ContentView(
-        content: .textAndImage(text: "Volume", image: .systemName("speaker.wave.3.fill")),
-        style: .prominent()
+        style: .prominent(),
+        content: .textAndImage(text: "Volume", image: .systemName("speaker.wave.3.fill"))
     )
 }
 
 #Preview("Text & Image (Small)") {
     ProminentHUDStyle.ContentView(
-        content: .textAndImage(text: "Volume", image: .systemName("speaker.wave.3.fill")),
-        style: .prominent().size(.small)
+        style: .prominent().size(.small),
+        content: .textAndImage(text: "Volume", image: .systemName("speaker.wave.3.fill"))
     )
 }
 
 #Preview("Text & Image (Medium)") {
     ProminentHUDStyle.ContentView(
-        content: .textAndImage(text: "Volume", image: .systemName("speaker.wave.3.fill")),
-        style: .prominent().size(.medium)
+        style: .prominent().size(.medium),
+        content: .textAndImage(text: "Volume", image: .systemName("speaker.wave.3.fill"))
     )
 }
 
 #Preview("Text & Image (Extra Large)") {
     ProminentHUDStyle.ContentView(
-        content: .textAndImage(text: "Volume", image: .systemName("speaker.wave.3.fill")),
-        style: .prominent().size(.extraLarge)
+        style: .prominent().size(.extraLarge),
+        content: .textAndImage(text: "Volume", image: .systemName("speaker.wave.3.fill"))
     )
 }
 #endif

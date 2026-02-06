@@ -11,31 +11,35 @@ import Combine
 import SwiftUI
 internal import SwiftExtensions
 
-extension HUDManager {
+extension HUDManager.Alert {
     /// The base HUD view that wraps the inner view provided but the HUD style.
-    public struct AlertBaseContentView: View {
-        let content: HUDAlertContent
-        let style: AnyHUDStyle
+    public struct BaseContentView: View {
+        let style: Style
+        let content: Style.AlertContent?
         
         init() {
-            content = .text(" ")
-            style = .currentPlatform()
+            style = .default()
+            content = nil
         }
         
-        init(content: HUDAlertContent, style: AnyHUDStyle = .currentPlatform()) {
+        init(content: Style.AlertContent, style: Style = .default()) {
             self.content = content
             self.style = style
         }
         
-        init(content: HUDAlertContent, style: some HUDStyle) {
-            self.content = content
-            self.style = AnyHUDStyle(style)
-        }
-        
         public var body: some View {
-            AnyView(style.base.createView(content: content))
+            conditionalBody
                 .fixedSize()
                 .allowsHitTesting(false)
+        }
+        
+        @ViewBuilder
+        public var conditionalBody: some View {
+            if let content {
+                style.createView(content: content)
+            } else {
+                Text(verbatim: " ")
+            }
         }
     }
 }
