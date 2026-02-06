@@ -10,7 +10,7 @@ import SwiftUI
 struct ProminentHUDView: View {
     @State private var text = "Volume"
     @State private var image: SampleImage = .speakerVolumeHigh
-    @State private var prominentStyle: ProminentHUDStyle = .init()
+    @State private var style: ProminentHUDStyle = .init()
     
     @State private var isContinuous: Bool = false
     @State private var continuousTask: Task<Void, any Error>?
@@ -20,23 +20,23 @@ struct ProminentHUDView: View {
         VStack {
             Form {
                 Section("Style") {
-                    Picker("Position on Screen", selection: $prominentStyle.position) {
+                    Picker("Position on Screen", selection: $style.position) {
                         ForEach(ProminentHUDStyle.Position.allCases) { position in
                             Text(position.name).tag(position)
                         }
                     }
                     
-                    Picker("Transition In", selection: $prominentStyle.transitionIn) {
+                    Picker("Transition In", selection: $style.transitionIn) {
                         ForEach(HUDTransition.allCases) { transition in
                             Text(transition.name).tag(transition)
                         }
                     }
                     
-                    Slider(value: $prominentStyle.duration, in: 0.0 ... 3.0, step: 0.1) {
-                        Text("Duration (\(prominentStyle.duration.formatted(.number.precision(.fractionLength(1 ... 2)))) seconds)")
+                    Slider(value: $style.duration, in: 0.0 ... 3.0, step: 0.1) {
+                        Text("Duration (\(style.duration.formatted(.number.precision(.fractionLength(1 ... 2)))) seconds)")
                     }
                     
-                    Picker("Transition Out", selection: $prominentStyle.transitionOut) {
+                    Picker("Transition Out", selection: $style.transitionOut) {
                         ForEach(HUDTransition.allCases) { transition in
                             Text(transition.name).tag(transition)
                         }
@@ -53,19 +53,19 @@ struct ProminentHUDView: View {
                     TextField("HUD Text", text: $text)
                     
                     Button("Show Text-Only Alert") {
-                        HUDManager.shared.displayAlert(style: prominentStyle, content: .text(text))
+                        HUDManager.shared.displayAlert(style: style, content: .text(text))
                     }
                     
                     Button("Show Image-Only Alert") {
                         HUDManager.shared.displayAlert(
-                            style: prominentStyle,
+                            style: style,
                             content: .image(.systemName(image.rawValue))
                         )
                     }
                     
                     Button("Show Image & Text Alert") {
                         HUDManager.shared.displayAlert(
-                            style: prominentStyle,
+                            style: style,
                             content: .textAndImage(text: text, image: .systemName(image.rawValue))
                         )
                     }
@@ -90,7 +90,7 @@ struct ProminentHUDView: View {
         
         continuousTask = Task {
             while !Task.isCancelled {
-                HUDManager.shared.displayAlert(style: prominentStyle, content: .text(UUID().uuidString))
+                HUDManager.shared.displayAlert(style: style, content: .text(UUID().uuidString))
                 alertCount += 1
                 try await Task.sleep(for: .milliseconds(500))
             }
