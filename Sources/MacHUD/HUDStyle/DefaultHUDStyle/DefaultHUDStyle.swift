@@ -20,6 +20,12 @@ public struct DefaultHUDStyle: HUDStyle {
     /// Fade-out behavior when the alert is dismissed from the screen.
     public var transitionOut: HUDTransition
     
+    public init() {
+        transitionIn = Self.defaultTransitionIn
+        duration = Self.defaultDuration
+        transitionOut = Self.defaultTransitionOut
+    }
+    
     public init(
         transitionIn: HUDTransition,
         duration: TimeInterval,
@@ -29,18 +35,6 @@ public struct DefaultHUDStyle: HUDStyle {
         self.duration = duration
         self.transitionOut = transitionOut
     }
-    
-    /// Initializes with custom values, defaulting `nil` parameters to appropriate values for the current platform.
-    @_disfavoredOverload
-    public init(
-        transitionIn: HUDTransition? = nil,
-        duration: TimeInterval? = nil,
-        transitionOut: HUDTransition? = nil
-    ) {
-        self.transitionIn = transitionIn ?? Self.default().transitionIn
-        self.duration = duration ?? Self.default().duration
-        self.transitionOut = transitionOut ?? Self.default().transitionOut
-    }
 }
 
 extension DefaultHUDStyle: Equatable { }
@@ -48,5 +42,33 @@ extension DefaultHUDStyle: Equatable { }
 extension DefaultHUDStyle: Hashable { }
 
 extension DefaultHUDStyle: Sendable { }
+
+// MARK: - Platform Defaults
+
+extension DefaultHUDStyle {
+    static var defaultTransitionIn: HUDTransition {
+        if #available(macOS 26.0, *) {
+            MenuPopoverHUDStyle().transitionIn
+        } else {
+            ProminentHUDStyle().transitionIn
+        }
+    }
+    
+    static var defaultDuration: TimeInterval {
+        if #available(macOS 26.0, *) {
+            MenuPopoverHUDStyle().duration
+        } else {
+            ProminentHUDStyle().duration
+        }
+    }
+    
+    static var defaultTransitionOut: HUDTransition {
+        if #available(macOS 26.0, *) {
+            MenuPopoverHUDStyle().transitionOut
+        } else {
+            ProminentHUDStyle().transitionOut
+        }
+    }
+}
 
 #endif

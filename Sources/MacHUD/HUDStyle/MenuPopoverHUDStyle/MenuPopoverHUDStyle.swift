@@ -24,6 +24,10 @@ public struct MenuPopoverHUDStyle: HUDStyle {
     /// Fade-out behavior when the alert is dismissed from the screen.
     public var transitionOut: HUDTransition
     
+    public init() {
+        self = .macOS26
+    }
+    
     public init(
         transitionIn: HUDTransition,
         duration: TimeInterval,
@@ -32,18 +36,6 @@ public struct MenuPopoverHUDStyle: HUDStyle {
         self.transitionIn = transitionIn
         self.duration = duration
         self.transitionOut = transitionOut
-    }
-    
-    /// Initializes with custom values, defaulting `nil` parameters to appropriate values for the current platform.
-    @_disfavoredOverload
-    public init(
-        transitionIn: HUDTransition? = nil,
-        duration: TimeInterval? = nil,
-        transitionOut: HUDTransition? = nil
-    ) {
-        self.transitionIn = transitionIn ?? Self.default().transitionIn
-        self.duration = duration ?? Self.default().duration
-        self.transitionOut = transitionOut ?? Self.default().transitionOut
     }
 }
 

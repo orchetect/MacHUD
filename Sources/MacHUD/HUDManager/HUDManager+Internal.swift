@@ -25,7 +25,7 @@ extension HUDManager {
     func addNewAlert<S: HUDStyle>(style: S.Type) async throws -> Alert<S> {
         let id = style.id
         if alerts[id] == nil { alerts[id] = [] }
-        let newAlert = try await Alert<S>(style: .default())
+        let newAlert = try await Alert<S>(style: S())
         alerts[id]?.append(newAlert)
         return newAlert
     }

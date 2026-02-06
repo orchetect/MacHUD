@@ -110,14 +110,14 @@ private struct MockHUDView<Content: View>: View {
     VStack(spacing: 20) {
         MockHUDView {
             MenuPopoverHUDStyle.ContentView(
-                style: .default(),
+                style: .init(),
                 content: .text("MacBook Pro Speakers")
             )
         }
         
         MockHUDView {
             MenuPopoverHUDStyle.ContentView(
-                style: .default(),
+                style: .init(),
                 content: .image(.systemName("square.fill"))
             )
         }

@@ -14,8 +14,8 @@ import SwiftUI
 public protocol HUDStyle: Equatable, Hashable, Sendable, SendableMetatype where ContentView.Style == Self {
     // MARK: - Static Constructors
     
-    /// Default style properties for the current platform.
-    static func `default`() -> Self
+    /// Initialize using default style properties for the current platform.
+    init()
     
     // MARK: - Common properties
     

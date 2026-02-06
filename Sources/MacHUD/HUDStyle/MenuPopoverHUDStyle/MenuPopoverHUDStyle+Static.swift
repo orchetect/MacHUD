@@ -16,22 +16,13 @@ extension HUDStyle where Self == MenuPopoverHUDStyle {
     /// These alerts present as popovers below a menubar extra.
     /// While in full screen mode, these alerts are centered at the top of the screen instead.
     @available(macOS 26.0, *)
-    public static func menuPopover(_ style: MenuPopoverHUDStyle = .default()) -> MenuPopoverHUDStyle {
+    public static func menuPopover(_ style: MenuPopoverHUDStyle = MenuPopoverHUDStyle()) -> MenuPopoverHUDStyle {
         style
     }
 }
 
 @available(macOS 26.0, *)
 extension MenuPopoverHUDStyle {
-    /// HUD style appropriate for the current platform version.
-    public static func `default`() -> Self {
-        // if #available(macOS 27.0, *) {
-        //    .macOS27
-        // } else {
-        .macOS26
-        // }
-    }
-    
     /// Prominent HUD style matching macOS 10.15 system HUD appearance and behavior.
     public static var macOS26: Self {
         MenuPopoverHUDStyle(

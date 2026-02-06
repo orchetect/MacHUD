@@ -18,11 +18,11 @@ extension HUDManager.Alert {
         let content: Style.AlertContent?
         
         init() {
-            style = .default()
+            style = Style()
             content = nil
         }
         
-        init(content: Style.AlertContent, style: Style = .default()) {
+        init(content: Style.AlertContent, style: Style = Style()) {
             self.content = content
             self.style = style
         }

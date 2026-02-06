@@ -10,7 +10,7 @@ import SwiftUI
 struct ProminentHUDView: View {
     @State private var text = "Volume"
     @State private var image: SampleImage = .speakerVolumeHigh
-    @State private var prominentStyle: ProminentHUDStyle = .default()
+    @State private var prominentStyle: ProminentHUDStyle = .init()
     
     @State private var isContinuous: Bool = false
     @State private var continuousTask: Task<Void, any Error>?

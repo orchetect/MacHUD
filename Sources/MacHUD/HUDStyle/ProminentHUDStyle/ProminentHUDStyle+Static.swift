@@ -12,23 +12,12 @@ import Foundation
 
 extension HUDStyle where Self == ProminentHUDStyle {
     /// Prominent HUD style (macOS 11 through 15).
-    public static func prominent(_ style: ProminentHUDStyle = .default()) -> ProminentHUDStyle {
+    public static func prominent(_ style: ProminentHUDStyle = ProminentHUDStyle()) -> ProminentHUDStyle {
         style
     }
 }
 
 extension ProminentHUDStyle {
-    /// HUD style appropriate for the current platform version.
-    public static func `default`() -> Self {
-        if #available(macOS 11.0, *) {
-            macOS11Thru15
-        } else if #available(macOS 10.15, *) {
-            macOS10_15
-        } else {
-            macOS10_15
-        }
-    }
-    
     /// Prominent HUD style matching macOS 10.15 system HUD appearance and behavior.
     public static var macOS10_15: Self {
         ProminentHUDStyle(

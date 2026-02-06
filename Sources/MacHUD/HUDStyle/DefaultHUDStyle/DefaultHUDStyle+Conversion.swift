@@ -8,20 +8,18 @@
 
 extension DefaultHUDStyle {
     func convertedToProminentHUDStyle() -> ProminentHUDStyle {
-        ProminentHUDStyle(
-            transitionIn: transitionIn,
-            duration: duration,
-            transitionOut: transitionOut
-        )
+        ProminentHUDStyle()
+            .transitionIn(transitionIn)
+            .duration(duration)
+            .transitionOut(transitionOut)
     }
     
     @available(macOS 26.0, *)
     func convertedToMenuPopoverHUDStyle() -> MenuPopoverHUDStyle {
-        MenuPopoverHUDStyle(
-            transitionIn: transitionIn,
-            duration: duration,
-            transitionOut: transitionOut
-        )
+        MenuPopoverHUDStyle()
+            .transitionIn(transitionIn)
+            .duration(duration)
+            .transitionOut(transitionOut)
     }
 }
 
