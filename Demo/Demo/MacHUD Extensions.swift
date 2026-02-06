@@ -51,29 +51,6 @@ extension ProminentHUDStyle.Size {
     }
 }
 
-// MARK: - ProminentHUDStyle Tint
-
-extension ProminentHUDStyle.Tint: @retroactive Identifiable {
-    public var id: Self {
-        self
-    }
-}
-
-extension ProminentHUDStyle.Tint {
-    var name: String {
-        switch self {
-        case .light:
-            "Light"
-        case .mediumLight:
-            "Medium Light"
-        case .dark:
-            "Dark"
-        case .ultraDark:
-            "Ultra Dark"
-        }
-    }
-}
-
 // MARK: - Transition
 
 extension HUDTransition: @retroactive Identifiable {

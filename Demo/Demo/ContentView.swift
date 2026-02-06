@@ -8,111 +8,49 @@ import MacHUD
 import SwiftUI
 
 struct ContentView: View {
-    @State private var text = "Volume"
-    @State private var image: SampleImage = .speakerVolumeHigh
-    @State private var style: ProminentHUDStyle = .default()
-    
-    @State private var isContinuous: Bool = false
-    @State private var continuousTask: Task<Void, any Error>?
-    @State private var notificationCount: Int = 0
+    @State private var panel: Panel = .menuPopover
     
     var body: some View {
-        VStack {
-            Form {
-                Section("Style") {
-                    Picker("Position on Screen", selection: $style.position) {
-                        ForEach(ProminentHUDStyle.Position.allCases) { position in
-                            Text(position.name).tag(position)
-                        }
-                    }
-                    
-                    Picker("Size", selection: $style.size) {
-                        ForEach(ProminentHUDStyle.Size.allCases) { size in
-                            Text(size.name).tag(size)
-                        }
-                    }
-                    
-                    Picker("Tint", selection: $style.tint) {
-                        ForEach(ProminentHUDStyle.Tint.allCases) { tint in
-                            Text(tint.name).tag(tint)
-                        }
-                    }
-                    
-                    Toggle("Bordered", isOn: $style.isBordered)
-                    
-                    Picker("Transition In", selection: $style.transitionIn) {
-                        ForEach(HUDTransition.allCases) { transition in
-                            Text(transition.name).tag(transition)
-                        }
-                    }
-                    
-                    Slider(value: $style.duration, in: 0.0 ... 3.0, step: 0.1) {
-                        Text("Duration (\(style.duration.formatted(.number.precision(.fractionLength(1 ... 2)))) seconds)")
-                    }
-                    
-                    Picker("Transition Out", selection: $style.transitionOut) {
-                        ForEach(HUDTransition.allCases) { transition in
-                            Text(transition.name).tag(transition)
-                        }
-                    }
-                }
-                
-                Section("Generate HUD Alert") {
-                    Picker("System Symbol", selection: $image) {
-                        ForEach(SampleImage.allCases) { image in
-                            Image(systemName: image.rawValue).tag(image)
-                        }
-                    }
-                    
-                    TextField("HUD Text", text: $text)
-                    
-                    Button("Show Text-Only Alert") {
-                        HUDManager.shared.displayAlert(.text(text), style: style)
-                    }
-                    
-                    Button("Show Image-Only Alert") {
-                        HUDManager.shared.displayAlert(
-                            .image(.systemName(image.rawValue)),
-                            style: style
-                        )
-                    }
-                    
-                    Button("Show Image & Text Alert") {
-                        HUDManager.shared.displayAlert(
-                            .textAndImage(text: text, image: .systemName(image.rawValue)),
-                            style: style
-                        )
-                    }
-                }
-                
-                Section("Generate HUD Alerts Automatically") {
-                    LabeledContent("Count", value: "\(notificationCount)")
-                    
-                    Toggle("Show Continuously (Stress Test)", isOn: $isContinuous)
-                        .onChange(of: isContinuous) { newValue in
-                            newValue ? startContinuousTask() : stopContinuousTask()
-                        }
+        NavigationSplitView {
+            List(Panel.allCases, selection: $panel) {
+                Label($0.name, systemImage: $0.systemImage)
+                    .tag($0)
+            }
+            .navigationSplitViewColumnWidth(170)
+        } detail: {
+            switch panel {
+            case .prominent:
+                ProminentHUDView()
+            case .menuPopover:
+                if #available(macOS 26.0, *) {
+                    MenuPopoverHUDView()
+                } else {
+                    Text("Menu popover HUD style is only available on macOS 26 and later.")
                 }
             }
-            .formStyle(.grouped)
         }
-        .padding()
     }
-    
-    private func startContinuousTask() {
-        stopContinuousTask()
+}
+
+extension ContentView {
+    enum Panel: String, CaseIterable, Identifiable {
+        case prominent
+        case menuPopover
         
-        continuousTask = Task {
-            while !Task.isCancelled {
-                HUDManager.shared.displayAlert(.text(UUID().uuidString), style: style)
-                notificationCount += 1
-                try await Task.sleep(for: .milliseconds(500))
+        var name: String {
+            switch self {
+            case .prominent: "Prominent"
+            case .menuPopover: "Menu Popover"
             }
         }
-    }
-    
-    private func stopContinuousTask() {
-        continuousTask?.cancel()
-        continuousTask = nil
+        
+        var systemImage: String {
+            switch self {
+            case .prominent: "bell.square"
+            case .menuPopover: "rectangle.compress.vertical"
+            }
+        }
+        
+        var id: RawValue { rawValue }
     }
 }
