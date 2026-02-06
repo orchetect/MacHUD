@@ -30,6 +30,8 @@ extension HUDManager.Alert {
         
         isInUse = true
         
+        self.style = style
+        
         do {
             try await _updateWindow(content: content)
             try await _showWindow()

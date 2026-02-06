@@ -13,11 +13,11 @@ internal import SwiftExtensions
 extension HUDManager.Alert {
     /// Creates a new reusable alert window and configures it.
     @MainActor
-    func windowFactory() throws -> NSWindow {
+    func windowFactory() async throws -> NSWindow {
         // Note: style mask `.hudWindow` only applies to NSPanel, not NSWindow
         let window = NSWindow(
             contentRect: NSMakeRect(0, 0, 200, 200),
-            styleMask: style.windowStyleMask(),
+            styleMask: await style.windowStyleMask(),
             backing: .buffered,
             defer: true
         )
@@ -53,7 +53,7 @@ extension HUDManager.Alert {
         
         // style formatting
         let context = try Self.context(window: window)
-        style.setupWindow(context: context)
+        await style.setupWindow(context: context)
         
         return window
     }
@@ -62,7 +62,7 @@ extension HUDManager.Alert {
     @MainActor
     func _updateWindow(
         content: Style.AlertContent
-    ) throws {
+    ) async throws {
         guard let window else {
             throw HUDError.internalInconsistency("Missing HUD alert window.")
         }
@@ -70,6 +70,7 @@ extension HUDManager.Alert {
             throw HUDError.internalInconsistency("Missing HUD alert reusable content view.")
         }
         
+        let style = await style
         try autoreleasepool {
             // get screen for alert
             let alertScreen = try NSScreen.alertScreen
@@ -100,6 +101,8 @@ extension HUDManager.Alert {
     /// Shows the alert on screen, optionally animating its appearance and dismissal.
     @MainActor
     func _showWindow() async throws {
+        let style = await style
+        
         guard let window else {
             throw HUDError.internalInconsistency("Missing HUD alert window.")
         }
