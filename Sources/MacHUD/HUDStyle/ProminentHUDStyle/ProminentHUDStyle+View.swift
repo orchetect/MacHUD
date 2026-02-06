@@ -157,14 +157,7 @@ extension ProminentHUDStyle.ContentView {
         imageSource != nil
     }
     
-    private var imageSize: CGFloat {
-        switch style.size {
-        case .small: 80.0
-        case .medium: 100.0
-        case .large: 120.0
-        case .extraLarge: 150.0
-        }
-    }
+    private var imageSize: CGFloat { 120.0 }
     
     private var imageColor: Color {
         // .primary.opacity(0.8)
@@ -200,61 +193,27 @@ extension ProminentHUDStyle.ContentView {
     )
 }
 
-#Preview("Image (Large) (Default)") {
+#Preview("Image") {
     ProminentHUDStyle.ContentView(
         style: .prominent(),
         content: .image(.systemName("speaker.wave.3.fill"))
     )
 }
 
-#Preview("Image (Small)") {
-    ProminentHUDStyle.ContentView(
-        style: .prominent().size(.small),
-        content: .image(.systemName("speaker.wave.3.fill"))
-    )
-}
-
-#Preview("Image (Medium)") {
-    ProminentHUDStyle.ContentView(
-        style: .prominent().size(.medium),
-        content: .image(.systemName("speaker.wave.3.fill"))
-    )
-}
-
-#Preview("Image (Extra Large)") {
-    ProminentHUDStyle.ContentView(
-        style: .prominent().size(.extraLarge),
-        content: .image(.systemName("speaker.wave.3.fill"))
-    )
-}
-
-#Preview("Text & Image (Large) (Default)") {
+#Preview("Text & Image") {
     ProminentHUDStyle.ContentView(
         style: .prominent(),
         content: .textAndImage(text: "Volume", image: .systemName("speaker.wave.3.fill"))
     )
 }
 
-#Preview("Text & Image (Small)") {
+#Preview("Text & Image") {
     ProminentHUDStyle.ContentView(
-        style: .prominent().size(.small),
+        style: .prominent(),
         content: .textAndImage(text: "Volume", image: .systemName("speaker.wave.3.fill"))
     )
 }
 
-#Preview("Text & Image (Medium)") {
-    ProminentHUDStyle.ContentView(
-        style: .prominent().size(.medium),
-        content: .textAndImage(text: "Volume", image: .systemName("speaker.wave.3.fill"))
-    )
-}
-
-#Preview("Text & Image (Extra Large)") {
-    ProminentHUDStyle.ContentView(
-        style: .prominent().size(.extraLarge),
-        content: .textAndImage(text: "Volume", image: .systemName("speaker.wave.3.fill"))
-    )
-}
 #endif
 
 #endif

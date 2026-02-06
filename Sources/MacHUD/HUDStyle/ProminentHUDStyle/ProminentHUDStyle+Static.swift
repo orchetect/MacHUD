@@ -22,8 +22,6 @@ extension ProminentHUDStyle {
     public static var macOS10_15: Self {
         ProminentHUDStyle(
             position: .bottom,
-            size: .large,
-            isBordered: false,
             transitionIn: .opacity(duration: 0.05),
             duration: 1.2,
             transitionOut: .opacity(duration: 0.8)
@@ -34,8 +32,6 @@ extension ProminentHUDStyle {
     public static var macOS11Thru15: Self {
         ProminentHUDStyle(
             position: .bottom,
-            size: .large,
-            isBordered: false,
             transitionIn: .opacity(duration: 0.05),
             duration: 1.2,
             transitionOut: .opacity(duration: 0.8)

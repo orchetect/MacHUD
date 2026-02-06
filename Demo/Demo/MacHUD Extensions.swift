@@ -28,29 +28,6 @@ extension ProminentHUDStyle.Position {
     }
 }
 
-// MARK: - ProminentHUDStyle Size
-
-extension ProminentHUDStyle.Size: @retroactive Identifiable {
-    public var id: Self {
-        self
-    }
-}
-
-extension ProminentHUDStyle.Size {
-    var name: String {
-        switch self {
-        case .small:
-            "Small"
-        case .medium:
-            "Medium"
-        case .large:
-            "Large"
-        case .extraLarge:
-            "Extra Large"
-        }
-    }
-}
-
 // MARK: - Transition
 
 extension HUDTransition: @retroactive Identifiable {

@@ -18,20 +18,6 @@ extension ProminentHUDStyle {
         return copy
     }
     
-    /// Returns the style updating the ``size`` property value.
-    public func size(_ value: Size) -> Self {
-        var copy = self
-        copy.size = value
-        return copy
-    }
-    
-    /// Returns the style updating the ``isBordered`` property value.
-    public func isBordered(_ value: Bool) -> Self {
-        var copy = self
-        copy.isBordered = value
-        return copy
-    }
-    
     /// Returns the style updating the ``transitionIn`` property value.
     public func transitionIn(_ value: HUDTransition) -> Self {
         var copy = self

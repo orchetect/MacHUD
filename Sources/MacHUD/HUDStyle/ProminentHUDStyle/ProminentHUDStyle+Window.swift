@@ -25,14 +25,6 @@ extension ProminentHUDStyle {
     public func updateWindow(context: HUDWindowContext) {
         guard let contentView = context.window.contentView else { return }
         
-        // apply style
-        if isBordered {
-            contentView.layer?.borderWidth = borderWidth
-            contentView.layer?.borderColor = borderColor(colorScheme: context.colorScheme)
-        } else {
-            contentView.layer?.borderWidth = 0.0
-        }
-        
         // set window size and position
         let displayBounds = windowFrame(
             contentViewSize: contentView.frame.size,
@@ -43,15 +35,7 @@ extension ProminentHUDStyle {
 }
 
 extension ProminentHUDStyle {
-    var borderWidth: CGFloat {
-        switch size {
-        case .small: 1.0
-        case .medium: 2.0
-        case .large: 3.0
-        case .extraLarge: 4.0
-        }
-    }
-    
+    // TODO: Vestigial; removed `isBordered` property. Can delete.
     func borderColor(colorScheme: ColorScheme) -> CGColor {
         switch colorScheme {
         case .light:

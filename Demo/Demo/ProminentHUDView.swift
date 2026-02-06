@@ -26,14 +26,6 @@ struct ProminentHUDView: View {
                         }
                     }
                     
-                    Picker("Size", selection: $prominentStyle.size) {
-                        ForEach(ProminentHUDStyle.Size.allCases) { size in
-                            Text(size.name).tag(size)
-                        }
-                    }
-                    
-                    Toggle("Bordered", isOn: $prominentStyle.isBordered)
-                    
                     Picker("Transition In", selection: $prominentStyle.transitionIn) {
                         ForEach(HUDTransition.allCases) { transition in
                             Text(transition.name).tag(transition)

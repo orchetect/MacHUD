@@ -13,12 +13,6 @@ public struct ProminentHUDStyle: HUDStyle {
     /// Position on screen for the HUD to appear.
     public var position: Position
     
-    /// HUD size.
-    public var size: Size
-    
-    /// Boolean determining whether the HUD alert will have a visual border.
-    public var isBordered: Bool
-    
     /// Fade-out behavior when the alert is dismissed from the screen.
     public var transitionIn: HUDTransition
     
@@ -41,15 +35,11 @@ public struct ProminentHUDStyle: HUDStyle {
     
     public init(
         position: Position,
-        size: Size,
-        isBordered: Bool,
         transitionIn: HUDTransition,
         duration: TimeInterval,
         transitionOut: HUDTransition
     ) {
         self.position = position
-        self.size = size
-        self.isBordered = isBordered
         self.transitionIn = transitionIn
         self.duration = duration
         self.transitionOut = transitionOut
