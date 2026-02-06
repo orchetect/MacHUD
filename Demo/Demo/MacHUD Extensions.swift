@@ -6,6 +6,7 @@
 
 import Foundation
 import MacHUD
+internal import SwiftExtensions
 
 // MARK: - ProminentHUDStyle Position
 
@@ -39,18 +40,31 @@ extension HUDTransition: @retroactive Identifiable {
 extension HUDTransition {
     var name: String {
         switch self {
-        case .default:
-            "Default"
         case let .opacity(duration: duration):
-            "Opacity fade \(duration.formatted(.number.precision(.fractionLength(1 ... 2)))) seconds"
-        case .none:
-            "None"
+            return "Opacity fade \(duration.formatted(.number.precision(.fractionLength(1 ... 2)))) seconds"
+        case let .scaleAndOpacity(scaleFactor: scaleFactor, duration: duration):
+            let sf = if let scaleFactor = scaleFactor?.double {
+                " \(scaleFactor.formatted(.number.precision(.fractionLength(1 ... 2))))x"
+            } else {
+                ""
+            }
+            let dur = duration.formatted(.number.precision(.fractionLength(1 ... 2)))
+            return "Scale\(sf) and opacity fade \(dur) seconds"
         }
     }
 }
 
 extension HUDTransition: @retroactive CaseIterable {
     public static var allCases: [HUDTransition] {
-        [.default, .opacity(duration: 0.05), .opacity(duration: 0.8), .opacity(duration: 2.0), .none]
+        [
+            .opacity(duration: 0.05),
+            .opacity(duration: 0.4),
+            .opacity(duration: 0.8),
+            .opacity(duration: 2.0),
+            .scaleAndOpacity(duration: 0.05),
+            .scaleAndOpacity(scaleFactor: 0.9, duration: 0.4),
+            .scaleAndOpacity(duration: 0.8),
+            .scaleAndOpacity(duration: 2.0),
+        ]
     }
 }

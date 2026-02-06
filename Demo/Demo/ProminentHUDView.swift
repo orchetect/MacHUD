@@ -30,6 +30,7 @@ struct ProminentHUDView: View {
                         ForEach(HUDTransition.allCases) { transition in
                             Text(transition.name).tag(transition)
                         }
+                        Text("None").tag(nil as HUDTransition?)
                     }
                     
                     Slider(value: $style.duration, in: 0.0 ... 3.0, step: 0.1) {
@@ -40,6 +41,7 @@ struct ProminentHUDView: View {
                         ForEach(HUDTransition.allCases) { transition in
                             Text(transition.name).tag(transition)
                         }
+                        Text("None").tag(nil as HUDTransition?)
                     }
                 }
                 

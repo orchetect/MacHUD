@@ -26,9 +26,9 @@ extension MenuPopoverHUDStyle {
     /// Prominent HUD style matching macOS 10.15 system HUD appearance and behavior.
     public static var macOS26: Self {
         MenuPopoverHUDStyle(
-            transitionIn: .opacity(duration: 0.05),
-            duration: 1.2,
-            transitionOut: .opacity(duration: 0.8)
+            transitionIn: .scaleAndOpacity(scaleFactor: 0.9, duration: 0.4),
+            duration: 0.75,
+            transitionOut: .scaleAndOpacity(scaleFactor: 0.9, duration: 0.4)
         )
     }
 }

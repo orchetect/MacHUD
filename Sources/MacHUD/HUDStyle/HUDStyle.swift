@@ -19,9 +19,17 @@ public protocol HUDStyle: Equatable, Hashable, Sendable, SendableMetatype where 
     
     // MARK: - Common properties
     
-    var transitionIn: HUDTransition { get }
-    var duration: TimeInterval { get }
-    var transitionOut: HUDTransition { get }
+    /// Fade-out behavior when the alert is dismissed from the screen.
+    /// `nil` presents the alert immediately without a transition.
+    var transitionIn: HUDTransition? { get set }
+    
+    /// The amount of time for the HUD alert to persist on screen before it is dismissed, not including fade-in or
+    /// fade-out time.
+    var duration: TimeInterval { get set }
+    
+    /// Fade-out behavior when the alert is dismissed from the screen.
+    /// `nil` dismisses the alert immediately without a transition.
+    var transitionOut: HUDTransition? { get set }
     
     // MARK: - Window and View Content
     

@@ -11,6 +11,21 @@ import SwiftUI
 internal import SwiftExtensions
 
 extension HUDManager.Alert {
+    static var defaultScaleFactor: CGFloat { 0.9 }
+    
+    static func scaleFactorToShrinkWindow(scaleFactor: CGFloat) -> NSSize {
+        let scaleFactor = scaleFactor.clamped(to: 0.1 ... 2.0)
+        return NSSize(width: scaleFactor, height: scaleFactor)
+    }
+    
+    static func scaleFactorToResetWindow(scaleFactor: CGFloat) -> NSSize {
+        let shrinkFactor = scaleFactorToShrinkWindow(scaleFactor: scaleFactor)
+        return NSSize(
+            width: 1.0 / shrinkFactor.width,
+            height: 1.0 / shrinkFactor.height
+        )
+    }
+    
     /// Creates a new reusable alert window and configures it.
     @MainActor
     func windowFactory() async throws -> NSWindow {
@@ -40,6 +55,8 @@ extension HUDManager.Alert {
         window.isExcludedFromWindowsMenu = true
         window.allowsToolTipsWhenApplicationIsInactive = false
         window.isMovableByWindowBackground = false
+        window.animationBehavior = .none
+        
         window.collectionBehavior = [
             .ignoresCycle, .stationary, .canJoinAllSpaces, .fullScreenAuxiliary, .transient
         ]
@@ -75,6 +92,9 @@ extension HUDManager.Alert {
             // get screen for alert
             let alertScreen = try NSScreen.alertScreen
             let screenRect = alertScreen.effectiveAlertScreenRect
+            
+            // assert scale factor has been reset to default
+            assert(window.contentView?.isRotatedOrScaledFromBase == false)
             
             // set max alert size
             window.contentMaxSize = screenRect.size
@@ -113,17 +133,81 @@ extension HUDManager.Alert {
             window.orderFront(self)
         }
         
-        if let fadeInDuration: TimeInterval = switch style.transitionIn {
-        case .default: 0.05
-        case let .opacity(duration: customDuration): customDuration
-        case .none: nil
-        } {
+        if let transition = style.transitionIn {
+            let isOpacity: Bool
+            let scaleFactors: (shrink: NSSize, reset: NSSize)?
+            let transitionDuration: TimeInterval
+            switch transition {
+            case let .opacity(duration: customDuration):
+                isOpacity = true
+                scaleFactors = nil
+                transitionDuration = customDuration.clamped(to: 0.01 ... 5.0)
+            case let .scaleAndOpacity(scaleFactor: customScaleFactor, duration: customDuration):
+                isOpacity = true
+                scaleFactors = (
+                    shrink: Self.scaleFactorToShrinkWindow(scaleFactor: customScaleFactor ?? Self.defaultScaleFactor),
+                    reset: Self.scaleFactorToResetWindow(scaleFactor: customScaleFactor ?? Self.defaultScaleFactor)
+                )
+                transitionDuration = customDuration.clamped(to: 0.01 ... 5.0)
+            }
+            
+            let targetWindowFrame = window.frame
+            
+            // set initial state
+            
+            if let scaleFactors, let contentView = window.contentView {
+                // contentview
+                // For some reason, we need to set the original scale factor within an animation group or it will not scale on screen
+                await NSAnimationContext.runAnimationGroup { context in
+                    context.duration = 0.001
+                    context.allowsImplicitAnimation = true
+                    
+                    autoreleasepool {
+                        // window
+                        var newFrame = targetWindowFrame
+                        newFrame.origin.y += 10
+                        window.animator().setFrame(newFrame, display: true, animate: false)
+                        
+                        assert(!contentView.isRotatedOrScaledFromBase, "Scale state is unknown. This may cause incorrect alert size on screen.")
+                        let cframe = contentView.frame
+                        let newContentOrigin = NSPoint(
+                            x: cframe.origin.x + ((cframe.width - (cframe.width * scaleFactors.shrink.width)) / 2),
+                            y: cframe.origin.y + ((cframe.height * scaleFactors.shrink.height) / 4)
+                        )
+                        contentView.setFrameOrigin(newContentOrigin)
+                        contentView.animator().scaleUnitSquare(to: scaleFactors.shrink)
+                    }
+                }
+            }
+            
+            if !isOpacity {
+                autoreleasepool {
+                    window.alphaValue = 1.0
+                }
+            }
+            
             // animate alert appearing
             // NOTE: Animations will not work unless called on main thread/actor
             await NSAnimationContext.runAnimationGroup { context in
-                context.duration = fadeInDuration
+                context.duration = transitionDuration
+                context.allowsImplicitAnimation = true
+                
                 autoreleasepool {
-                    window.animator().alphaValue = 1.0
+                    if isOpacity {
+                        window.animator().alphaValue = 1.0
+                    }
+                    
+                    if let scaleFactors, let contentView = window.contentView {
+                        window.animator().setFrame(targetWindowFrame, display: true, animate: true)
+                        
+                        let cframe = contentView.frame
+                        let newContentOrigin = NSPoint(
+                            x: cframe.origin.x - ((cframe.width - (cframe.width * scaleFactors.shrink.width)) / 2),
+                            y: cframe.origin.y - ((cframe.height * scaleFactors.shrink.height) / 4)
+                        )
+                        contentView.setFrameOrigin(newContentOrigin)
+                        contentView.animator().scaleUnitSquare(to: scaleFactors.reset)
+                    }
                 }
             }
         } else {

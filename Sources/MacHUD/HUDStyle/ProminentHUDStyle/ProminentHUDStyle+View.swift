@@ -18,6 +18,8 @@ extension ProminentHUDStyle {
         let text: String?
         let imageSource: HUDImageSource?
         
+        let padding: CGFloat = 20.0
+        
         public init(
             text: String? = nil,
             imageSource: HUDImageSource? = nil,
@@ -48,9 +50,13 @@ extension ProminentHUDStyle {
             VStack(spacing: 20) {
                 if let conditionalImageView, let textView {
                     conditionalImageView
+                        .aspectRatio(1.0, contentMode: .fit)
+                        .frame(minWidth: minSize)
                     textView
                 } else if let conditionalImageView {
                     conditionalImageView
+                        .aspectRatio(1.0, contentMode: .fit)
+                        .frame(minWidth: minSize, minHeight: minSize)
                 } else if let textView {
                     textView
                 } else {
@@ -58,17 +64,14 @@ extension ProminentHUDStyle {
                     Text(verbatim: " ")
                 }
             }
-            .aspectRatio(isImagePresent ? 1.0 : nil, contentMode: .fit)
-            .frame(minWidth: minSize, minHeight: minSize)
-            .padding(20)
+            .padding(padding)
         }
         
-        @ViewBuilder
         private var conditionalImageView: (some View)? {
             if #available(macOS 13.0, *) {
-                imageView?.fontWeight(.light)
+                return imageView?.fontWeight(.light)
             } else {
-                imageView
+                return imageView
             }
         }
         
@@ -86,11 +89,14 @@ extension ProminentHUDStyle {
         }
         
         private var textView: (some View)? {
-            if let text, text != "" {
+            if let text, !text.trimmed.isEmpty {
                 Text(text)
                     .font(.system(size: textFontSize))
                     .foregroundColor(textColor)
+                    .multilineTextAlignment(.center)
                     .truncationMode(.tail)
+                    .frame(maxWidth: maxContentWidth)
+                    .fixedSize(horizontal: true, vertical: false)
             } else {
                 nil
             }
@@ -105,6 +111,15 @@ extension ProminentHUDStyle {
 // MARK: - Geometry
 
 extension ProminentHUDStyle.ContentView {
+    private var alertScreenRect: NSRect? {
+        try? NSScreen.alertScreen.effectiveAlertScreenRect
+    }
+    
+    private var maxContentWidth: CGFloat? {
+        guard let alertScreenRect else { return nil }
+        return alertScreenRect.width - (padding * 4)
+    }
+    
     private var minSize: CGFloat? {
         if isImagePresent, isTextPresent {
             imageSize * 1.35
@@ -132,7 +147,7 @@ extension ProminentHUDStyle.ContentView {
     }
     
     private var textOnlyFontSize: CGFloat {
-        let screenSize = (try? NSScreen.alertScreen.effectiveAlertScreenRect.size)
+        let screenSize = alertScreenRect?.size
             ?? CGSize(width: 1920, height: 1080) // provide a reasonable default
         return textOnlyAlertFontSize(forScreenSize: screenSize)
     }

@@ -29,7 +29,8 @@ extension HUDManager.Alert {
         
         public var body: some View {
             conditionalBody
-                .fixedSize()
+                .compositingGroup()
+                // .fixedSize()
                 .allowsHitTesting(false)
         }
         

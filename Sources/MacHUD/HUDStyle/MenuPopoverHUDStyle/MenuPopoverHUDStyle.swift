@@ -14,24 +14,18 @@ import Foundation
 /// While in full screen mode, these alerts are centered at the top of the screen instead.
 @available(macOS 26.0, *)
 public struct MenuPopoverHUDStyle: HUDStyle {
-    /// Fade-out behavior when the alert is dismissed from the screen.
-    public var transitionIn: HUDTransition
-    
-    /// The amount of time for the HUD alert to persist on screen before it is dismissed, not including fade-in or
-    /// fade-out time.
+    public var transitionIn: HUDTransition?
     public var duration: TimeInterval
-    
-    /// Fade-out behavior when the alert is dismissed from the screen.
-    public var transitionOut: HUDTransition
+    public var transitionOut: HUDTransition?
     
     public init() {
         self = .macOS26
     }
     
     public init(
-        transitionIn: HUDTransition,
+        transitionIn: HUDTransition?,
         duration: TimeInterval,
-        transitionOut: HUDTransition
+        transitionOut: HUDTransition?
     ) {
         self.transitionIn = transitionIn
         self.duration = duration

@@ -10,14 +10,11 @@ import Foundation
 
 /// Visual transition in or out for an on-screen HUD alert.
 public enum HUDTransition {
-    /// Default transition appropriate for the current platform.
-    case `default`
-    
     /// Opacity fade.
     case opacity(duration: TimeInterval)
     
-    /// No transition. (Immediate)
-    case none
+    /// Scale and opacity fade.
+    case scaleAndOpacity(scaleFactor: CGFloat? = nil, duration: TimeInterval)
 }
 
 extension HUDTransition: Equatable { }

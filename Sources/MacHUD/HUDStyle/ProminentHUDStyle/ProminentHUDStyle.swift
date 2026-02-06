@@ -14,14 +14,14 @@ public struct ProminentHUDStyle: HUDStyle {
     public var position: Position
     
     /// Fade-out behavior when the alert is dismissed from the screen.
-    public var transitionIn: HUDTransition
+    public var transitionIn: HUDTransition?
     
     /// The amount of time for the HUD alert to persist on screen before it is dismissed, not including fade-in or
     /// fade-out time.
     public var duration: TimeInterval
     
     /// Fade-out behavior when the alert is dismissed from the screen.
-    public var transitionOut: HUDTransition
+    public var transitionOut: HUDTransition?
     
     public init() {
         self = if #available(macOS 11.0, *) {
@@ -35,9 +35,9 @@ public struct ProminentHUDStyle: HUDStyle {
     
     public init(
         position: Position,
-        transitionIn: HUDTransition,
+        transitionIn: HUDTransition?,
         duration: TimeInterval,
-        transitionOut: HUDTransition
+        transitionOut: HUDTransition?
     ) {
         self.position = position
         self.transitionIn = transitionIn
