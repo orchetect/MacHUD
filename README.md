@@ -2,7 +2,7 @@
 
 [![Platforms | macOS 10.15+](https://img.shields.io/badge/platforms-macOS%2010.15+-blue.svg?style=flat)](https://developer.apple.com/swift) [![Xcode 16](https://img.shields.io/badge/Xcode-16-blue.svg?style=flat)](https://developer.apple.com/swift) [![License: MIT](http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat)](https://github.com/orchetect/MacHUD/blob/main/LICENSE)
 
-A heads-up-display (HUD) library written in Swift that simulates macOS system HUD alerts.
+A heads-up-display (HUD) library written in Swift that simulates macOS system HUD alerts, as well as custom alert designs.
 
 ## Overview
 
@@ -66,7 +66,9 @@ To enable HUD alerts showing over top of full-screen application windows partici
 
 ## Customization
 
-The included HUD alert styles have a fair degree of customizability as-is. However, it is possible to define custom alert window styles easily by conforming a struct to the `HUDStyle` protocol.
+In addition to pre-defined system alert styles provided by the library, fully custom alert windows can also be designed by adopting the `HUDStyle` protocol.
+
+
 
 See the included `ProminentHUDStyle` and `MenuPopoverHUDStyle` HUD styles for examples on how to implement a custom HUD style.
 
