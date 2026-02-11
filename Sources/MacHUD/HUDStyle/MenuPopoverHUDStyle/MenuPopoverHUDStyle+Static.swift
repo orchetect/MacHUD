@@ -6,6 +6,7 @@
 
 #if os(macOS)
 
+import AppKit
 import Foundation
 
 // MARK: - Static Constructors
@@ -24,11 +25,12 @@ extension HUDStyle where Self == MenuPopoverHUDStyle {
 @available(macOS 26.0, *)
 extension MenuPopoverHUDStyle {
     /// Prominent HUD style matching macOS 10.15 system HUD appearance and behavior.
-    public static var macOS26: Self {
+    public static func macOS26(statusItem: (@MainActor () -> NSStatusItem)? = nil) -> Self {
         MenuPopoverHUDStyle(
             transitionIn: .scaleAndOpacity(scaleFactor: 0.9, duration: 0.4),
             duration: 0.75,
-            transitionOut: .scaleAndOpacity(scaleFactor: 0.9, duration: 0.4)
+            transitionOut: .scaleAndOpacity(scaleFactor: 0.9, duration: 0.4),
+            statusItem: statusItem
         )
     }
 }

@@ -6,13 +6,19 @@
 
 #if os(macOS)
 
+import AppKit
 import Foundation
 
 // MARK: - Composable/Chainable Methods
 
 @available(macOS 26.0, *)
 extension MenuPopoverHUDStyle {
-    // empty
+    /// Returns the style updating the ``statusItem`` property value.
+    public func statusItem(_ closure: (@MainActor () -> NSStatusItem)? = nil) -> Self {
+        var copy = self
+        copy.statusItem = closure
+        return copy
+    }
 }
 
 #endif
