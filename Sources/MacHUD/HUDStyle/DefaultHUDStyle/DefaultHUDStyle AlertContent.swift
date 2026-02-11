@@ -23,7 +23,7 @@ extension DefaultHUDStyle.AlertContent {
         switch self {
         case let .text(text): .text(text)
         case let .image(imageSource): .image(imageSource)
-        case let .textAndImage(text, image): .textAndImage(text: text, image: image)
+        case let .textAndImage(text, image): .imageAndText(text: text, image: image)
         }
     }
     

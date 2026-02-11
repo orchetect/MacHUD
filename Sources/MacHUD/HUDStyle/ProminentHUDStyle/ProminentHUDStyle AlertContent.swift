@@ -12,7 +12,7 @@ extension ProminentHUDStyle {
     public enum AlertContent: HUDAlertContent {
         case text(String)
         case image(HUDImageSource)
-        case textAndImage(text: String, image: HUDImageSource)
+        case imageAndText(text: String, image: HUDImageSource)
         case imageAndProgress(image: HUDImageSource, value: HUDProgressValue)
     }
 }
