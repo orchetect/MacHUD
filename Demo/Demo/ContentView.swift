@@ -4,6 +4,7 @@
 //  © 2018-2026 Steffan Andrews • Licensed under MIT License
 //
 
+import AppKit
 import MacHUD
 import SwiftUI
 

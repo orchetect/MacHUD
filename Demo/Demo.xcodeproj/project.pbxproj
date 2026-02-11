@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		E221D4652F31871500533AF9 /* MacHUD in Frameworks */ = {isa = PBXBuildFile; productRef = E221D4642F31871500533AF9 /* MacHUD */; };
+		E26923B02F3D00440016B1B3 /* MenuBarExtraAccess in Frameworks */ = {isa = PBXBuildFile; productRef = E26923AF2F3D00440016B1B3 /* MenuBarExtraAccess */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E26923B02F3D00440016B1B3 /* MenuBarExtraAccess in Frameworks */,
 				E221D4652F31871500533AF9 /* MacHUD in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -71,6 +73,7 @@
 			name = Demo;
 			packageProductDependencies = (
 				E221D4642F31871500533AF9 /* MacHUD */,
+				E26923AF2F3D00440016B1B3 /* MenuBarExtraAccess */,
 			);
 			productName = Demo;
 			productReference = E2F97C962F2194CE009C09A2 /* Demo.app */;
@@ -102,6 +105,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				E221D4632F31871500533AF9 /* XCLocalSwiftPackageReference "../../MacHUD" */,
+				E26923AE2F3D00440016B1B3 /* XCRemoteSwiftPackageReference "MenuBarExtraAccess" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E2F97C972F2194CE009C09A2 /* Products */;
@@ -380,10 +384,26 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		E26923AE2F3D00440016B1B3 /* XCRemoteSwiftPackageReference "MenuBarExtraAccess" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/orchetect/MenuBarExtraAccess";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		E221D4642F31871500533AF9 /* MacHUD */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MacHUD;
+		};
+		E26923AF2F3D00440016B1B3 /* MenuBarExtraAccess */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E26923AE2F3D00440016B1B3 /* XCRemoteSwiftPackageReference "MenuBarExtraAccess" */;
+			productName = MenuBarExtraAccess;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

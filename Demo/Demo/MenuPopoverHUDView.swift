@@ -9,6 +9,8 @@ import SwiftUI
 
 @available(macOS 26.0, *)
 struct MenuPopoverHUDView: View {
+    @Environment(\.statusItem) private var statusItem
+    
     @State private var text = "Volume"
     @State private var image: SampleImage = .speakerVolumeHigh
     @State private var style: MenuPopoverHUDStyle = .init()
@@ -51,19 +53,22 @@ struct MenuPopoverHUDView: View {
                     
                     HStack {
                         Button("Show Text-Only Alert") {
-                            HUDManager.shared.displayAlert(style: style, content: .text(text))
+                            HUDManager.shared.displayAlert(
+                                style: style.statusItem(statusItem),
+                                content: .text(text)
+                            )
                         }
                         
                         Button("Show Image-Only Alert") {
                             HUDManager.shared.displayAlert(
-                                style: style,
+                                style: style.statusItem(statusItem),
                                 content: .image(.systemName(image.rawValue))
                             )
                         }
                         
                         Button("Show Image & Text Alert") {
                             HUDManager.shared.displayAlert(
-                                style: style,
+                                style: style.statusItem(statusItem),
                                 content: .textAndImage(text: text, image: .systemName(image.rawValue))
                             )
                         }
@@ -73,14 +78,14 @@ struct MenuPopoverHUDView: View {
                 Section("Sample HUD Alerts") {
                     Button("Show Audio Volume Change HUD Alert") {
                         HUDManager.shared.displayAlert(
-                            style: .menuPopover(),
+                            style: .menuPopover().statusItem(statusItem),
                             content: .audioVolume(deviceName: "MacBook Pro Speakers", level: .unitInterval(.random(in: 0.0 ... 1.0)))
                         )
                     }
                     
                     Button("Show Screen Brightness Change HUD Alert") {
                         HUDManager.shared.displayAlert(
-                            style: .menuPopover(),
+                            style: .menuPopover().statusItem(statusItem),
                             content: .screenBrightness(level: .unitInterval(.random(in: 0.0 ... 1.0)))
                         )
                     }
@@ -105,7 +110,10 @@ struct MenuPopoverHUDView: View {
         
         continuousTask = Task {
             while !Task.isCancelled {
-                HUDManager.shared.displayAlert(style: style, content: .text(UUID().uuidString))
+                HUDManager.shared.displayAlert(
+                    style: style.statusItem(statusItem),
+                    content: .text(UUID().uuidString)
+                )
                 alertCount += 1
                 try await Task.sleep(for: .milliseconds(500))
             }
