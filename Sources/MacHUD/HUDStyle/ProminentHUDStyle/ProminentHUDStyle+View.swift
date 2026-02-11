@@ -47,11 +47,12 @@ extension ProminentHUDStyle {
         }
         
         public var body: some View {
-            VStack(spacing: 20) {
+            VStack(spacing: 14) {
                 if let conditionalImageView, let textView {
                     conditionalImageView
                         .aspectRatio(1.0, contentMode: .fit)
                         .frame(minWidth: minSize)
+                        .padding([.top], 15) // based on Xcode 26.3's built-in HUD alerts
                     textView
                 } else if let conditionalImageView {
                     conditionalImageView
@@ -122,9 +123,9 @@ extension ProminentHUDStyle.ContentView {
     
     private var minSize: CGFloat? {
         if isImagePresent, isTextPresent {
-            imageSize * 1.35
+            imageSize * 1.45
         } else if isImagePresent {
-            imageSize * 1.3
+            imageSize * 1.4
         } else {
             nil
         }
@@ -157,7 +158,7 @@ extension ProminentHUDStyle.ContentView {
     }
     
     private var textWithImageFontSize: CGFloat {
-        20.0
+        18.0
     }
     
     private var textColor: Color {
@@ -172,7 +173,7 @@ extension ProminentHUDStyle.ContentView {
         imageSource != nil
     }
     
-    private var imageSize: CGFloat { 120.0 }
+    private var imageSize: CGFloat { 110.0 } // based on Xcode 26.3's built-in HUD alerts
     
     private var imageColor: Color {
         // .primary.opacity(0.8)
@@ -212,13 +213,6 @@ extension ProminentHUDStyle.ContentView {
     ProminentHUDStyle.ContentView(
         style: .prominent(),
         content: .image(.systemName("speaker.wave.3.fill"))
-    )
-}
-
-#Preview("Text & Image") {
-    ProminentHUDStyle.ContentView(
-        style: .prominent(),
-        content: .textAndImage(text: "Volume", image: .systemName("speaker.wave.3.fill"))
     )
 }
 
