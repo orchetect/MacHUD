@@ -4,9 +4,7 @@
 
 A heads-up-display (HUD) library written in Swift that simulates macOS system HUD alerts, as well as custom alert designs.
 
-![Prominent HUD Alert Screen Capture](Images/prominent-hud-sample.mp4)
-
-![Menu Popover HUD Alert Screen Capture](Images/menu-popover-hud-sample.mp4)
+![Prominent HUD Alert Screen Capture](https://github.com/user-attachments/assets/980f671b-f704-4f4e-bd08-d79cbb1122d7) ![Menu Popover HUD Alert Screen Capture](https://github.com/user-attachments/assets/5b335a11-25aa-4393-b9e5-e2525bf1dfe5)
 
 ## Overview
 
