@@ -77,6 +77,13 @@ struct MenuPopoverHUDView: View {
                             content: .audioVolume(deviceName: "MacBook Pro Speakers", level: .unitInterval(.random(in: 0.0 ... 1.0)))
                         )
                     }
+                    
+                    Button("Show Screen Brightness Change HUD Alert") {
+                        HUDManager.shared.displayAlert(
+                            style: .menuPopover(),
+                            content: .screenBrightness(level: .unitInterval(.random(in: 0.0 ... 1.0)))
+                        )
+                    }
                 }
                 
                 Section("Generate HUD Alerts Automatically") {

@@ -69,7 +69,7 @@ struct ProminentHUDView: View {
                         Button("Show Image & Text Alert") {
                             HUDManager.shared.displayAlert(
                                 style: style,
-                                content: .textAndImage(text: text, image: .systemName(image.rawValue))
+                                content: .imageAndText(text: text, image: .systemName(image.rawValue))
                             )
                         }
                     }
@@ -79,7 +79,7 @@ struct ProminentHUDView: View {
                     Button("Show Xcode Build HUD Alert") {
                         HUDManager.shared.displayAlert(
                             style: .prominent(),
-                            content: .textAndImage(text: "Build Succeeded", image: .image(Image(.xcodeBuild)))
+                            content: .imageAndText(text: "Build Succeeded", image: .image(Image(.xcodeBuild)))
                         )
                     }
                     
@@ -87,6 +87,13 @@ struct ProminentHUDView: View {
                         HUDManager.shared.displayAlert(
                             style: .prominent(),
                             content: .audioVolume(level: .unitInterval(.random(in: 0.0 ... 1.0)))
+                        )
+                    }
+                    
+                    Button("Show Screen Brightness Change HUD Alert") {
+                        HUDManager.shared.displayAlert(
+                            style: .prominent(),
+                            content: .screenBrightness(level: .unitInterval(.random(in: 0.0 ... 1.0)))
                         )
                     }
                 }
