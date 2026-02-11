@@ -77,7 +77,7 @@ extension HUDManager.Alert {
     
     /// Updates the reusable window with new parameters.
     @MainActor
-    func _updateWindow(
+    func updateWindow(
         content: Style.AlertContent
     ) async throws {
         guard let window else {
@@ -120,7 +120,7 @@ extension HUDManager.Alert {
     
     /// Shows the alert on screen, optionally animating its appearance and dismissal.
     @MainActor
-    func _showWindow() async throws {
+    func showWindow() async throws {
         let style = await style
         
         guard let window else {

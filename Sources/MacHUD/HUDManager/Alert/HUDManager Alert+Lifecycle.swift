@@ -18,7 +18,7 @@ extension HUDManager.Alert {
         if isInUse {
             // do a basic reset of the window if it's currently in use
             await Task { @MainActor in
-                _orderOutWindowAndZeroOutAlpha()
+                orderOutWindowAndZeroOutAlpha()
                 // this may not be necessary or may not do anything useful;
                 // the assumption is that it cancels any already in-progress animation but it hasn't been
                 // confirmed that it actually does that yet
@@ -33,8 +33,8 @@ extension HUDManager.Alert {
         self.style = style
         
         do {
-            try await _updateWindow(content: content)
-            try await _showWindow()
+            try await updateWindow(content: content)
+            try await showWindow()
         } catch {
             isInUse = false
             throw error
@@ -110,17 +110,17 @@ extension HUDManager.Alert {
             }
         }
         
-        self._orderOutWindowAndZeroOutAlpha()
-        await self._resetInUse()
+        self.orderOutWindowAndZeroOutAlpha()
+        await self.resetInUse()
     }
     
     @HUDManager
-    func _resetInUse() {
+    func resetInUse() {
         isInUse = false
     }
     
     @MainActor
-    func _orderOutWindowAndZeroOutAlpha() {
+    func orderOutWindowAndZeroOutAlpha() {
         autoreleasepool {
             window?.orderOut(self)
             window?.alphaValue = 0
