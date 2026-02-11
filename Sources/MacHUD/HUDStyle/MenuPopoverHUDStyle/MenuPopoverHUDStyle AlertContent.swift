@@ -46,13 +46,13 @@ extension MenuPopoverHUDStyle.AlertContent {
     /// Alert that simulates the macOS system screen brightness level change HUD alert.
     ///
     /// - Parameters:
-    ///   - displayName: Display name. (On MacBook Pro, this defaults to "Display" for the internal display.)
-    ///   - level: Audio level.
+    ///   - displayName: Display (screen) name. (On MacBook Pro, this defaults to "Display" for the internal display.)
+    ///   - level: Brightness level.
     public static func screenBrightness(displayName: String = "Display", level: HUDProgressValue) -> Self {
         .textAndProgress(
             text: displayName,
             value: level,
-            images: .minMax(min: .systemName("sun.min"), max: .systemName("sun.max"))
+            images: .minMax(min: .systemName("sun.min.fill"), max: .systemName("sun.max.fill"))
         )
     }
 }

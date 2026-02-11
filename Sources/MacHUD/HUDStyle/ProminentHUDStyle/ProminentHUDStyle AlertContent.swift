@@ -24,9 +24,11 @@ extension ProminentHUDStyle.AlertContent {
     ///
     /// - Parameters:
     ///   - level: Audio level.
-    public static func audioVolume(level: HUDProgressValue) -> Self {
+    ///   - dynamicImage: If `true`, an image corresponding to the volume level is used.
+    ///     If `false`, a standard static image is used mimicking macOS system behavior.
+    public static func audioVolume(level: HUDProgressValue, dynamicImage: Bool = false) -> Self {
         .imageAndProgress(
-            image: .image(forVolumeLevel: level.unitInterval),
+            image: .image(forVolumeLevel: dynamicImage ? level.unitInterval : 1.0),
             value: level
         )
     }
@@ -34,10 +36,10 @@ extension ProminentHUDStyle.AlertContent {
     /// Alert that simulates the macOS system screen brightness level change HUD alert.
     ///
     /// - Parameters:
-    ///   - level: Audio level.
+    ///   - level: Screen brightness level.
     public static func screenBrightness(level: HUDProgressValue) -> Self {
         .imageAndProgress(
-            image: .image(forVolumeLevel: level.unitInterval),
+            image: .systemName("sun.max"),
             value: level
         )
     }

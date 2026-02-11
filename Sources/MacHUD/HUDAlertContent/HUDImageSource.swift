@@ -51,11 +51,13 @@ extension HUDImageSource {
         guard let level else { return .systemName("speaker.slash.fill") }
         
         return switch level {
-        case ...0.0: .systemName("speaker.fill")
-        case 0.0 ... 0.25: .systemName("speaker.wave.1.fill")
-        case 0.25 ... 0.50: .systemName("speaker.wave.2.fill")
-        case 0.50 ... 0.75: .systemName("speaker.wave.3.fill")
-        default: // case 0.75 ... 1.0
+        case ...0.0:
+            .systemName("speaker.fill")
+        case 0.0 ... 0.33:
+            .systemName("speaker.wave.1.fill")
+        case 0.33 ... 0.66:
+            .systemName("speaker.wave.2.fill")
+        default: // 0.66 ... 1.0
             .systemName("speaker.wave.3.fill")
         }
     }

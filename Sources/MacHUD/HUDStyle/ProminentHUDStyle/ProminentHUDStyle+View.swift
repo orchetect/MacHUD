@@ -17,16 +17,19 @@ extension ProminentHUDStyle {
         let style: Style
         let text: String?
         let imageSource: HUDImageSource?
+        let progressValue: HUDProgressValue?
         
         let padding: CGFloat = 20.0
         
         public init(
             text: String? = nil,
             imageSource: HUDImageSource? = nil,
+            progressValue: HUDProgressValue? = nil,
             style: ProminentHUDStyle
         ) {
             self.text = text
             self.imageSource = imageSource
+            self.progressValue = progressValue
             self.style = style
         }
         
@@ -35,21 +38,19 @@ extension ProminentHUDStyle {
             case let .text(string):
                 text = string
                 imageSource = nil
+                progressValue = nil
             case let .image(imageSource):
                 text = nil
                 self.imageSource = imageSource
+                progressValue = nil
             case let .textAndImage(text: string, image: imageSource):
                 text = string
                 self.imageSource = imageSource
+                progressValue = nil
             case let .imageAndProgress(image: imageSource, value: value):
-                // TODO: temporary for debugging. add actual progress bar instead.
-                if #available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *) {
-                    text = value.localizedPercentageString
-                } else {
-                    text = "\(value.percentageValue)%"
-                }
-                
+                text = nil
                 self.imageSource = imageSource
+                progressValue = value
             }
             
             self.style = style
@@ -59,12 +60,21 @@ extension ProminentHUDStyle {
             VStack(spacing: 14) {
                 if let conditionalImageView, let textView {
                     conditionalImageView
+                        .frame(width: imageSize, height: imageSize)
                         .aspectRatio(1.0, contentMode: .fit)
                         .frame(minWidth: minSize)
                         .padding([.top], 15) // based on Xcode 26.3's built-in HUD alerts
                     textView
+                } else if let conditionalImageView, let progressValue {
+                    conditionalImageView
+                        .frame(width: imageSize * 0.8, height: imageSize * 0.8)
+                        .aspectRatio(1.0, contentMode: .fit)
+                        .frame(minWidth: minSize)
+                        .padding([.top, .bottom], 14 * 2)
+                    AmountView(value: progressValue)
                 } else if let conditionalImageView {
                     conditionalImageView
+                        .frame(width: imageSize, height: imageSize)
                         .aspectRatio(1.0, contentMode: .fit)
                         .frame(minWidth: minSize, minHeight: minSize)
                 } else if let textView {
@@ -90,7 +100,6 @@ extension ProminentHUDStyle {
                 image
                     .resizable()
                     .scaledToFit()
-                    .frame(width: imageSize, height: imageSize)
                     .foregroundColor(imageColor)
                     .opacity(0.8)
             } else {
@@ -225,10 +234,24 @@ extension ProminentHUDStyle.ContentView {
     )
 }
 
-#Preview("Text & Image") {
+#Preview("Image & Text") {
     ProminentHUDStyle.ContentView(
         style: .prominent(),
         content: .textAndImage(text: "Volume", image: .systemName("speaker.wave.3.fill"))
+    )
+}
+
+#Preview("Image & Progress (Volume)") {
+    ProminentHUDStyle.ContentView(
+        style: .prominent(),
+        content: .audioVolume(level: .unitInterval(0.6))
+    )
+}
+
+#Preview("Image & Progress (Brightness)") {
+    ProminentHUDStyle.ContentView(
+        style: .prominent(),
+        content: .screenBrightness(level: .unitInterval(0.6))
     )
 }
 
