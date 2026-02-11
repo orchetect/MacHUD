@@ -45,6 +45,13 @@ extension ContentView {
             }
         }
         
+        var verboseName: String {
+            switch self {
+            case .prominent: "Prominent HUD Alerts"
+            case .menuPopover: "Menu Popover HUD Alerts"
+            }
+        }
+        
         var systemImage: String {
             switch self {
             case .prominent: "bell.square"

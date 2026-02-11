@@ -11,6 +11,8 @@ import SwiftUI
 struct MenuPopoverHUDView: View {
     @Environment(\.statusItem) private var statusItem
     
+    let panel: ContentView.Panel = .menuPopover
+    
     @State private var text = "Volume"
     @State private var image: SampleImage = .speakerVolumeHigh
     @State private var style: MenuPopoverHUDStyle = .init()
@@ -22,6 +24,21 @@ struct MenuPopoverHUDView: View {
     var body: some View {
         VStack {
             Form {
+                InfoView(panel.verboseName, systemImage: panel.systemImage) {
+                    Text("Introduced by Apple in macOS 26.")
+                        .font(.headline)
+                    
+                    Text(
+                        """
+                        These alerts are paired with Control Center menus. \
+                        If the alert's corresponding menubar item is visible in the menubar, the HUD alert with pop under the menubar item. \
+                        If the menubar item is not visible or has not been added to the menubar by the user, the HUD alert will pop under the main Control Center menubar item.
+                        
+                        When the user has an app in full-screen mode, the HUD alert is presented at the center top of the screen instead.
+                        """
+                    )
+                }
+                
                 Section("Style") {
                     Picker("Transition In", selection: $style.transitionIn) {
                         ForEach(HUDTransition.allCases) { transition in

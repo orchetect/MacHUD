@@ -8,6 +8,8 @@ import MacHUD
 import SwiftUI
 
 struct ProminentHUDView: View {
+    let panel: ContentView.Panel = .prominent
+    
     @State private var text = "Volume"
     @State private var image: SampleImage = .speakerVolumeHigh
     @State private var style: ProminentHUDStyle = .init()
@@ -19,6 +21,17 @@ struct ProminentHUDView: View {
     var body: some View {
         VStack {
             Form {
+                InfoView(panel.verboseName, systemImage: panel.systemImage) {
+                    Text("HUD alerts used in macOS 11 through 15 (and earlier).")
+                        .font(.headline)
+                    
+                    Text(
+                        """
+                        These alerts are presented as medium-sized temporary screen overlays centered in the lower half of the screen.
+                        """
+                    )
+                }
+                
                 Section("Style") {
                     Picker("Position on Screen", selection: $style.position) {
                         ForEach(ProminentHUDStyle.Position.allCases) { position in

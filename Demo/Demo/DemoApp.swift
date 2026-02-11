@@ -22,7 +22,7 @@ struct DemoApp: App {
                     await HUDManager.shared.prewarm()
                 }
         }
-        .defaultSize(width: 800, height: 800)
+        .defaultSize(width: 800, height: 1100)
         
         MenuBarExtra("Demo", systemImage: "bubble.fill") {
             Button("Quit") { NSApp.terminate(nil) }
