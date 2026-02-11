@@ -15,76 +15,66 @@ extension ProminentHUDStyle {
         
         public typealias Style = ProminentHUDStyle
         let style: Style
-        let text: String?
-        let imageSource: HUDImageSource?
-        let progressValue: HUDProgressValue?
-        
-        let padding: CGFloat = 20.0
-        
-        public init(
-            text: String? = nil,
-            imageSource: HUDImageSource? = nil,
-            progressValue: HUDProgressValue? = nil,
-            style: ProminentHUDStyle
-        ) {
-            self.text = text
-            self.imageSource = imageSource
-            self.progressValue = progressValue
-            self.style = style
-        }
+        let content: Style.AlertContent
         
         public init(style: Style, content: Style.AlertContent) {
-            switch content {
-            case let .text(string):
-                text = string
-                imageSource = nil
-                progressValue = nil
-            case let .image(imageSource):
-                text = nil
-                self.imageSource = imageSource
-                progressValue = nil
-            case let .textAndImage(text: string, image: imageSource):
-                text = string
-                self.imageSource = imageSource
-                progressValue = nil
-            case let .imageAndProgress(image: imageSource, value: value):
-                text = nil
-                self.imageSource = imageSource
-                progressValue = value
-            }
-            
             self.style = style
+            self.content = content
         }
         
         public var body: some View {
             VStack(spacing: 14) {
-                if let conditionalImageView, let textView {
-                    conditionalImageView
-                        .frame(width: imageSize, height: imageSize)
-                        .aspectRatio(1.0, contentMode: .fit)
-                        .frame(minWidth: minSize)
-                        .padding([.top], 15) // based on Xcode 26.3's built-in HUD alerts
-                    textView
-                } else if let conditionalImageView, let progressValue {
-                    conditionalImageView
-                        .frame(width: imageSize * 0.8, height: imageSize * 0.8)
-                        .aspectRatio(1.0, contentMode: .fit)
-                        .frame(minWidth: minSize)
-                        .padding([.top, .bottom], 14 * 2)
+                switch content {
+                case let .text(text):
+                    TextView(text: text, isTextOnly: true)
+                case let .image(imageSource):
+                    ImageView(imageSource: imageSource, format: .imageOnly)
+                case let .textAndImage(text: text, image: imageSource):
+                    ImageView(imageSource: imageSource, format: .imageAndText)
+                    TextView(text: text, isTextOnly: false)
+                case let .imageAndProgress(image: imageSource, value: progressValue):
+                    ImageView(imageSource: imageSource, format: .imageAndProgress)
                     AmountView(value: progressValue)
-                } else if let conditionalImageView {
-                    conditionalImageView
-                        .frame(width: imageSize, height: imageSize)
-                        .aspectRatio(1.0, contentMode: .fit)
-                        .frame(minWidth: minSize, minHeight: minSize)
-                } else if let textView {
-                    textView
-                } else {
-                    // force the view to have content in case both image and text are nil
-                    Text(verbatim: " ")
                 }
             }
-            .padding(padding)
+            .padding(Geometry.padding)
+        }
+    }
+}
+
+extension ProminentHUDStyle.ContentView {
+    struct ImageView: View {
+        @Environment(\.colorScheme) private var colorScheme
+        private typealias Geometry = ProminentHUDStyle.Geometry
+        
+        let imageSource: HUDImageSource
+        let format: ImageFormat
+        
+        var body: some View {
+            switch format {
+            case .imageAndText:
+                conditionalImageView
+                    .frame(width: Geometry.imageSize, height: Geometry.imageSize)
+                    .aspectRatio(1.0, contentMode: .fit)
+                    .frame(minWidth: Geometry.minSize(isImagePresent: true, isTextPresent: true))
+                    .padding([.top], 15) // based on Xcode 26.3's built-in HUD alerts
+            
+            case .imageAndProgress:
+                conditionalImageView
+                    .frame(width: Geometry.imageSize * 0.8, height: Geometry.imageSize * 0.8)
+                    .aspectRatio(1.0, contentMode: .fit)
+                    .frame(minWidth: Geometry.minSize(isImagePresent: true, isTextPresent: false))
+                    .padding([.top, .bottom], 14 * 2)
+                
+            case .imageOnly:
+                conditionalImageView
+                    .frame(width: Geometry.imageSize, height: Geometry.imageSize)
+                    .aspectRatio(1.0, contentMode: .fit)
+                    .frame(
+                        minWidth: Geometry.minSize(isImagePresent: true, isTextPresent: false),
+                        minHeight: Geometry.minSize(isImagePresent: true, isTextPresent: false)
+                    )
+            }
         }
         
         private var conditionalImageView: (some View)? {
@@ -100,100 +90,107 @@ extension ProminentHUDStyle {
                 image
                     .resizable()
                     .scaledToFit()
-                    .foregroundColor(imageColor)
+                    .foregroundColor(Geometry.imageColor(colorScheme: colorScheme))
                     .opacity(0.8)
             } else {
                 nil
             }
         }
         
-        private var textView: (some View)? {
-            if let text, !text.trimmed.isEmpty {
-                Text(text)
-                    .font(.system(size: textFontSize))
-                    .foregroundColor(textColor)
-                    .multilineTextAlignment(.center)
-                    .truncationMode(.tail)
-                    .frame(maxWidth: maxContentWidth)
-                    .fixedSize(horizontal: true, vertical: false)
-            } else {
-                nil
-            }
+        enum ImageFormat: String, CaseIterable, Sendable {
+            case imageAndText
+            case imageAndProgress
+            case imageOnly
         }
         
         private var image: Image? {
-            imageSource?.image
+            imageSource.image
         }
     }
 }
 
-// MARK: - Geometry
-
 extension ProminentHUDStyle.ContentView {
-    private var alertScreenRect: NSRect? {
-        try? NSScreen.alertScreen.effectiveAlertScreenRect
+    struct TextView: View {
+        private typealias Geometry = ProminentHUDStyle.Geometry
+        
+        let text: String
+        let isTextOnly: Bool
+        
+        var body: some View {
+            Text(text)
+                .font(.system(size: Geometry.textFontSize(isTextOnly: isTextOnly)))
+                .foregroundColor(Geometry.textColor)
+                .multilineTextAlignment(.center)
+                .truncationMode(.tail)
+                .frame(maxWidth: Geometry.maxContentWidth)
+                .fixedSize(horizontal: true, vertical: false)
+        }
     }
-    
-    private var maxContentWidth: CGFloat? {
-        guard let alertScreenRect else { return nil }
-        return alertScreenRect.width - (padding * 4)
-    }
-    
-    private var minSize: CGFloat? {
-        if isImagePresent, isTextPresent {
-            imageSize * 1.45
-        } else if isImagePresent {
-            imageSize * 1.4
-        } else {
-            nil
+}
+
+// MARK: - Alert
+
+extension ProminentHUDStyle {
+    enum Geometry {
+        static var alertScreenRect: NSRect? {
+            try? NSScreen.alertScreen.effectiveAlertScreenRect
+        }
+        
+        static let padding: CGFloat = 20.0
+        
+        static var maxContentWidth: CGFloat? {
+            guard let alertScreenRect else { return nil }
+            return alertScreenRect.width - (padding * 4)
+        }
+        
+        static func minSize(isImagePresent: Bool, isTextPresent: Bool) -> CGFloat? {
+            if isImagePresent, isTextPresent {
+                imageSize * 1.45
+            } else if isImagePresent {
+                imageSize * 1.4
+            } else {
+                nil
+            }
         }
     }
 }
 
 // MARK: - Text
 
-extension ProminentHUDStyle.ContentView {
-    private var isTextPresent: Bool {
-        text != nil
-    }
-    
-    private var textFontSize: CGFloat {
-        if image == nil {
+extension ProminentHUDStyle.Geometry {
+    static func textFontSize(isTextOnly: Bool) -> CGFloat {
+        if isTextOnly {
             textOnlyFontSize
         } else {
             textWithImageFontSize
         }
     }
     
-    private var textOnlyFontSize: CGFloat {
+    static var textOnlyFontSize: CGFloat {
         let screenSize = alertScreenRect?.size
             ?? CGSize(width: 1920, height: 1080) // provide a reasonable default
         return textOnlyAlertFontSize(forScreenSize: screenSize)
     }
     
-    private func textOnlyAlertFontSize(forScreenSize screenSize: CGSize) -> CGFloat {
+    static func textOnlyAlertFontSize(forScreenSize screenSize: CGSize) -> CGFloat {
         screenSize.width / 40
     }
     
-    private var textWithImageFontSize: CGFloat {
+    static var textWithImageFontSize: CGFloat {
         18.0
     }
     
-    private var textColor: Color {
+    static var textColor: Color {
         .primary
     }
 }
 
 // MARK: - Image
 
-extension ProminentHUDStyle.ContentView {
-    private var isImagePresent: Bool {
-        imageSource != nil
-    }
+extension ProminentHUDStyle.Geometry {
+    static var imageSize: CGFloat { 110.0 } // based on Xcode 26.3's built-in HUD alerts
     
-    private var imageSize: CGFloat { 110.0 } // based on Xcode 26.3's built-in HUD alerts
-    
-    private var imageColor: Color {
+    static func imageColor(colorScheme: ColorScheme) -> Color {
         // .primary.opacity(0.8)
         
         switch colorScheme {
