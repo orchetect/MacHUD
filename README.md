@@ -4,6 +4,10 @@
 
 A heads-up-display (HUD) library written in Swift that simulates macOS system HUD alerts, as well as custom alert designs.
 
+![Prominent HUD Alert Screen Capture](Images/prominent-hud-sample.mp4)
+
+![Menu Popover HUD Alert Screen Capture](Images/menu-popover-hud-sample.mp4)
+
 ## Overview
 
 Apple does not provide a public API to display system HUD alerts (such as those that appear when adjusting the system volume or screen brightness). However, in very specific cases it may be appropriate for an application to display an alert of this style.
