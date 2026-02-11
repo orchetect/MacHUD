@@ -96,14 +96,17 @@ struct MenuPopoverHUDView: View {
                     Button("Show Audio Volume Change HUD Alert") {
                         HUDManager.shared.displayAlert(
                             style: .menuPopover().statusItem(statusItem),
-                            content: .audioVolume(deviceName: "MacBook Pro Speakers", level: .unitInterval(.random(in: 0.0 ... 1.0)))
+                            content: .audioVolume(
+                                deviceName: "MacBook Pro Speakers",
+                                level: .value(Int.random(in: 0 ... 17), range: 0 ... 17)
+                            )
                         )
                     }
                     
                     Button("Show Screen Brightness Change HUD Alert") {
                         HUDManager.shared.displayAlert(
                             style: .menuPopover().statusItem(statusItem),
-                            content: .screenBrightness(level: .unitInterval(.random(in: 0.0 ... 1.0)))
+                            content: .screenBrightness(level: .value(Int.random(in: 0 ... 17), range: 0 ... 17))
                         )
                     }
                 }
