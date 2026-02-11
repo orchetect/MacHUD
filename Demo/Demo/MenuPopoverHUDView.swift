@@ -140,6 +140,24 @@ struct MenuPopoverHUDView: View {
                             )
                         )
                     }
+                    
+                    Button("Show Text & Progress Bar HUD Alert With Very Long Text") {
+                        HUDManager.shared.displayAlert(
+                            style: .menuPopover().statusItem(statusItem),
+                            content: .textAndProgress(
+                                text:
+                                    """
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt \
+                                    ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco \
+                                    laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in \
+                                    voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat \
+                                    non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                                    """,
+                                value: .unitInterval(.random(in: 0.0 ... 1.0)),
+                                images: .audioVolume
+                            )
+                        )
+                    }
                 }
                 
                 Section("Memory Use Debug: Generate HUD Alerts Automatically") {
