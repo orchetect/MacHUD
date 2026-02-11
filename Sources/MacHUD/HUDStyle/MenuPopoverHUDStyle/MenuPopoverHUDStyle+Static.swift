@@ -25,12 +25,17 @@ extension HUDStyle where Self == MenuPopoverHUDStyle {
 @available(macOS 26.0, *)
 extension MenuPopoverHUDStyle {
     /// Prominent HUD style matching macOS 10.15 system HUD appearance and behavior.
-    public static func macOS26(statusItem: (@MainActor () -> NSStatusItem)? = nil) -> Self {
+    public static func macOS26() -> Self {
+        .macOS26(statusItem: nil)
+    }
+    
+    /// Prominent HUD style matching macOS 10.15 system HUD appearance and behavior.
+    public static func macOS26(statusItem: @autoclosure @escaping @MainActor () -> NSStatusItem?) -> Self {
         MenuPopoverHUDStyle(
             transitionIn: .scaleAndOpacity(scaleFactor: 0.9, duration: 0.4),
             duration: 0.75,
             transitionOut: .scaleAndOpacity(scaleFactor: 0.9, duration: 0.4),
-            statusItem: statusItem
+            statusItem: statusItem()
         )
     }
 }

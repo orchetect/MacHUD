@@ -18,7 +18,7 @@ public struct MenuPopoverHUDStyle: HUDStyle {
     public var transitionIn: HUDTransition?
     public var duration: TimeInterval
     public var transitionOut: HUDTransition?
-    public var statusItem: (@MainActor () -> NSStatusItem)?
+    public var statusItem: (@MainActor () -> NSStatusItem?)?
     
     public init() {
         self = .macOS26()
@@ -28,7 +28,7 @@ public struct MenuPopoverHUDStyle: HUDStyle {
         transitionIn: HUDTransition?,
         duration: TimeInterval,
         transitionOut: HUDTransition?,
-        statusItem: (@MainActor () -> NSStatusItem)? = nil
+        statusItem: @autoclosure @escaping @MainActor () -> NSStatusItem?
     ) {
         self.transitionIn = transitionIn
         self.duration = duration
