@@ -14,7 +14,7 @@ public enum HUDTransition {
     case opacity(duration: TimeInterval)
     
     /// Scale and opacity fade.
-    case scaleAndOpacity(scaleFactor: CGFloat? = nil, duration: TimeInterval)
+    case scaleAndOpacity(scaleFactor: ScaleFactor? = nil, duration: TimeInterval)
 }
 
 extension HUDTransition: Equatable { }

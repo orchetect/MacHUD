@@ -11,14 +11,14 @@ import SwiftUI
 internal import SwiftExtensions
 
 extension HUDManager.Alert {
-    static var defaultScaleFactor: CGFloat { 0.9 }
+    static var defaultScaleFactor: HUDTransition.ScaleFactor { .percent90 }
     
-    static func scaleFactorToShrinkWindow(scaleFactor: CGFloat) -> NSSize {
-        let scaleFactor = scaleFactor.clamped(to: 0.1 ... 2.0)
+    static func scaleFactorToShrinkWindow(scaleFactor: HUDTransition.ScaleFactor) -> NSSize {
+        let scaleFactor = scaleFactor.rawValue
         return NSSize(width: scaleFactor, height: scaleFactor)
     }
     
-    static func scaleFactorToResetWindow(scaleFactor: CGFloat) -> NSSize {
+    static func scaleFactorToResetWindow(scaleFactor: HUDTransition.ScaleFactor) -> NSSize {
         let shrinkFactor = scaleFactorToShrinkWindow(scaleFactor: scaleFactor)
         return NSSize(
             width: 1.0 / shrinkFactor.width,

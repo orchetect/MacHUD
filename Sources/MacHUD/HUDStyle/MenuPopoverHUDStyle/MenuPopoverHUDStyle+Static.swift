@@ -32,9 +32,9 @@ extension MenuPopoverHUDStyle {
     /// Prominent HUD style matching macOS 10.15 system HUD appearance and behavior.
     public static func macOS26(statusItem: @autoclosure @escaping @MainActor () -> NSStatusItem?) -> Self {
         MenuPopoverHUDStyle(
-            transitionIn: .scaleAndOpacity(scaleFactor: 0.9, duration: 0.4),
+            transitionIn: .scaleAndOpacity(scaleFactor: .percent90, duration: 0.4),
             duration: 0.75,
-            transitionOut: .scaleAndOpacity(scaleFactor: 0.9, duration: 0.4),
+            transitionOut: .scaleAndOpacity(scaleFactor: .percent90, duration: 0.4),
             statusItem: statusItem()
         )
     }
