@@ -44,7 +44,7 @@ extension HUDManager.Alert {
     /// Triggers alert dismissal, animating out, and disposing of its resources.
     @MainActor
     func dismiss(transition: HUDTransition?) async throws {
-        guard let window = await window else {
+        guard let window else {
             throw HUDError.internalInconsistency("Missing HUD alert window.")
         }
         

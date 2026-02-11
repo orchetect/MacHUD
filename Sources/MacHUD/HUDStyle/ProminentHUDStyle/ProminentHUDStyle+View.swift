@@ -36,7 +36,7 @@ extension ProminentHUDStyle {
             case let .image(imageSource):
                 ImageView(imageSource: imageSource, format: .imageOnly)
                 
-            case let .imageAndText(text: text, image: imageSource):
+            case let .imageAndText(image: imageSource, text: text):
                 VStack(spacing: 14) {
                     ImageView(imageSource: imageSource, format: .imageAndText)
                     TextView(text: text, size: .imageAndText)
@@ -78,7 +78,7 @@ extension ProminentHUDStyle {
 #Preview("Image & Text") {
     ProminentHUDStyle.ContentView(
         style: .prominent(),
-        content: .imageAndText(text: "Volume", image: .systemName("speaker.wave.3.fill"))
+        content: .imageAndText(image: .systemName("speaker.wave.3.fill"), text: "Volume")
     )
 }
 

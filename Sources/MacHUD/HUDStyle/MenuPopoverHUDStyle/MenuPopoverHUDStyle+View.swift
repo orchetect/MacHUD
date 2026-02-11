@@ -35,8 +35,8 @@ extension MenuPopoverHUDStyle {
                 TextView(text: text)
             case let .image(imageSource):
                 ImageView(imageSource: imageSource)
-            case let .textAndImage(text: text, image: imageSource):
-                TextAndImageView(text: text, imageSource: imageSource)
+            case let .imageAndText(image: imageSource, text: text):
+                ImageAndTextView(imageSource: imageSource, text: text)
             case let .textAndProgress(text: text, value: value, images: imageSources):
                 TextAndProgressView(text: text, progressImages: imageSources, progressValue: value)
             }
@@ -87,9 +87,9 @@ extension MenuPopoverHUDStyle.ContentView {
 
 @available(macOS 26.0, *)
 extension MenuPopoverHUDStyle.ContentView {
-    struct TextAndImageView: View {
-        let text: String
+    struct ImageAndTextView: View {
         let imageSource: HUDImageSource
+        let text: String
         
         var body: some View {
             VStack(spacing: 10) {

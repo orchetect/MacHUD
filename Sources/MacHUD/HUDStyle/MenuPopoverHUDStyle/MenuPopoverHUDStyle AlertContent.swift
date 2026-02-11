@@ -18,7 +18,7 @@ extension MenuPopoverHUDStyle {
         case image(HUDImageSource)
         
         /// Text and image HUD alert.
-        case textAndImage(text: String, image: HUDImageSource)
+        case imageAndText(image: HUDImageSource, text: String)
         
         /// HUD alert including a progress bar.
         /// Value is specified as a floating-point value between `0.0 ... 1.0`.
