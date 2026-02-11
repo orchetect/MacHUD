@@ -122,7 +122,7 @@ extension MenuPopoverHUDStyle.ContentView {
     struct TextAndProgressView: View {
         let text: String
         let progressImages: HUDProgressImageSource?
-        let progressValue: HUDProgressValue
+        let progressValue: HUDSteppedProgressValue
         
         var body: some View {
             VStack(spacing: 10) {
@@ -155,7 +155,7 @@ extension MenuPopoverHUDStyle.ContentView {
                     //     .labelsHidden()
                     //     .allowsHitTesting(false)
                     
-                    AmountView(amount: progressUnitInterval, step: 0.1)
+                    AmountView(value: progressUnitInterval, dividerCount: dividerCount)
                     
                     if let maxImage {
                         maxImage
@@ -190,6 +190,13 @@ extension MenuPopoverHUDStyle.ContentView {
         private var progressUnitInterval: CGFloat {
             progressValue.unitInterval
         }
+        
+        private var dividerCount: Int? {
+            guard let segmentCount = progressValue.step?.segmentCount(for: progressValue.range) else { return nil }
+            let dividerCount = segmentCount - 1
+            guard dividerCount > 1 else { return nil }
+            return dividerCount
+        }
     }
 }
 
@@ -223,7 +230,28 @@ private struct MockHUDView<Content: View>: View {
         MockHUDView {
             MenuPopoverHUDStyle.ContentView(
                 style: .init(),
-                content: .image(.systemName("square.fill"))
+                content: .image(.systemName("speaker.3.fill"))
+            )
+        }
+        
+        MockHUDView {
+            MenuPopoverHUDStyle.ContentView(
+                style: .init(),
+                content: .imageAndText(image: .systemName("speaker.3.fill"), text: "MacBook Pro Speakers")
+            )
+        }
+        
+        MockHUDView {
+            MenuPopoverHUDStyle.ContentView(
+                style: .init(),
+                content: .textAndProgress(text: "System Audio", value: .unitInterval(0.1), images: .audioVolume)
+            )
+        }
+        
+        MockHUDView {
+            MenuPopoverHUDStyle.ContentView(
+                style: .init(),
+                content: .audioVolume(deviceName: "MacBook Pro Speakers", level: .unitInterval(5 / 18))
             )
         }
         

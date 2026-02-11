@@ -14,18 +14,19 @@ extension MenuPopoverHUDStyle.ContentView {
     struct AmountView<Value: BinaryFloatingPoint>: View {
         @Environment(\.controlSize) private var controlSize
         
-        let amount: Value
-        let range: ClosedRange<Value>
-        let step: Value?
+        let value: Value
         let dividerCount: Int?
         
         @State private var width: CGFloat = 0
         
-        init(amount: Value, range: ClosedRange<Value> = 0.0 ... 1.0, step: Value? = nil) {
-            self.amount = amount
-            self.range = range
-            self.step = step
-            dividerCount = Self.dividerCount(range: range, step: step)
+        init(value: Value, dividerCount: Int? = nil) {
+            self.value = value
+            
+            if let dividerCount, dividerCount > 0 {
+                self.dividerCount = dividerCount.clamped(to: 1 ... 30)
+            } else {
+                self.dividerCount = nil
+            }
         }
         
         public var body: some View {
@@ -43,14 +44,16 @@ extension MenuPopoverHUDStyle.ContentView {
                 
                 if let dividerCount {
                     HStack {
-                        ForEach(0 ..< dividerCount, id: \.self) { _ in
+                        ForEach(0 ..< dividerCount, id: \.self) { index in
                             Circle()
                                 .fill(.quaternary)
                                 .frame(height: 2)
-                                .frame(maxWidth: .infinity)
+                            if index < dividerCount - 1 {
+                                Spacer()
+                            }
                         }
                     }
-                    .frame(width: width)
+                    .frame(width: dividersWidth)
                     .offset(y: height)
                 }
             }
@@ -69,27 +72,73 @@ extension MenuPopoverHUDStyle.ContentView {
         }
         
         private var progressWidth: CGFloat {
-            width * percentage
+            width * CGFloat(value).clamped(to: 0.0 ... 1.0)
         }
         
-        private var percentage: CGFloat {
-            let safeAmount = amount.clamped(to: range)
-            
-            // avoid division by zero
-            guard range.upperBound > range.lowerBound else { return 1.0 }
-            
-            return CGFloat((safeAmount - range.lowerBound) / (range.upperBound - range.lowerBound))
+        private var segmentsCount: Int? {
+            guard let dividerCount, dividerCount >= 0 else { return nil }
+            return dividerCount + 1
         }
         
-        private static func dividerCount(range: ClosedRange<Value>, step: Value?) -> Int? {
-            guard let step else { return nil }
-            let safeStep = step.clamped(to: 0.0...)
-            guard safeStep > 0.0 else { return nil }
-            let count = (Int((range.upperBound - range.lowerBound) / safeStep) - 1)
-                .clamped(to: 2 ... 100)
-            return count
+        private var dividersWidth: CGFloat {
+            guard width > 0.0 else { return 0.0 }
+            return width - (segmentWidth * 2)
+        }
+        
+        private var segmentWidth: CGFloat {
+            guard let segmentsCount else { return 0.0 }
+            return width / CGFloat(segmentsCount)
         }
     }
 }
+
+#if DEBUG
+@available(macOS 26.0, *)
+private typealias AmountView = MenuPopoverHUDStyle.ContentView.AmountView
+
+@available(macOS 26.0, *)
+#Preview {
+    VStack(spacing: 20) {
+        Text("No Dividers")
+        
+        AmountView(value: 0.0, dividerCount: nil)
+        AmountView(value: 0.5, dividerCount: nil)
+        AmountView(value: 1.0, dividerCount: nil)
+        
+        Text("Typical Dividers")
+        
+        AmountView(value: 0.0, dividerCount: 9)
+        AmountView(value: 0.1, dividerCount: 9)
+        AmountView(value: 0.2, dividerCount: 9)
+        AmountView(value: 0.3, dividerCount: 9)
+        AmountView(value: 0.4, dividerCount: 9)
+        AmountView(value: 0.5, dividerCount: 9)
+        AmountView(value: 0.6, dividerCount: 9)
+        AmountView(value: 0.7, dividerCount: 9)
+        AmountView(value: 0.8, dividerCount: 9)
+        AmountView(value: 0.9, dividerCount: 9)
+        AmountView(value: 1.0, dividerCount: 9)
+        
+        Text("Edge Case Dividers")
+        
+        AmountView(value: 0.5, dividerCount: -1)
+        AmountView(value: 0.5, dividerCount: 0)
+        AmountView(value: 0.5, dividerCount: 1)
+        AmountView(value: 0.5, dividerCount: 2)
+        AmountView(value: 0.5, dividerCount: 100)
+        
+        Text("System Volume and Display Brightness")
+        
+        AmountView(value: 1.0 / 18.0, dividerCount: 17)
+        AmountView(value: 4.0 / 18.0, dividerCount: 17)
+        AmountView(value: 9.0 / 18.0, dividerCount: 17)
+        AmountView(value: 16.0 / 18.0, dividerCount: 17)
+        AmountView(value: 17.0 / 18.0, dividerCount: 17)
+    }
+    .padding()
+    .frame(width: 400)
+    .fixedSize()
+}
+#endif
 
 #endif

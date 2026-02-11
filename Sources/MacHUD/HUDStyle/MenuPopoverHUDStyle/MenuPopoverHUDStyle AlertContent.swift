@@ -22,7 +22,16 @@ extension MenuPopoverHUDStyle {
         
         /// HUD alert including a progress bar.
         /// Value is specified as a floating-point value between `0.0 ... 1.0`.
-        case textAndProgress(text: String, value: HUDProgressValue, images: HUDProgressImageSource?)
+        ///
+        /// - Parameters:
+        ///   - text: Text string.
+        ///   - value: Progress bar value.
+        ///   - images: Optionally specify minimum and maximum images to display on either side of the progress bar.
+        case textAndProgress(
+            text: String,
+            value: HUDSteppedProgressValue,
+            images: HUDProgressImageSource?
+        )
     }
 }
 
@@ -38,7 +47,7 @@ extension MenuPopoverHUDStyle.AlertContent {
     public static func audioVolume(deviceName: String, level: HUDProgressValue) -> Self {
         .textAndProgress(
             text: deviceName,
-            value: level,
+            value: level.stepped(.segmentCount(18)), // as seen in macOS 26 volume HUD
             images: .audioVolume
         )
     }
@@ -51,7 +60,7 @@ extension MenuPopoverHUDStyle.AlertContent {
     public static func screenBrightness(displayName: String = "Display", level: HUDProgressValue) -> Self {
         .textAndProgress(
             text: displayName,
-            value: level,
+            value: level.stepped(.segmentCount(18)), // as seen in macOS 26 screen brightness HUD
             images: .screenBrightness
         )
     }

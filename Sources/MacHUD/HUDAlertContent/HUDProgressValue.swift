@@ -17,7 +17,7 @@ public enum HUDProgressValue {
     case percent(Int)
     
     /// Value within a given custom possible mix/max range.
-    case value(value: Double, range: ClosedRange<Double> = 0.0 ... 1.0)
+    case value(_ value: Double, range: ClosedRange<Double> = 0.0 ... 1.0)
 }
 
 extension HUDProgressValue: Equatable { }
@@ -41,13 +41,39 @@ extension HUDProgressValue {
         .percent(Int(value))
     }
     
+    /// Percentage between `0 ... 100`.
+    @_disfavoredOverload
+    public static func percent(_ value: some BinaryFloatingPoint) -> Self {
+        .percent(Int(value))
+    }
+    
+    /// Value within a given custom possible mix/max range.
+    @_disfavoredOverload
+    public static func value<B: BinaryInteger>(
+        _ value: B,
+        range: ClosedRange<B>,
+        step: Step? = nil
+    ) -> Self {
+        .value(Double(value), range: Double(range.lowerBound) ... Double(range.upperBound))
+    }
+    
     /// Value within a given custom possible mix/max range.
     @_disfavoredOverload
     public static func value<F: BinaryFloatingPoint>(
-        value: F,
-        range: ClosedRange<F> = 0.0 ... 1.0
+        _ value: F,
+        range: ClosedRange<F> = 0.0 ... 1.0,
+        step: Step? = nil
     ) -> Self {
-        .value(value: Double(value), range: Double(range.lowerBound) ... Double(range.upperBound))
+        .value(Double(value), range: Double(range.lowerBound) ... Double(range.upperBound))
+    }
+}
+
+// MARK: - Composition
+
+extension HUDProgressValue {
+    /// Return the progress value with a step value.
+    public func stepped(_ step: Step?) -> HUDSteppedProgressValue {
+        HUDSteppedProgressValue(self, step: step)
     }
 }
 
@@ -57,16 +83,16 @@ extension HUDProgressValue {
     /// Returns the value as a unit interval (floating-point value between `0.0 ... 1.0`).
     public var unitInterval: Double {
         switch self {
-        case .unitInterval(let double):
+        case let .unitInterval(double):
             return double
-        case .percent(let int):
+        case let .percent(int):
             return Double(int) / 100.0
-        case .value(let value, let range):
+        case let .value(value, range: range):
             let safeAmount = value.clamped(to: range)
-            
+
             // avoid division by zero
             guard range.upperBound > range.lowerBound else { return 1.0 }
-            
+
             return (safeAmount - range.lowerBound) / (range.upperBound - range.lowerBound)
         }
     }
@@ -80,6 +106,15 @@ extension HUDProgressValue {
     @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
     public var localizedPercentageString: String {
         percentageValue.formatted(.percent)
+    }
+    
+    /// Returns the minimum and maximum value range.
+    public var range: ClosedRange<Double> {
+        switch self {
+        case let .unitInterval(double): 0.0 ... 1.0
+        case let .percent(int): 0.0 ... 100.0
+        case let .value(_, range: range): range
+        }
     }
 }
 

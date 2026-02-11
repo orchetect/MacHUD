@@ -51,7 +51,7 @@ extension DefaultHUDStyle.AlertContent {
         case let .imageAndText(text, image):
             .imageAndText(image: image, text: text)
         case let .imageOrTextAndProgress(image: image, text: text, value: value):
-            .textAndProgress(text: text, value: value, images: .minMax(min: image, max: image))
+            .textAndProgress(text: text, value: value.stepped(nil), images: .minMax(min: image, max: image))
         }
     }
 }
