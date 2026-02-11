@@ -70,6 +70,15 @@ struct MenuPopoverHUDView: View {
                     }
                 }
                 
+                Section("Sample HUD Alerts") {
+                    Button("Show Audio Volume Change HUD Alert") {
+                        HUDManager.shared.displayAlert(
+                            style: .menuPopover(),
+                            content: .audioVolume(deviceName: "MacBook Pro Speakers", level: .unitInterval(.random(in: 0.0 ... 1.0)))
+                        )
+                    }
+                }
+                
                 Section("Generate HUD Alerts Automatically") {
                     LabeledContent("Count", value: "\(alertCount)")
                     

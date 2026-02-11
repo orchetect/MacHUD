@@ -82,6 +82,13 @@ struct ProminentHUDView: View {
                             content: .textAndImage(text: "Build Succeeded", image: .image(Image(.xcodeBuild)))
                         )
                     }
+                    
+                    Button("Show Audio Volume Change HUD Alert") {
+                        HUDManager.shared.displayAlert(
+                            style: .prominent(),
+                            content: .audioVolume(level: .unitInterval(.random(in: 0.0 ... 1.0)))
+                        )
+                    }
                 }
                 
                 Section("Generate HUD Alerts Automatically") {
