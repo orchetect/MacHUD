@@ -17,7 +17,7 @@ public enum HUDProgressValue {
     case percent(Int)
     
     /// Value within a given custom possible mix/max range.
-    case value(value: Double, range: ClosedRange<Double>)
+    case value(value: Double, range: ClosedRange<Double> = 0.0 ... 1.0)
 }
 
 extension HUDProgressValue: Equatable { }
@@ -43,7 +43,10 @@ extension HUDProgressValue {
     
     /// Value within a given custom possible mix/max range.
     @_disfavoredOverload
-    public static func value<F: BinaryFloatingPoint>(value: F, range: ClosedRange<F>) -> Self {
+    public static func value<F: BinaryFloatingPoint>(
+        value: F,
+        range: ClosedRange<F> = 0.0 ... 1.0
+    ) -> Self {
         .value(value: Double(value), range: Double(range.lowerBound) ... Double(range.upperBound))
     }
 }
