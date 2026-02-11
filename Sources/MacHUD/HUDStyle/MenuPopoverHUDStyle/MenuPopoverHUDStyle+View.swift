@@ -26,6 +26,7 @@ extension MenuPopoverHUDStyle {
                 .padding([.top, .bottom], 12)
                 .padding([.leading, .trailing], 15)
                 .frame(width: MenuPopoverHUDStyle.size.width /* , height: MenuPopoverHUDStyle.size.height */)
+                .fixedSize()
         }
         
         @ViewBuilder
