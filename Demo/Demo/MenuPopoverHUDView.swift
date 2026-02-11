@@ -86,7 +86,7 @@ struct MenuPopoverHUDView: View {
                         Button("Show Image & Text Alert") {
                             HUDManager.shared.displayAlert(
                                 style: style.statusItem(statusItem),
-                                content: .textAndImage(text: text, image: .systemName(image.rawValue))
+                                content: .imageAndText(image: .systemName(image.rawValue), text: text)
                             )
                         }
                     }
@@ -108,7 +108,41 @@ struct MenuPopoverHUDView: View {
                     }
                 }
                 
-                Section("Generate HUD Alerts Automatically") {
+                Section("Debug & Edge Case Testing") {
+                    Button("Show Text-Only HUD Alert With Very Long Text") {
+                        HUDManager.shared.displayAlert(
+                            style: .menuPopover().statusItem(statusItem),
+                            content: .text(
+                                """
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt \
+                                ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco \
+                                laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in \
+                                voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat \
+                                non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                                """
+                            )
+                        )
+                    }
+                    
+                    Button("Show Image & Text HUD Alert With Very Long Text") {
+                        HUDManager.shared.displayAlert(
+                            style: .menuPopover().statusItem(statusItem),
+                            content: .imageAndText(
+                                image: .systemName("pencil.and.scribble"),
+                                text:
+                                    """
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt \
+                                    ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco \
+                                    laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in \
+                                    voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat \
+                                    non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                                    """
+                            )
+                        )
+                    }
+                }
+                
+                Section("Memory Use Debug: Generate HUD Alerts Automatically") {
                     LabeledContent("Count", value: "\(alertCount)")
                     
                     Toggle("Show Continuously (Stress Test)", isOn: $isContinuous)
