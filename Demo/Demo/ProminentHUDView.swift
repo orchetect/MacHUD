@@ -54,21 +54,32 @@ struct ProminentHUDView: View {
                     
                     TextField("HUD Text", text: $text)
                     
-                    Button("Show Text-Only Alert") {
-                        HUDManager.shared.displayAlert(style: style, content: .text(text))
+                    HStack {
+                        Button("Show Text-Only Alert") {
+                            HUDManager.shared.displayAlert(style: style, content: .text(text))
+                        }
+                        
+                        Button("Show Image-Only Alert") {
+                            HUDManager.shared.displayAlert(
+                                style: style,
+                                content: .image(.systemName(image.rawValue))
+                            )
+                        }
+                        
+                        Button("Show Image & Text Alert") {
+                            HUDManager.shared.displayAlert(
+                                style: style,
+                                content: .textAndImage(text: text, image: .systemName(image.rawValue))
+                            )
+                        }
                     }
-                    
-                    Button("Show Image-Only Alert") {
+                }
+                
+                Section("Sample HUD Alerts") {
+                    Button("Show Xcode Build HUD Alert") {
                         HUDManager.shared.displayAlert(
-                            style: style,
-                            content: .image(.systemName(image.rawValue))
-                        )
-                    }
-                    
-                    Button("Show Image & Text Alert") {
-                        HUDManager.shared.displayAlert(
-                            style: style,
-                            content: .textAndImage(text: text, image: .systemName(image.rawValue))
+                            style: .prominent(),
+                            content: .textAndImage(text: "Build Succeeded", image: .image(Image(.xcodeBuild)))
                         )
                     }
                 }

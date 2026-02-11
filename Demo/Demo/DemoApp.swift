@@ -16,6 +16,6 @@ struct DemoApp: App {
                     await HUDManager.shared.prewarm()
                 }
         }
-        .defaultSize(width: 650, height: 800)
+        .defaultSize(width: 800, height: 800)
     }
 }

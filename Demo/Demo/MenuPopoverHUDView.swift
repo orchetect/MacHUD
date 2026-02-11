@@ -49,22 +49,24 @@ struct MenuPopoverHUDView: View {
                     
                     TextField("HUD Text", text: $text)
                     
-                    Button("Show Text-Only Alert") {
-                        HUDManager.shared.displayAlert(style: style, content: .text(text))
-                    }
-                    
-                    Button("Show Image-Only Alert") {
-                        HUDManager.shared.displayAlert(
-                            style: style,
-                            content: .image(.systemName(image.rawValue))
-                        )
-                    }
-                    
-                    Button("Show Image & Text Alert") {
-                        HUDManager.shared.displayAlert(
-                            style: style,
-                            content: .textAndImage(text: text, image: .systemName(image.rawValue))
-                        )
+                    HStack {
+                        Button("Show Text-Only Alert") {
+                            HUDManager.shared.displayAlert(style: style, content: .text(text))
+                        }
+                        
+                        Button("Show Image-Only Alert") {
+                            HUDManager.shared.displayAlert(
+                                style: style,
+                                content: .image(.systemName(image.rawValue))
+                            )
+                        }
+                        
+                        Button("Show Image & Text Alert") {
+                            HUDManager.shared.displayAlert(
+                                style: style,
+                                content: .textAndImage(text: text, image: .systemName(image.rawValue))
+                            )
+                        }
                     }
                 }
                 
