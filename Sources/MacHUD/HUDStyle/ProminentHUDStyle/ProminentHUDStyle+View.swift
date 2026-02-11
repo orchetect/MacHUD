@@ -41,6 +41,15 @@ extension ProminentHUDStyle {
             case let .textAndImage(text: string, image: imageSource):
                 text = string
                 self.imageSource = imageSource
+            case let .imageAndProgress(image: imageSource, value: value):
+                // TODO: temporary for debugging. add actual progress bar instead.
+                if #available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *) {
+                    text = value.localizedPercentageString
+                } else {
+                    text = "\(value.percentageValue)%"
+                }
+                
+                self.imageSource = imageSource
             }
             
             self.style = style

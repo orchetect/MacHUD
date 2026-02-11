@@ -13,7 +13,33 @@ extension ProminentHUDStyle {
         case text(String)
         case image(HUDImageSource)
         case textAndImage(text: String, image: HUDImageSource)
-        // TODO: add progress slider (volume level, screen brightness, etc.)
+        case imageAndProgress(image: HUDImageSource, value: HUDProgressValue)
+    }
+}
+
+// MARK: - Static Constructors
+
+extension ProminentHUDStyle.AlertContent {
+    /// Alert that simulates the macOS system audio device volume level change HUD alert.
+    ///
+    /// - Parameters:
+    ///   - level: Audio level.
+    public static func audioVolume(level: HUDProgressValue) -> Self {
+        .imageAndProgress(
+            image: .image(forVolumeLevel: level.unitInterval),
+            value: level
+        )
+    }
+    
+    /// Alert that simulates the macOS system screen brightness level change HUD alert.
+    ///
+    /// - Parameters:
+    ///   - level: Audio level.
+    public static func screenBrightness(level: HUDProgressValue) -> Self {
+        .imageAndProgress(
+            image: .image(forVolumeLevel: level.unitInterval),
+            value: level
+        )
     }
 }
 

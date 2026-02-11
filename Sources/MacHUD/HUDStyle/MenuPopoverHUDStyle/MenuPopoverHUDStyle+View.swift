@@ -22,24 +22,124 @@ extension MenuPopoverHUDStyle {
         }
         
         public var body: some View {
+            conditionalView
+                .padding([.top, .bottom], 12)
+                .padding([.leading, .trailing], 15)
+                .frame(width: MenuPopoverHUDStyle.size.width /* , height: MenuPopoverHUDStyle.size.height */)
+        }
+        
+        @ViewBuilder
+        private var conditionalView: some View {
+            switch content {
+            case let .text(text):
+                TextView(text: text)
+            case let .image(imageSource):
+                ImageView(imageSource: imageSource)
+            case let .textAndImage(text: text, image: imageSource):
+                TextAndImageView(text: text, imageSource: imageSource)
+            case let .textAndProgress(text: text, value: value, images: imageSources):
+                TextAndProgressView(text: text, progressImages: imageSources, progressValue: value)
+            }
+        }
+    }
+}
+
+@available(macOS 26.0, *)
+extension MenuPopoverHUDStyle.ContentView {
+    struct TextView: View {
+        let text: String
+        
+        var body: some View {
             VStack(spacing: 10) {
-                if let text {
-                    HStack {
-                        Text(text)
-                            .font(.system(size: 12, weight: .semibold))
-                            .multilineTextAlignment(.leading)
-                            .truncationMode(.tail)
-                        Spacer()
-                    }
-                }
-                
-                // TODO: finish this
-                
                 HStack {
-                    Image(systemName: "speaker.fill")
+                    Text(text)
+                        .font(.system(size: 12, weight: .semibold))
+                        .multilineTextAlignment(.leading)
+                        .truncationMode(.tail)
+                    Spacer()
+                }
+            }
+        }
+    }
+}
+
+@available(macOS 26.0, *)
+extension MenuPopoverHUDStyle.ContentView {
+    struct ImageView: View {
+        let imageSource: HUDImageSource
+        
+        var body: some View {
+            VStack(spacing: 10) {
+                HStack {
+                    (image ?? Image(systemName: "questionmark"))
                         .resizable()
                         .scaledToFit()
-                        .frame(height: 12)
+                        .frame(width: 24, height: 24)
+                }
+            }
+        }
+        
+        private var image: Image? {
+            imageSource.image
+        }
+    }
+}
+
+@available(macOS 26.0, *)
+extension MenuPopoverHUDStyle.ContentView {
+    struct TextAndImageView: View {
+        let text: String
+        let imageSource: HUDImageSource
+        
+        var body: some View {
+            VStack(spacing: 10) {
+                HStack {
+                    if let image {
+                        image
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 24, height: 24)
+                    }
+                    
+                    Text(text)
+                        .font(.system(size: 12, weight: .semibold))
+                        .multilineTextAlignment(.leading)
+                        .truncationMode(.tail)
+                    Spacer()
+                }
+            }
+        }
+        
+        private var image: Image? {
+            imageSource.image
+        }
+    }
+}
+
+@available(macOS 26.0, *)
+extension MenuPopoverHUDStyle.ContentView {
+    struct TextAndProgressView: View {
+        let text: String
+        let progressImages: HUDProgressImageSource?
+        let progressValue: HUDProgressValue
+        
+        var body: some View {
+            VStack(spacing: 10) {
+                HStack {
+                    Text(text)
+                        .font(.system(size: 12, weight: .semibold))
+                        .multilineTextAlignment(.leading)
+                        .truncationMode(.tail)
+                    Spacer()
+                }
+                
+                HStack {
+                    if let minImage {
+                        minImage
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 12)
+                    }
                     
                     // Unfortunately, ProgressView and Slider have native behavior that makes their infill bar
                     // fade to a lighter color due to the fact that our HUD windows are not technically "in focus".
@@ -54,38 +154,40 @@ extension MenuPopoverHUDStyle {
                     //     .labelsHidden()
                     //     .allowsHitTesting(false)
                     
-                    AmountView(amount: 0.6, step: 0.1)
+                    AmountView(amount: progressUnitInterval, step: 0.1)
                     
-                    Image(systemName: "speaker.wave.3.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(height: 12)
+                    if let maxImage {
+                        maxImage
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 12)
+                    }
                 }
                 .foregroundStyle(.primary)
                 .frame(minHeight: 16)
             }
-            .padding([.top, .bottom], 12)
-            .padding([.leading, .trailing], 15)
-            .frame(width: MenuPopoverHUDStyle.size.width /* , height: MenuPopoverHUDStyle.size.height */)
         }
         
-        private var text: String? {
-            switch content {
-            case let .text(text),
-                 let .textAndImage(text: text, image: _):
-                text
-            case .image(_):
-                nil
+        private var minImage: Image? {
+            guard let progressImages else { return nil }
+            
+            return switch progressImages {
+            case let .minMax(min: minSource, max: _):
+                minSource.image
             }
         }
         
-        private var image: Image? {
-            switch content {
-            case .text(_): nil
-            case let .image(imageSource),
-                 let .textAndImage(text: _, image: imageSource):
-                imageSource.image
+        private var maxImage: Image? {
+            guard let progressImages else { return nil }
+            
+            return switch progressImages {
+            case let .minMax(min: _, max: maxSource):
+                maxSource.image
             }
+        }
+        
+        private var progressUnitInterval: CGFloat {
+            progressValue.unitInterval
         }
     }
 }
