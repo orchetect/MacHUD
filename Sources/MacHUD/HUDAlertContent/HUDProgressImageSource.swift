@@ -17,4 +17,18 @@ extension HUDProgressImageSource: Equatable { }
 
 extension HUDProgressImageSource: Sendable { }
 
+// MARK: - Static Constructors
+
+extension HUDProgressImageSource {
+    /// Audio device volume level images.
+    public static var audioVolume: Self {
+        .minMax(min: .systemName("speaker.fill"), max: .systemName("speaker.wave.3.fill"))
+    }
+    
+    /// Screen brightness level images.
+    public static var screenBrightness: Self {
+        .minMax(min: .systemName("sun.min.fill"), max: .systemName("sun.max.fill"))
+    }
+}
+
 #endif

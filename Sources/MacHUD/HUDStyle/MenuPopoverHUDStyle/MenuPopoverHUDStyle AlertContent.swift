@@ -39,7 +39,7 @@ extension MenuPopoverHUDStyle.AlertContent {
         .textAndProgress(
             text: deviceName,
             value: level,
-            images: .minMax(min: .systemName("speaker.fill"), max: .systemName("speaker.wave.3.fill"))
+            images: .audioVolume
         )
     }
     
@@ -52,7 +52,7 @@ extension MenuPopoverHUDStyle.AlertContent {
         .textAndProgress(
             text: displayName,
             value: level,
-            images: .minMax(min: .systemName("sun.min.fill"), max: .systemName("sun.max.fill"))
+            images: .screenBrightness
         )
     }
 }
