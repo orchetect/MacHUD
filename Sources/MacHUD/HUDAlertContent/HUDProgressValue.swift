@@ -111,8 +111,8 @@ extension HUDProgressValue {
     /// Returns the minimum and maximum value range.
     public var range: ClosedRange<Double> {
         switch self {
-        case let .unitInterval(double): 0.0 ... 1.0
-        case let .percent(int): 0.0 ... 100.0
+        case .unitInterval(_): 0.0 ... 1.0
+        case .percent(_): 0.0 ... 100.0
         case let .value(_, range: range): range
         }
     }
