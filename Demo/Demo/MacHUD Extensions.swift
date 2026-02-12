@@ -43,7 +43,7 @@ extension HUDTransition {
         case let .opacity(duration: duration):
             return "Opacity fade \(duration.formatted(.number.precision(.fractionLength(1 ... 2)))) seconds"
         case let .scaleAndOpacity(scaleFactor: scaleFactor, duration: duration):
-            let sf = if let scaleFactor = scaleFactor?.double {
+            let sf = if let scaleFactor = scaleFactor?.rawValue {
                 " \(scaleFactor.formatted(.number.precision(.fractionLength(1 ... 2))))x"
             } else {
                 ""
@@ -62,7 +62,7 @@ extension HUDTransition: @retroactive CaseIterable {
             .opacity(duration: 0.8),
             .opacity(duration: 2.0),
             .scaleAndOpacity(duration: 0.05),
-            .scaleAndOpacity(scaleFactor: 0.9, duration: 0.4),
+            .scaleAndOpacity(scaleFactor: .percent90, duration: 0.4),
             .scaleAndOpacity(duration: 0.8),
             .scaleAndOpacity(duration: 2.0),
         ]
