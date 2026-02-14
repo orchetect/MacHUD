@@ -70,96 +70,40 @@ struct MenuPopoverHUDView: View {
                     
                     HStack {
                         Button("Show Text-Only Alert") {
-                            HUDManager.shared.displayAlert(
-                                style: style.statusItem(statusItem),
-                                content: .text(text)
-                            )
+                            showTextOnlyAlert()
                         }
                         
                         Button("Show Image-Only Alert") {
-                            HUDManager.shared.displayAlert(
-                                style: style.statusItem(statusItem),
-                                content: .image(.systemName(image.rawValue))
-                            )
+                            showImageOnlyAlert()
                         }
                         
                         Button("Show Image & Text Alert") {
-                            HUDManager.shared.displayAlert(
-                                style: style.statusItem(statusItem),
-                                content: .imageAndText(image: .systemName(image.rawValue), text: text)
-                            )
+                            showImageAndTextAlert()
                         }
                     }
                 }
                 
                 Section("Sample HUD Alerts") {
                     Button("Show Audio Volume Change HUD Alert") {
-                        HUDManager.shared.displayAlert(
-                            style: .menuPopover().statusItem(statusItem),
-                            content: .audioVolume(
-                                deviceName: "MacBook Pro Speakers",
-                                level: .value(Int.random(in: 0 ... 17), range: 0 ... 17)
-                            )
-                        )
+                        showAudioVolumeChangeAlert()
                     }
                     
                     Button("Show Screen Brightness Change HUD Alert") {
-                        HUDManager.shared.displayAlert(
-                            style: .menuPopover().statusItem(statusItem),
-                            content: .screenBrightness(level: .value(Int.random(in: 0 ... 17), range: 0 ... 17))
-                        )
+                        showScreenBrightnessChangeAlert()
                     }
                 }
                 
                 Section("Debug & Edge Case Testing") {
                     Button("Show Text-Only HUD Alert With Very Long Text") {
-                        HUDManager.shared.displayAlert(
-                            style: .menuPopover().statusItem(statusItem),
-                            content: .text(
-                                """
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt \
-                                ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco \
-                                laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in \
-                                voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat \
-                                non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                                """
-                            )
-                        )
+                        showShowTextOnlyAlertWithVeryLongText()
                     }
                     
                     Button("Show Image & Text HUD Alert With Very Long Text") {
-                        HUDManager.shared.displayAlert(
-                            style: .menuPopover().statusItem(statusItem),
-                            content: .imageAndText(
-                                image: .systemName("pencil.and.scribble"),
-                                text:
-                                    """
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt \
-                                    ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco \
-                                    laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in \
-                                    voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat \
-                                    non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                                    """
-                            )
-                        )
+                        showShowImageAndTextAlertWithVeryLongText()
                     }
                     
                     Button("Show Text & Progress Bar HUD Alert With Very Long Text") {
-                        HUDManager.shared.displayAlert(
-                            style: .menuPopover().statusItem(statusItem),
-                            content: .textAndProgress(
-                                text:
-                                    """
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt \
-                                    ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco \
-                                    laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in \
-                                    voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat \
-                                    non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                                    """,
-                                value: .unitInterval(.random(in: 0.0 ... 1.0)),
-                                images: .audioVolume
-                            )
-                        )
+                        showShowImageAndProgressBarAlertWithVeryLongText()
                     }
                 }
                 
@@ -176,13 +120,123 @@ struct MenuPopoverHUDView: View {
         }
         .padding()
     }
+}
+
+@available(macOS 26.0, *)
+extension MenuPopoverHUDView {
+    private func showTextOnlyAlert() {
+        Task {
+            await HUDManager.shared.displayAlert(
+                style: style.statusItem(statusItem),
+                content: .text(text)
+            )
+        }
+    }
     
+    private func showImageOnlyAlert() {
+        Task {
+            await HUDManager.shared.displayAlert(
+                style: style.statusItem(statusItem),
+                content: .image(.systemName(image.rawValue))
+            )
+        }
+    }
+    
+    private func showImageAndTextAlert() {
+        Task {
+            await HUDManager.shared.displayAlert(
+                style: style.statusItem(statusItem),
+                content: .imageAndText(image: .systemName(image.rawValue), text: text)
+            )
+        }
+    }
+    
+    private func showAudioVolumeChangeAlert() {
+        Task {
+            await HUDManager.shared.displayAlert(
+                style: .menuPopover().statusItem(statusItem),
+                content: .audioVolume(
+                    deviceName: "MacBook Pro Speakers",
+                    level: .value(Int.random(in: 0 ... 17), range: 0 ... 17)
+                )
+            )
+        }
+    }
+    
+    private func showScreenBrightnessChangeAlert() {
+        Task {
+            await  HUDManager.shared.displayAlert(
+                style: .menuPopover().statusItem(statusItem),
+                content: .screenBrightness(level: .value(Int.random(in: 0 ... 17), range: 0 ... 17))
+            )
+        }
+    }
+    
+    private func showShowTextOnlyAlertWithVeryLongText() {
+        Task {
+            await HUDManager.shared.displayAlert(
+                style: .menuPopover().statusItem(statusItem),
+                content: .text(
+                    """
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt \
+                    ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco \
+                    laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in \
+                    voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat \
+                    non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                    """
+                )
+            )
+        }
+    }
+    
+    private func showShowImageAndTextAlertWithVeryLongText() {
+        Task {
+            await HUDManager.shared.displayAlert(
+                style: .menuPopover().statusItem(statusItem),
+                content: .imageAndText(
+                    image: .systemName("pencil.and.scribble"),
+                    text:
+                        """
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt \
+                        ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco \
+                        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in \
+                        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat \
+                        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                        """
+                )
+            )
+        }
+    }
+    
+    private func showShowImageAndProgressBarAlertWithVeryLongText() {
+        Task {
+            await HUDManager.shared.displayAlert(
+                style: .menuPopover().statusItem(statusItem),
+                content: .textAndProgress(
+                    text:
+                        """
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt \
+                        ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco \
+                        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in \
+                        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat \
+                        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                        """,
+                    value: .unitInterval(.random(in: 0.0 ... 1.0)),
+                    images: .audioVolume
+                )
+            )
+        }
+    }
+}
+
+@available(macOS 26.0, *)
+extension MenuPopoverHUDView {
     private func startContinuousTask() {
         stopContinuousTask()
         
         continuousTask = Task {
             while !Task.isCancelled {
-                HUDManager.shared.displayAlert(
+                await HUDManager.shared.displayAlert(
                     style: style.statusItem(statusItem),
                     content: .text(UUID().uuidString)
                 )

@@ -69,79 +69,40 @@ struct ProminentHUDView: View {
                     
                     HStack {
                         Button("Show Text-Only Alert") {
-                            HUDManager.shared.displayAlert(style: style, content: .text(text))
+                            showTextOnlyAlert()
                         }
                         
                         Button("Show Image-Only Alert") {
-                            HUDManager.shared.displayAlert(
-                                style: style,
-                                content: .image(.systemName(image.rawValue))
-                            )
+                            showImageOnlyAlert()
                         }
                         
                         Button("Show Image & Text Alert") {
-                            HUDManager.shared.displayAlert(
-                                style: style,
-                                content: .imageAndText(image: .systemName(image.rawValue), text: text)
-                            )
+                            showImageAndTextAlert()
                         }
                     }
                 }
                 
                 Section("Sample HUD Alerts") {
                     Button("Show Xcode Build HUD Alert") {
-                        HUDManager.shared.displayAlert(
-                            style: .prominent(),
-                            content: .imageAndText(image: .image(Image(.xcodeBuild)), text: "Build Succeeded")
-                        )
+                        showXcodeBuildAlert()
                     }
                     
                     Button("Show Audio Volume Change HUD Alert") {
-                        HUDManager.shared.displayAlert(
-                            style: .prominent(),
-                            content: .audioVolume(level: .unitInterval(.random(in: 0.0 ... 1.0)))
-                        )
+                        showAudioVolumeChangeAlert()
                     }
                     
                     Button("Show Screen Brightness Change HUD Alert") {
-                        HUDManager.shared.displayAlert(
-                            style: .prominent(),
-                            content: .screenBrightness(level: .unitInterval(.random(in: 0.0 ... 1.0)))
-                        )
+                        showScreenBrightnessChangeAlert()
                     }
                 }
                 
                 Section("Debug & Edge Case Testing") {
                     Button("Show Text-Only HUD Alert With Very Long Text") {
-                        HUDManager.shared.displayAlert(
-                            style: .prominent(),
-                            content: .text(
-                                """
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt \
-                                ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco \
-                                laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in \
-                                voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat \
-                                non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                                """
-                            )
-                        )
+                        showShowTextOnlyAlertWithVeryLongText()
                     }
                     
                     Button("Show Image & Text HUD Alert With Very Long Text") {
-                        HUDManager.shared.displayAlert(
-                            style: .prominent(),
-                            content: .imageAndText(
-                                image: .systemName("pencil.and.scribble"),
-                                text:
-                                    """
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt \
-                                    ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco \
-                                    laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in \
-                                    voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat \
-                                    non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                                    """
-                            )
-                        )
+                        showShowImageAndTextAlertWithVeryLongText()
                     }
                 }
                 
@@ -158,13 +119,104 @@ struct ProminentHUDView: View {
         }
         .padding()
     }
+}
+
+extension ProminentHUDView {
+    private func showTextOnlyAlert() {
+        Task {
+            await HUDManager.shared.displayAlert(style: style, content: .text(text))
+        }
+    }
     
+    private func showImageOnlyAlert() {
+        Task {
+            await HUDManager.shared.displayAlert(
+                style: style,
+                content: .image(.systemName(image.rawValue))
+            )
+        }
+    }
+    
+    private func showImageAndTextAlert() {
+        Task {
+            await HUDManager.shared.displayAlert(
+                style: style,
+                content: .imageAndText(image: .systemName(image.rawValue), text: text)
+            )
+        }
+    }
+    
+    private func showXcodeBuildAlert() {
+        Task {
+            await HUDManager.shared.displayAlert(
+                style: .prominent(),
+                content: .imageAndText(image: .image(Image(.xcodeBuild)), text: "Build Succeeded")
+            )
+        }
+    }
+    
+    private func showAudioVolumeChangeAlert() {
+        Task {
+            await HUDManager.shared.displayAlert(
+                style: .prominent(),
+                content: .audioVolume(level: .unitInterval(.random(in: 0.0 ... 1.0)))
+            )
+        }
+    }
+    
+    private func showScreenBrightnessChangeAlert() {
+        Task {
+            await HUDManager.shared.displayAlert(
+                style: .prominent(),
+                content: .screenBrightness(level: .unitInterval(.random(in: 0.0 ... 1.0)))
+            )
+        }
+    }
+    
+    private func showShowTextOnlyAlertWithVeryLongText() {
+        Task {
+            await HUDManager.shared.displayAlert(
+                style: .prominent(),
+                content: .text(
+                    """
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt \
+                    ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco \
+                    laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in \
+                    voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat \
+                    non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                    """
+                )
+            )
+        }
+    }
+    
+    private func showShowImageAndTextAlertWithVeryLongText() {
+        Task {
+            await HUDManager.shared.displayAlert(
+                style: .prominent(),
+                content: .imageAndText(
+                    image: .systemName("pencil.and.scribble"),
+                    text:
+                        """
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt \
+                        ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco \
+                        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in \
+                        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat \
+                        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+                        """
+                )
+            )
+        }
+    }
+}
+
+extension ProminentHUDView {
     private func startContinuousTask() {
         stopContinuousTask()
         
         continuousTask = Task {
             while !Task.isCancelled {
-                HUDManager.shared.displayAlert(style: style, content: .text(UUID().uuidString))
+                await HUDManager.shared.displayAlert(style: style, content: .text(UUID().uuidString))
                 alertCount += 1
                 try await Task.sleep(for: .milliseconds(500))
             }

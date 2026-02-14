@@ -69,6 +69,23 @@ extension HUDManager {
         }
     }
     
+    /// Synchronously waits for at least one HUD alert to be displayed on screen.
+    @concurrent nonisolated
+    public func waitForAlertsToDisplay(timeout: TimeInterval? = nil) async throws {
+        let timeIn = Date()
+        while !Task.isCancelled {
+            let activeCount = await activeCount
+            guard activeCount == 0 else {
+                logger.debug("Currently \(activeCount) active on-screen HUD alerts. Returning immediately.")
+                return
+            }
+            try await Task.sleep(seconds: 0.1)
+            if let timeout {
+                guard Date().timeIntervalSince(timeIn) < timeout else { throw HUDError.timeout }
+            }
+        }
+    }
+    
     /// Synchronously waits for all HUD alerts to dismiss from the screen.
     @concurrent nonisolated
     public func waitForAlertsToDismiss(timeout: TimeInterval? = nil) async throws {
