@@ -157,7 +157,7 @@ extension MenuPopoverHUDView {
                 style: .menuPopover().statusItem(statusItem),
                 content: .audioVolume(
                     deviceName: "MacBook Pro Speakers",
-                    level: .value(Int.random(in: 0 ... 17), range: 0 ... 17)
+                    level: .value(Int.random(in: 0 ... 18), range: 0 ... 18)
                 )
             )
         }
@@ -165,9 +165,9 @@ extension MenuPopoverHUDView {
     
     private func showScreenBrightnessChangeAlert() {
         Task {
-            await  HUDManager.shared.displayAlert(
+            await HUDManager.shared.displayAlert(
                 style: .menuPopover().statusItem(statusItem),
-                content: .screenBrightness(level: .value(Int.random(in: 0 ... 17), range: 0 ... 17))
+                content: .screenBrightness(level: .value(Int.random(in: 0 ... 18), range: 0 ... 18))
             )
         }
     }
