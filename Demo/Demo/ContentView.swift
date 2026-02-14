@@ -9,7 +9,7 @@ import MacHUD
 import SwiftUI
 
 struct ContentView: View {
-    @State private var panel: Panel = .menuPopover
+    @State private var panel: Panel = if #available(macOS 26.0, *) { .menuPopover } else { .prominent }
     
     var body: some View {
         NavigationSplitView {

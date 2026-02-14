@@ -25,6 +25,10 @@ struct DemoApp: App {
         .defaultSize(width: 800, height: 1100)
         
         MenuBarExtra("Demo", systemImage: "bubble.fill") {
+            if #available(macOS 26.0, *) { } else {
+                Button("Menubar extra is only used for macOS 26 popover HUDs") { }.disabled(true)
+                Divider()
+            }
             Button("Quit") { NSApp.terminate(nil) }
         }
         .menuBarExtraAccess(isPresented: $isMenuPresented) { statusItem in
