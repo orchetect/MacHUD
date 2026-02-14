@@ -251,7 +251,42 @@ private struct MockHUDView<Content: View>: View {
         MockHUDView {
             MenuPopoverHUDStyle.ContentView(
                 style: .init(),
+                content: .audioVolume(deviceName: "MacBook Pro Speakers", level: .unitInterval(0.0))
+            )
+        }
+        
+        MockHUDView {
+            MenuPopoverHUDStyle.ContentView(
+                style: .init(),
+                content: .audioVolume(deviceName: "MacBook Pro Speakers", level: .unitInterval(1 / 18))
+            )
+        }
+        
+        MockHUDView {
+            MenuPopoverHUDStyle.ContentView(
+                style: .init(),
                 content: .audioVolume(deviceName: "MacBook Pro Speakers", level: .unitInterval(5 / 18))
+            )
+        }
+        
+        MockHUDView {
+            MenuPopoverHUDStyle.ContentView(
+                style: .init(),
+                content: .audioVolume(deviceName: "MacBook Pro Speakers", level: .unitInterval(8 / 18))
+            )
+        }
+        
+        MockHUDView {
+            MenuPopoverHUDStyle.ContentView(
+                style: .init(),
+                content: .audioVolume(deviceName: "MacBook Pro Speakers", level: .unitInterval(17 / 18))
+            )
+        }
+        
+        MockHUDView {
+            MenuPopoverHUDStyle.ContentView(
+                style: .init(),
+                content: .audioVolume(deviceName: "MacBook Pro Speakers", level: .unitInterval(1.0))
             )
         }
         
