@@ -23,14 +23,14 @@ extension HUDManager {
         style: S,
         content: S.AlertContent
     ) async {
-        await self.displayAlert(style: style, content: content, waitForDismiss: false)
+        await displayAlert(style: style, content: content, waitForDismiss: false)
     }
 }
 
 extension HUDManager {
     /// Display a HUD alert on the screen synchronously using the default style for the current platform.
     /// This method waits until the alert is fully dismissed before returning.
-    public nonisolated func displayAlertAndWaitUntilDismissed(
+    public func displayAlertAndWaitUntilDismissed(
         _ content: DefaultHUDStyle.AlertContent
     ) async {
         await displayAlertAndWaitUntilDismissed(style: .platformDefault(), content: content)
@@ -38,7 +38,7 @@ extension HUDManager {
     
     /// Display a HUD alert on the screen synchronously using the specified style.
     /// This method waits until the alert is fully dismissed before returning.
-    public nonisolated func displayAlertAndWaitUntilDismissed<S: HUDStyle>(
+    public func displayAlertAndWaitUntilDismissed<S: HUDStyle>(
         style: S,
         content: S.AlertContent
     ) async {
@@ -92,7 +92,8 @@ extension HUDManager {
             var count = 0
             for id in ids {
                 for alert in alerts[id] ?? [] {
-                    if await alert.phase != .inactive { count += 1 }
+                    let phase = await alert.phase
+                    if phase != .inactive { count += 1 }
                 }
             }
             return count
