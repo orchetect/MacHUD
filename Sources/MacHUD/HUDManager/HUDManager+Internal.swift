@@ -66,7 +66,7 @@ extension HUDManager {
     }
     
     /// Trigger a new HID alert being shown on-screen.
-    func newHUDAlert<S: HUDStyle>(
+    func displayAlert<S: HUDStyle>(
         style: S,
         content: S.AlertContent,
         waitForDismiss: Bool

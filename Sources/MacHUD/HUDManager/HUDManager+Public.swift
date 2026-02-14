@@ -12,20 +12,18 @@ import Foundation
 
 extension HUDManager {
     /// Display a HUD alert on the screen asynchronously using the default style for the current platform.
-    public nonisolated func displayAlert(
+    public func displayAlert(
         _ content: DefaultHUDStyle.AlertContent
-    ) {
-        displayAlert(style: .platformDefault(), content: content)
+    ) async {
+        await displayAlert(style: .platformDefault(), content: content)
     }
     
     /// Display a HUD alert on the screen asynchronously using the specified style.
-    public nonisolated func displayAlert<S: HUDStyle>(
+    public func displayAlert<S: HUDStyle>(
         style: S,
         content: S.AlertContent
-    ) {
-        Task {
-            await newHUDAlert(style: style, content: content)
-        }
+    ) async {
+        await self.displayAlert(style: style, content: content, waitForDismiss: false)
     }
 }
 
@@ -44,7 +42,7 @@ extension HUDManager {
         style: S,
         content: S.AlertContent
     ) async {
-        await newHUDAlert(style: style, content: content)
+        await displayAlert(style: style, content: content, waitForDismiss: true)
     }
 }
 
