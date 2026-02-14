@@ -90,6 +90,8 @@ extension HUDManager.Alert {
             throw HUDError.internalInconsistency("Missing HUD alert reusable content view.")
         }
         
+        await setPhase(.preparingWindow)
+        
         let style = await style
         try autoreleasepool {
             // get screen for alert
@@ -123,9 +125,7 @@ extension HUDManager.Alert {
     
     /// Shows the alert on screen, optionally animating its appearance and dismissal.
     @MainActor
-    func showWindow() async throws {
-        let style = await style
-        
+    func showWindow(transition: HUDTransition?) async throws {
         guard let window else {
             throw HUDError.internalInconsistency("Missing HUD alert window.")
         }
@@ -136,7 +136,9 @@ extension HUDManager.Alert {
             window.orderFront(self)
         }
         
-        if let transition = style.transitionIn {
+        if let transition {
+            await setPhase(.transitioningIn)
+            
             let isOpacity: Bool
             let scaleFactors: (shrink: NSSize, reset: NSSize)?
             let transitionDuration: TimeInterval
@@ -220,16 +222,45 @@ extension HUDManager.Alert {
             }
         }
         
-        // remain on screen for specified time period; schedule the fade out
-        // prevent time values being too small as failsafe
-        let duration = style.duration.clamped(to: 0.1...)
-        try? await Task.sleep(seconds: duration)
+        await setPhase(.staticallyDisplayed)
         
-        // dismiss
-        do {
-            try await dismiss(transition: style.transitionOut)
-        } catch {
-            logger.debug("Error dismissing HUD alert: \(error.localizedDescription)")
+        // schedule dismiss timer
+        await restartDisplayTimer()
+    }
+    
+    @HUDManager
+    func cancelDisplayTimer() {
+        displayTimer?.cancel()
+        displayTimer = nil
+    }
+    
+    @HUDManager
+    func restartDisplayTimer() {
+        cancelDisplayTimer()
+        displayTimer = Task {
+            // prevent time values being too small or large as failsafe
+            let duration = style.duration.clamped(to: 0.1 ... 60.0)
+            try? await Task.sleep(seconds: duration)
+            try Task.checkCancellation()
+            
+            // dismiss
+            do {
+                try await dismiss(transition: style.transitionOut)
+            } catch {
+                logger.debug("Error dismissing HUD alert: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    @concurrent nonisolated
+    func wait(for phase: HUDManager.AlertPhase, timeout: TimeInterval = 5.0) async {
+        let timeIn = Date()
+        let timeout = timeout.clamped(to: 0.0 ... 60.0)
+        while await self.phase != phase,
+              !Task.isCancelled
+        {
+            try? await Task.sleep(seconds: 0.1)
+            guard Date().timeIntervalSince(timeIn) < timeout else { return }
         }
     }
 }

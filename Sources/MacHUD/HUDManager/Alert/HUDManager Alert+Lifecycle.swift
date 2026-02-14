@@ -12,31 +12,68 @@ internal import SwiftExtensions
 // MARK: - Methods
 
 extension HUDManager.Alert {
+    /// Returns true if the alert is inactive or if the alert is visibly presented on-screen
+    /// but can be reused to display the new content.
+    @HUDManager
+    func isReusable(for content: Style.AlertContent, reserveIfReusable: Bool = true) -> Bool {
+        switch phase {
+        case .inactive:
+            // content is irrelevant, if alert is inactive, it can used for any content
+            return true
+            
+        case .preparingWindow,
+             .transitioningIn,
+             .staticallyDisplayed:
+            // TODO: not performing any content comparison, but could if needed
+            // ultimately it would be ideal to perform a comparison of the currently displayed
+            // alert's content and the new content to be displayed.
+            // if the content is similar enough, reuse of the on-screen alert would be allowed.
+            // ostensibly, it would require an additional `HUDAlertContent` protocol requirement
+            // to implement a method such as `isLayoutCompatible(with other: Self)`.
+            _ = content
+            
+            if reserveIfReusable {
+                cancelDisplayTimer()
+            }
+            
+            return true
+            
+        case .transitioningOut:
+            // there is no viable way to stop a window that is in the process of transitioning out
+            return false
+        }
+    }
+    
     /// Creates the alert window and shows it on screen.
     @HUDManager
     func show(content: Style.AlertContent, style: Style) async throws {
-        if isInUse {
-            // do a basic reset of the window if it's currently in use
-            await Task { @MainActor in
-                orderOutWindowAndZeroOutAlpha()
-                // this may not be necessary or may not do anything useful;
-                // the assumption is that it cancels any already in-progress animation but it hasn't been
-                // confirmed that it actually does that yet
-                await NSAnimationContext.runAnimationGroup { context in
-                    context.duration = 0.0
-                }
-            }.value
-        }
-        
-        isInUse = true
-        
-        self.style = style
-        
         do {
-            try await updateWindow(content: content)
-            try await showWindow()
+            switch phase {
+            case .inactive:
+                self.style = style
+                phase = .preparingWindow
+                try await updateWindow(content: content)
+                try await showWindow(transition: style.transitionIn)
+                
+            case .preparingWindow, .transitioningIn:
+                cancelDisplayTimer()
+                await wait(for: .staticallyDisplayed)
+                self.style = style
+                try await updateWindow(content: content)
+                try await showWindow(transition: style.transitionIn)
+                
+            case .staticallyDisplayed:
+                cancelDisplayTimer()
+                self.style = style
+                try await updateWindow(content: content)
+                try await showWindow(transition: style.transitionIn)
+                
+            case .transitioningOut:
+                assertionFailure("Alert reuse attempted while alert is transitioning out. This shouldn't happen.")
+                return
+            }
         } catch {
-            isInUse = false
+            phase = .inactive
             throw error
         }
     }
@@ -49,6 +86,8 @@ extension HUDManager.Alert {
         }
         
         if let transition {
+            await setPhase(.transitioningOut)
+            
             let isOpacity: Bool
             let scaleFactors: (shrink: NSSize, reset: NSSize)?
             let transitionDuration: TimeInterval
@@ -111,12 +150,12 @@ extension HUDManager.Alert {
         }
         
         self.orderOutWindowAndZeroOutAlpha()
-        await self.resetInUse()
+        await self.setPhase(.inactive)
     }
     
     @HUDManager
-    func resetInUse() {
-        isInUse = false
+    func setPhase(_ phase: HUDManager.AlertPhase) {
+        self.phase = phase
     }
     
     @MainActor

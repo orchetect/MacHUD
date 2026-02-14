@@ -10,6 +10,7 @@ import Foundation
 
 public enum HUDError: Error {
     case internalInconsistency(_ verboseError: String)
+    case timeout
 }
 
 extension HUDError: LocalizedError {
@@ -17,6 +18,8 @@ extension HUDError: LocalizedError {
         switch self {
         case let .internalInconsistency(verboseError):
             "Internal inconsistency: \(verboseError)"
+        case .timeout:
+            "Timed out"
         }
     }
 }

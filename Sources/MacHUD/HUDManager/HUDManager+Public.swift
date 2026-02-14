@@ -59,29 +59,45 @@ extension HUDManager {
         customHUDStyles: repeat (each S).Type,
         count: Int = 2
     ) async {
-        guard alerts.isEmpty else { return }
-        
         // internal styles
-        await prewarmAlerts(hudStyle: ProminentHUDStyle.self, count: count)
+        await prewarmAlerts(style: ProminentHUDStyle.self, count: count)
         if #available(macOS 26.0, *) {
-            await prewarmAlerts(hudStyle: MenuPopoverHUDStyle.self, count: count)
+            await prewarmAlerts(style: MenuPopoverHUDStyle.self, count: count)
         }
         
         // custom styles
         for hudStyle in repeat each customHUDStyles {
-            await prewarmAlerts(hudStyle: hudStyle, count: count)
+            await prewarmAlerts(style: hudStyle, count: count)
         }
-        
-        await prewarm(customHUDStyles: ProminentHUDStyle.self, ProminentHUDStyle.self)
+    }
+    
+    /// Synchronously waits for all HUD alerts to dismiss from the screen.
+    @concurrent nonisolated
+    public func waitForAlertsToDismiss(timeout: TimeInterval? = nil) async throws {
+        let timeIn = Date()
+        while !Task.isCancelled {
+            guard await activeCount > 0 else {
+                logger.debug("No active on-screen HUD alerts to wait for. Returning immediately.")
+                return
+            }
+            try await Task.sleep(seconds: 0.1)
+            if let timeout {
+                guard Date().timeIntervalSince(timeIn) < timeout else { throw HUDError.timeout }
+            }
+        }
     }
     
     /// Returns the number of active HUD alerts on-screen.
-    @HUDManager
     public var activeCount: Int {
         get async {
-            await alerts.values.flatMap(\.self).reduce(0) {
-                $0 + ($1.isInUse ? 1 : 0)
+            let ids = alerts.keys
+            var count = 0
+            for id in ids {
+                for alert in alerts[id] ?? [] {
+                    if await alert.phase != .inactive { count += 1 }
+                }
             }
+            return count
         }
     }
 }

@@ -11,10 +11,13 @@ import Foundation
 extension HUDManager {
     static let maxConcurrentAlerts: Int = 10
     
-    func prewarmAlerts(hudStyle: (some HUDStyle).Type, count: Int = 2) async {
+    func prewarmAlerts(style: (some HUDStyle).Type, count: Int = 2) async {
+        let id = style.id
+        let currentCount = alerts[id]?.count ?? 0
+        let count = (count - currentCount).clamped(to: 0 ... Self.maxConcurrentAlerts)
         do {
-            for _ in 0 ..< count.clamped(to: 0 ... Self.maxConcurrentAlerts) {
-                _ = try await addNewAlert(style: hudStyle)
+            for _ in 0 ..< count {
+                _ = try await addNewAlert(style: style)
             }
         } catch {
             logger.debug("Error warming the HUDManager: \(error.localizedDescription)")
@@ -30,7 +33,7 @@ extension HUDManager {
         return newAlert
     }
     
-    func getAlerts<S: HUDStyle>(style: S.Type) async -> [Alert<S>]? {
+    func alerts<S: HUDStyle>(style: S.Type) async -> [Alert<S>]? {
         let id = style.id
         guard let alertPool = alerts[id] else { return nil }
         let typedAlertPool: [Alert<S>] = alertPool.reduce(into: []) { base, anyAlert in
@@ -43,15 +46,17 @@ extension HUDManager {
         return typedAlertPool
     }
     
-    func getFreeAlert<S: HUDStyle>(style: S.Type) async throws -> Alert<S> {
-        // return first reusable alert that is inactive, if any
-        if let alertPool = await getAlerts(style: style) {
+    func reusableAlert<S: HUDStyle>(style: S.Type, for content: S.AlertContent) async throws -> Alert<S> {
+        // return first reusable alert that is compatible with the content
+        if let alertPool = await alerts(style: style) {
             for alert in alertPool {
-                if await !alert.isInUse { return alert }
+                if await alert.isReusable(for: content) { return alert }
             }
             
             // failsafe: cap max number of alerts
-            if alertPool.count > Self.maxConcurrentAlerts, let lastAlert = alertPool.last {
+            if alertPool.count > Self.maxConcurrentAlerts,
+               let lastAlert = alertPool.last
+            {
                 return lastAlert
             }
         }
@@ -63,11 +68,15 @@ extension HUDManager {
     /// Trigger a new HID alert being shown on-screen.
     func newHUDAlert<S: HUDStyle>(
         style: S,
-        content: S.AlertContent
+        content: S.AlertContent,
+        waitForDismiss: Bool
     ) async {
         do {
-            let alert = try await getFreeAlert(style: S.self)
+            let alert = try await reusableAlert(style: S.self, for: content)
             try await alert.show(content: content, style: style)
+            if waitForDismiss {
+                await alert.wait(for: .inactive, timeout: 60.0)
+            }
         } catch {
             logger.debug("Error displaying HUD alert: \(error.localizedDescription)")
         }

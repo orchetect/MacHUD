@@ -11,7 +11,7 @@ import AppKit
 
 /// Internal HUD alert protocol enabling type erasure of typed ``Alert`` objects.
 protocol HUDAlertProtocol: AnyObject, Sendable {
-    @HUDManager var isInUse: Bool { get set }
+    @HUDManager var phase: HUDManager.AlertPhase { get set }
     @MainActor var window: NSWindow? { get set }
 }
 

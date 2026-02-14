@@ -16,8 +16,9 @@ extension HUDManager {
         
         // MARK: - State
         
-        @HUDManager var isInUse = false
-		
+        @HUDManager var phase: AlertPhase = .inactive
+        @HUDManager var displayTimer: Task<Void, any Error>? = nil
+        
         // MARK: - UI
 		
         @MainActor var window: NSWindow?
