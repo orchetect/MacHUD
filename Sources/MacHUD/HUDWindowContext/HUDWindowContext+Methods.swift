@@ -26,7 +26,7 @@ extension HUDWindowContext {
 
 extension HUDWindowContext {
     /// Applies a slightly translucent visual effect to the window.
-    public func applyVisualEffect() {
+    public func applyVisualEffect(material: NSVisualEffectView.Material = .hudWindow) {
         guard visualEffectView == nil else { return } // don't apply more than once
         guard let contentView = window.contentView else { return }
         
@@ -39,11 +39,11 @@ extension HUDWindowContext {
         
         newEffectView.state = .active
         newEffectView.blendingMode = .behindWindow
-        newEffectView.material = .hudWindow // .hudWindow
+        newEffectView.material = material
     }
     
-    /// If ``applyVisualEffect()`` was called to apply an effect to the window, this property will return
-    /// a reference to the visual effect view.
+    /// If ``applyVisualEffect(material:)`` was called to apply an effect to the window, this
+    /// property will return a reference to the visual effect view.
     public var visualEffectView: NSVisualEffectView? {
         for subview in window.contentView?.subviews ?? [] {
             if let typedSubview = subview as? NSVisualEffectView {
