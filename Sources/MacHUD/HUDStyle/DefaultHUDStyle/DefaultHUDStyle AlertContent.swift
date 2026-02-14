@@ -21,9 +21,7 @@ extension DefaultHUDStyle {
         case imageAndText(image: HUDImageSource, text: String)
         
         /// Image or text alert depending on platform, along with a progress bar.
-        case imageOrTextAndProgress(image: HUDImageSource, text: String, value: HUDProgressValue)
-        
-        // TODO: add progress slider (volume level, screen brightness, etc.) with image end-caps
+        case imageOrTextAndProgress(image: HUDImageSource, text: String, value: HUDSteppedProgressValue)
     }
 }
 
@@ -51,7 +49,7 @@ extension DefaultHUDStyle.AlertContent {
         case let .imageAndText(image: image, text: text):
             .imageAndText(image: image, text: text)
         case let .imageOrTextAndProgress(image: image, text: text, value: value):
-            .textAndProgress(text: text, value: value.stepped(nil), images: .minMax(min: image, max: image))
+            .textAndProgress(text: text, value: value, images: .minMax(min: image, max: image))
         }
     }
 }

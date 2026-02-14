@@ -13,33 +13,94 @@ extension ProminentHUDStyle.ContentView {
     struct AmountView: View {
         @Environment(\.controlSize) private var controlSize
         
-        let progressValue: HUDProgressValue
-        let segmentCount: Int = 16 // macOS 11 thru 15 HUD used 16 segments
+        let progressValue: HUDSteppedProgressValue
+        let segmentCount: Int?
         
-        init(value: HUDProgressValue) {
+        typealias Geometry = ProminentHUDStyle.Geometry
+        
+        /// - Parameters:
+        ///   - value: Progress value.
+        ///   - segmentCount: Number of segments that the progress bar is divided into.
+        ///     macOS 11 thru 15 HUD used 16 segments for audio volume and screen brightness.
+        ///     If `nil`, the progress bar is rendered as segmentless.
+        init(value: HUDSteppedProgressValue) {
             self.progressValue = value
+            
+            let proposedSegmentCount: Int? = if let step = value.step {
+                switch step {
+                case let .span(double):
+                    step.segmentCount(for: value.range)
+                case let .segmentCount(count):
+                    count
+                }
+            } else { nil }
+            
+            if let proposedSegmentCount, proposedSegmentCount < 1 {
+                self.segmentCount = nil
+            } else {
+                self.segmentCount = proposedSegmentCount?.clamped(to: 0 ... 100)
+            }
         }
         
-        public var body: some View {
+        var body: some View {
             ZStack(alignment: .leading) {
                 Rectangle()
-                    .fill(Color.black.opacity(0.8)) // TODO: make dynamic based on color scheme
+                    .fill(Geometry.backColor)
                 
-                HStack(spacing: 1) {
-                    ForEach(0 ..< 16, id: \.self) { index in
-                        Rectangle()
-                            .fill(isSegmentFilled(index: index) ? .white : .clear) // TODO: make dynamic based on color scheme
-                            .frame(width: 9, height: 6)
-                    }
-                }
-                .offset(x: 1)
+                conditionalBody
+                    .offset(x: 1)
             }
-            .frame(width: 161, height: 6 + 2) // actual measurements of macOS HUD
+            .frame(width: Geometry.width, height: Geometry.segmentHeight + 2)
             .fixedSize()
+        }
+        
+        @ViewBuilder
+        private var conditionalBody: some View {
+            if let segmentCount {
+                SegmentedBarView(progressValue: progressValue.value, segmentCount: segmentCount)
+            } else {
+                ContinuousBarView(progressValue: progressValue.value)
+            }
+        }
+    }
+}
+
+extension ProminentHUDStyle.ContentView.AmountView {
+    struct SegmentedBarView: View {
+        let progressValue: HUDProgressValue
+        let segmentCount: Int
+        
+        typealias Geometry = ProminentHUDStyle.Geometry
+        
+        var body: some View {
+            HStack(spacing: 1.0) {
+                ForEach(0 ..< segmentCount, id: \.self) { index in
+                    Rectangle()
+                        .fill(isSegmentFilled(index: index) ? Geometry.foreColor : .clear)
+                        .padding([.top, .bottom], 1.0)
+                }
+            }
         }
         
         private func isSegmentFilled(index: Int) -> Bool {
             Double(index) < (progressValue.unitInterval * Double(segmentCount))
+        }
+    }
+    
+    struct ContinuousBarView: View {
+        let progressValue: HUDProgressValue
+        
+        typealias Geometry = ProminentHUDStyle.Geometry
+        
+        var body: some View {
+            ZStack(alignment: .leading) {
+                Color.clear
+                
+                Rectangle()
+                    .fill(Geometry.foreColor)
+                    .frame(width: (Geometry.width - 2) * progressValue.unitInterval)
+                    .padding([.top, .bottom], 1.0)
+            }
         }
     }
 }
@@ -48,12 +109,45 @@ extension ProminentHUDStyle.ContentView {
 #Preview {
     VStack {
         ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.0))
-        
         ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.2))
-        
         ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.5))
-        
         ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(1.0))
+        Divider()
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.0, step: .segmentCount(0)))
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.2, step: .segmentCount(0)))
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.5, step: .segmentCount(0)))
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(1.0, step: .segmentCount(0)))
+        Divider()
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.0, step: .segmentCount(1)))
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.2, step: .segmentCount(1)))
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.5, step: .segmentCount(1)))
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(1.0, step: .segmentCount(1)))
+        Divider()
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.0, step: .segmentCount(2)))
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.2, step: .segmentCount(2)))
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.5, step: .segmentCount(2)))
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(1.0, step: .segmentCount(2)))
+        Divider()
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.0, step: .segmentCount(10)))
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.2, step: .segmentCount(10)))
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.5, step: .segmentCount(10)))
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(1.0, step: .segmentCount(10)))
+        Divider()
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.0, step: .segmentCount(20)))
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.2, step: .segmentCount(20)))
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.5, step: .segmentCount(20)))
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(1.0, step: .segmentCount(20)))
+        Divider()
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.0, step: .segmentCount(100)))
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.2, step: .segmentCount(100)))
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.5, step: .segmentCount(100)))
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(1.0, step: .segmentCount(100)))
+        
+        Divider()
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.0, step: nil))
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.2, step: nil))
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.5, step: nil))
+        ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(1.0, step: nil))
     }
     .padding(20)
 }

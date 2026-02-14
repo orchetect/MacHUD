@@ -13,7 +13,7 @@ extension ProminentHUDStyle {
         case text(String)
         case image(HUDImageSource)
         case imageAndText(image: HUDImageSource, text: String)
-        case imageAndProgress(image: HUDImageSource, value: HUDProgressValue)
+        case imageAndProgress(image: HUDImageSource, value: HUDSteppedProgressValue)
     }
 }
 
@@ -29,7 +29,7 @@ extension ProminentHUDStyle.AlertContent {
     public static func audioVolume(level: HUDProgressValue, dynamicImage: Bool = false) -> Self {
         .imageAndProgress(
             image: .image(forVolumeLevel: dynamicImage ? level.unitInterval : 1.0),
-            value: level
+            value: level.stepped(.segmentCount(ProminentHUDStyle.Geometry.standardSegmentCount))
         )
     }
     
@@ -40,7 +40,7 @@ extension ProminentHUDStyle.AlertContent {
     public static func screenBrightness(level: HUDProgressValue) -> Self {
         .imageAndProgress(
             image: .systemName("sun.max"),
-            value: level
+            value: level.stepped(.segmentCount(ProminentHUDStyle.Geometry.standardSegmentCount))
         )
     }
 }

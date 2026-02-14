@@ -39,4 +39,16 @@ extension ProminentHUDStyle {
     }
 }
 
+// MARK: - Progress Bar
+
+extension ProminentHUDStyle.Geometry {
+    static let backColor: Color = .black.opacity(0.8) // TODO: make dynamic based on color scheme
+    static let foreColor: Color = .white // TODO: make dynamic based on color scheme
+    
+    static let segmentHeight: CGFloat = 6.0 // actual measurements of macOS HUD
+    static let width: CGFloat = 161.0 // actual measurements of macOS HUD
+    
+    static let standardSegmentCount: Int = 16
+}
+
 #endif

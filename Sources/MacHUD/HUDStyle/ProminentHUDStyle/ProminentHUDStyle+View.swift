@@ -96,6 +96,16 @@ extension ProminentHUDStyle {
     )
 }
 
+#Preview("Image & Progress (Non-Segmented)") {
+    ProminentHUDStyle.ContentView(
+        style: .prominent(),
+        content: .imageAndProgress(
+            image: .systemName("speaker.wave.3.fill"),
+            value: .value(0.3, range: 0.0 ... 1.0, step: .segmentCount(10))
+        )
+    )
+}
+
 #endif
 
 #endif
