@@ -45,7 +45,7 @@ jobs:
     #   run: xcodebuild test -workspace ".swiftpm/xcode/package.xcworkspace" -scheme "$SCHEME" -destination "platform=macOS" | xcbeautify --renderer github-actions && exit ${PIPESTATUS[0]}
 
   demo-project:
-    name: Demo Project (Release Build)
+    name: Demo Project
     runs-on: macos-latest
     timeout-minutes: 20
     steps:
@@ -54,4 +54,4 @@ jobs:
       with:
         xcode-version: latest-stable
     - name: Build
-      run: xcodebuild build -project "Demo/Demo.xcodeproj" -scheme "Demo" -configuration "Release" -destination "generic/platform=macOS" # | xcbeautify --renderer github-actions && exit ${PIPESTATUS[0]}
+      run: xcodebuild build -project "Demo/Demo.xcodeproj" -scheme "Demo" -destination "generic/platform=macOS" | xcbeautify --renderer github-actions && exit ${PIPESTATUS[0]}
