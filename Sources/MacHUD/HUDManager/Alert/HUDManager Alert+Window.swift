@@ -56,6 +56,9 @@ extension HUDManager.Alert {
         window.allowsToolTipsWhenApplicationIsInactive = false
         window.isMovableByWindowBackground = false
         window.animationBehavior = .none
+        // window.becomesKeyOnlyIfNeeded = true // only applicable to NSPanel
+        // window.isFloatingPanel = true // only applicable to NSPanel
+        // window.worksWhenModal = false // only applicable to NSPanel
         
         window.collectionBehavior = [
             .ignoresCycle, .stationary, .canJoinAllSpaces, .fullScreenAuxiliary, .transient
