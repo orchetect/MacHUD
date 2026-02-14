@@ -60,13 +60,13 @@ extension HUDManager.Alert {
                 await wait(for: .staticallyDisplayed)
                 self.style = style
                 try await updateWindow(content: content)
-                try await showWindow(transition: style.transitionIn)
+                try await showWindow(transition: nil)
                 
             case .staticallyDisplayed:
                 cancelDisplayTimer()
                 self.style = style
                 try await updateWindow(content: content)
-                try await showWindow(transition: style.transitionIn)
+                try await showWindow(transition: nil)
                 
             case .transitioningOut:
                 assertionFailure("Alert reuse attempted while alert is transitioning out. This shouldn't happen.")
