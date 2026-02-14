@@ -18,7 +18,7 @@ extension DefaultHUDStyle {
         case image(HUDImageSource)
         
         /// Image and text alert.
-        case imageAndText(text: String, image: HUDImageSource)
+        case imageAndText(image: HUDImageSource, text: String)
         
         /// Image or text alert depending on platform, along with a progress bar.
         case imageOrTextAndProgress(image: HUDImageSource, text: String, value: HUDProgressValue)
@@ -34,7 +34,7 @@ extension DefaultHUDStyle.AlertContent {
             .text(text)
         case let .image(imageSource):
             .image(imageSource)
-        case let .imageAndText(text, image):
+        case let .imageAndText(image: image, text: text):
             .imageAndText(image: image, text: text)
         case let .imageOrTextAndProgress(image: image, text: _, value: value):
             .imageAndProgress(image: image, value: value)
@@ -48,7 +48,7 @@ extension DefaultHUDStyle.AlertContent {
             .text(text)
         case let .image(imageSource):
             .image(imageSource)
-        case let .imageAndText(text, image):
+        case let .imageAndText(image: image, text: text):
             .imageAndText(image: image, text: text)
         case let .imageOrTextAndProgress(image: image, text: text, value: value):
             .textAndProgress(text: text, value: value.stepped(nil), images: .minMax(min: image, max: image))
