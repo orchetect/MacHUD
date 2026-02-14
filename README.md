@@ -25,7 +25,7 @@ To add this package to an Xcode app project, use:
 1. To add this package to a Swift package, add the dependency to your package and target in Package.swift:
 
    ```swift
-   .package(url: "https://github.com/orchetect/MacHUD", from: "0.4.1")
+   .package(url: "https://github.com/orchetect/MacHUD", from: "0.5.0")
    ```
 
 2. Import the library:
@@ -36,11 +36,23 @@ To add this package to an Xcode app project, use:
 
 3. Try the [Demo](Demo) example project to see the library in action.
 
-## Note
+## Known Limitations
 
-To enable HUD alerts showing over top of full-screen application windows participating in Spaces, **one of two known methods** will work:
+The HUD alert windows are confined to your application's visibility state. If the user hides your application while running, HUD alerts will not be seen.
 
-1. Activation Policy API
+Additionally, HUD alerts will not show over top of full-screen application windows participating in Spaces.
+
+To get around these limitations, your application must be configured as a dockless agent/accessory. 
+
+> [!NOTE]
+>
+> This solution is only appropriate for applications that are dockless menubar-based applications.
+>
+> For applications that are standard applications (not menubar-based), a more complicated solution is required that would involve bundling a trusted executable that is configured as a dockless agent as described below, and have your application communicate with it when HUD alerts are needed to be displayed.
+
+**One of two known methods** will work:
+
+1. Set Activation Policy at Launch
 
    - Early in application execution, ie: `func applicationDidFinishLaunching(_:)`
 
@@ -54,9 +66,9 @@ To enable HUD alerts showing over top of full-screen application windows partici
      >
      > "The application doesn’t appear in the Dock and doesn’t have a menu bar, but it may be activated programmatically or by clicking on one of its windows. This corresponds to value of the LSUIElement key in the application’s Info.plist being 1."
 
-2. Adding Info.plist keys
+2. Add Info.plist keys
 
-   - Add the following keys are necessary to be present in your application's info.plist file, using 0 or 1 for presentation mode.
+   - Add the following keys in your application's Info.plist file, using 0 or 1 for presentation mode.
 
      ```xml
      <key>LSUIElement</key>
@@ -69,8 +81,6 @@ To enable HUD alerts showing over top of full-screen application windows partici
 ## Customization
 
 In addition to pre-defined system alert styles provided by the library, fully custom alert windows can also be designed by adopting the `HUDStyle` protocol.
-
-
 
 See the included `ProminentHUDStyle` and `MenuPopoverHUDStyle` HUD styles for examples on how to implement a custom HUD style.
 
