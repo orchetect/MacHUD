@@ -49,6 +49,7 @@ extension ProminentHUDStyle.Geometry {
     static let width: CGFloat = 161.0 // actual measurements of macOS HUD
     
     static let standardSegmentCount: Int = 16
+    static let maxSegmentCount: Int = 100
 }
 
 #endif

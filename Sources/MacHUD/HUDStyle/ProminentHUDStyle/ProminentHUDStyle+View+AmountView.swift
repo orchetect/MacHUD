@@ -26,19 +26,12 @@ extension ProminentHUDStyle.ContentView {
         init(value: HUDSteppedProgressValue) {
             self.progressValue = value
             
-            let proposedSegmentCount: Int? = if let step = value.step {
-                switch step {
-                case let .span(double):
-                    step.segmentCount(for: value.range)
-                case let .segmentCount(count):
-                    count
-                }
-            } else { nil }
-            
-            if let proposedSegmentCount, proposedSegmentCount < 1 {
-                self.segmentCount = nil
+            if let proposedSegmentCount = value.step?.segmentCount(for: value.range),
+               proposedSegmentCount > 0
+            {
+                segmentCount = proposedSegmentCount.clamped(to: 1 ... Geometry.maxSegmentCount)
             } else {
-                self.segmentCount = proposedSegmentCount?.clamped(to: 0 ... 100)
+                segmentCount = nil
             }
         }
         
