@@ -99,6 +99,12 @@ struct ProminentHUDView: View {
                     }
                 }
                 
+                Section("Advanced Animation HUD Alerts") {
+                    Button("Show Audio Unmute HUD Alert") {
+                        showUnmuteAudioAlert()
+                    }
+                }
+                
                 Section("Debug & Edge Case Testing") {
                     Button("Show Text-Only HUD Alert With Very Long Text") {
                         showShowTextOnlyAlertWithVeryLongText()
@@ -178,6 +184,23 @@ extension ProminentHUDView {
             await HUDManager.shared.displayAlert(
                 style: .prominent(),
                 content: .screenBrightness(level: .unitInterval(.random(in: 0.0 ... 1.0)))
+            )
+        }
+    }
+    
+    private func showUnmuteAudioAlert() {
+        Task {
+            await HUDManager.shared.displayAlert(
+                style: .prominent(),
+                content: .imageAndText(
+                    image: .animated(.imageReplacement(
+                        initial: .systemName("speaker.slash.fill", renderingMode: .hierarchical),
+                        target: .systemName("speaker.wave.3.fill", renderingMode: .hierarchical),
+                        magicReplace: false,
+                        speedMultiplier: nil
+                    )),
+                    text: "Built-In Speakers"
+                )
             )
         }
     }

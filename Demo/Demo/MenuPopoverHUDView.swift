@@ -96,6 +96,12 @@ struct MenuPopoverHUDView: View {
                     }
                 }
                 
+                Section("Advanced Animation HUD Alerts") {
+                    Button("Show Audio Unmute HUD Alert") {
+                        showUnmuteAudioAlert()
+                    }
+                }
+                
                 Section("Debug & Edge Case Testing") {
                     Button("Show Text-Only HUD Alert With Very Long Text") {
                         showShowTextOnlyAlertWithVeryLongText()
@@ -177,6 +183,23 @@ extension MenuPopoverHUDView {
             await HUDManager.shared.displayAlert(
                 style: .menuPopover().statusItem(statusItem),
                 content: .screenBrightness(level: .value(Int.random(in: 0 ... 18), range: 0 ... 18))
+            )
+        }
+    }
+    
+    private func showUnmuteAudioAlert() {
+        Task {
+            await HUDManager.shared.displayAlert(
+                style: .menuPopover().statusItem(statusItem),
+                content: .imageAndText(
+                    image: .animated(.imageReplacement(
+                        initial: .systemName("speaker.slash.fill", renderingMode: .hierarchical),
+                        target: .systemName("speaker.wave.3.fill", renderingMode: .hierarchical),
+                        magicReplace: false,
+                        speedMultiplier: nil
+                    )),
+                    text: "Built-In Speakers"
+                )
             )
         }
     }
