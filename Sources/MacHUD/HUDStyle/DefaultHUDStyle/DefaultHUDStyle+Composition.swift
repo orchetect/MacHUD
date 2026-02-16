@@ -6,12 +6,25 @@
 
 #if os(macOS)
 
+import AppKit
 import Foundation
 
 // MARK: - Composable/Chainable Methods
 
 extension DefaultHUDStyle {
-    // empty
+    /// Returns the style updating the ``statusItem`` property value.
+    public func statusItem(_ closure: @autoclosure @escaping @MainActor () -> NSStatusItem?) -> Self {
+        var copy = self
+        copy.statusItem = closure
+        return copy
+    }
+    
+    /// Returns the style updating the ``statusItem`` property value.
+    public func statusItem(_ closure: (@MainActor () -> NSStatusItem?)? = nil) -> Self {
+        var copy = self
+        copy.statusItem = closure
+        return copy
+    }
 }
 
 #endif

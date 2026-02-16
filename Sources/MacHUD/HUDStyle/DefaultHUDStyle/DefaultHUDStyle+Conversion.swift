@@ -13,6 +13,7 @@ extension DefaultHUDStyle {
             .duration(duration)
             .transitionOut(transitionOut)
             .imageAnimationDelay(imageAnimationDelay)
+            // status item is not used
     }
     
     @available(macOS 26.0, *)
@@ -22,6 +23,7 @@ extension DefaultHUDStyle {
             .duration(duration)
             .transitionOut(transitionOut)
             .imageAnimationDelay(imageAnimationDelay)
+            .statusItem(statusItem)
     }
 }
 

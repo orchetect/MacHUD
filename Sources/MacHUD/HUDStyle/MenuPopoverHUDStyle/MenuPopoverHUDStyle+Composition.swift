@@ -19,6 +19,13 @@ extension MenuPopoverHUDStyle {
         copy.statusItem = closure
         return copy
     }
+    
+    /// Returns the style updating the ``statusItem`` property value.
+    public func statusItem(_ closure: (@MainActor () -> NSStatusItem?)? = nil) -> Self {
+        var copy = self
+        copy.statusItem = closure
+        return copy
+    }
 }
 
 #endif
