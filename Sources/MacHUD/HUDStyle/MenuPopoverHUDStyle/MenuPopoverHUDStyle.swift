@@ -18,10 +18,10 @@ public struct MenuPopoverHUDStyle: HUDStyle {
     public var transitionIn: HUDTransition?
     public var duration: TimeInterval
     public var transitionOut: HUDTransition?
-    public var statusItem: (@MainActor () -> NSStatusItem?)?
-    
     // a small delay allows HUD window to transition in partly before image animation begins
     public var imageAnimationDelay: TimeInterval? = 0.2
+    
+    public var statusItem: (@MainActor () -> NSStatusItem?)?
     
     public init() {
         self = .macOS26()
@@ -46,7 +46,8 @@ extension MenuPopoverHUDStyle: Equatable {
         lhs.transitionIn == rhs.transitionIn
             && lhs.duration == rhs.duration
             && lhs.transitionOut == rhs.transitionOut
-            && (lhs.statusItem != nil) == (rhs.statusItem != nil) // can't compare closures, so just check for nil
+            && lhs.imageAnimationDelay == rhs.imageAnimationDelay
+        && (lhs.statusItem != nil) == (rhs.statusItem != nil) // can't compare closures, so just check for nil
     }
 }
 
@@ -56,6 +57,7 @@ extension MenuPopoverHUDStyle: Hashable {
         hasher.combine(transitionIn)
         hasher.combine(duration)
         hasher.combine(transitionOut)
+        hasher.combine(imageAnimationDelay)
         hasher.combine(statusItem != nil) // can't hash a closure, so just check for nil
     }
 }
