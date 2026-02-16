@@ -21,7 +21,12 @@ extension DefaultHUDStyle {
         case imageAndText(image: HUDImageSource, text: String)
         
         /// Image or text alert depending on platform, along with a progress bar.
-        case imageOrTextAndProgress(image: HUDImageSource, text: String, value: HUDSteppedProgressValue)
+        case imageOrTextAndProgress(
+            prominentImage: HUDImageSource,
+            text: String,
+            value: HUDSteppedProgressValue,
+            menuPopoverProgressImages: HUDProgressImageSource? = nil
+        )
     }
 }
 
@@ -36,7 +41,7 @@ extension DefaultHUDStyle.AlertContent {
             .image(imageSource)
         case let .imageAndText(image: image, text: text):
             .imageAndText(image: image, text: text)
-        case let .imageOrTextAndProgress(image: image, text: _, value: value):
+        case let .imageOrTextAndProgress(prominentImage: image, text: _, value: value, menuPopoverProgressImages: _):
             .imageAndProgress(image: image, value: value)
         }
     }
@@ -50,11 +55,11 @@ extension DefaultHUDStyle.AlertContent {
             .image(imageSource)
         case let .imageAndText(image: image, text: text):
             .imageAndText(image: image, text: text)
-        case let .imageOrTextAndProgress(image: image, text: text, value: value):
+        case let .imageOrTextAndProgress(prominentImage: _, text: text, value: value, menuPopoverProgressImages: images):
             .textAndProgress(
                 text: text,
                 value: value,
-                images: .minMax(min: image.staticImageSource, max: image.staticImageSource)
+                images: images
             )
         }
     }
