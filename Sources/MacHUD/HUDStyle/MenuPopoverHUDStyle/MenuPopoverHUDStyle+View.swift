@@ -142,8 +142,6 @@ extension MenuPopoverHUDStyle.ContentView {
                 HStack {
                     if let minImage {
                         minImage
-                            .resizable()
-                            .scaledToFit()
                             .frame(height: 12)
                     }
                     
@@ -164,8 +162,6 @@ extension MenuPopoverHUDStyle.ContentView {
                     
                     if let maxImage {
                         maxImage
-                            .resizable()
-                            .scaledToFit()
                             .frame(height: 12)
                     }
                 }
@@ -174,21 +170,25 @@ extension MenuPopoverHUDStyle.ContentView {
             }
         }
         
-        private var minImage: Image? {
-            guard let progressImages else { return nil }
-            
-            return switch progressImages {
-            case let .minMax(min: minSource, max: _):
-                minSource.image
+        private var minImage: (some View)? {
+            if let progressImages {
+                switch progressImages {
+                case let .minMax(min: minSource, max: _):
+                    minSource.scalableImage
+                }
+            } else {
+                nil
             }
         }
         
-        private var maxImage: Image? {
-            guard let progressImages else { return nil }
-            
-            return switch progressImages {
-            case let .minMax(min: _, max: maxSource):
-                maxSource.image
+        private var maxImage: (some View)? {
+            if let progressImages {
+                switch progressImages {
+                case let .minMax(min: _, max: maxSource):
+                    maxSource.scalableImage
+                }
+            } else {
+                nil
             }
         }
         
@@ -209,7 +209,7 @@ extension MenuPopoverHUDStyle.ContentView {
 
 @available(macOS 26.0, *)
 private struct MockHUDView<Content: View>: View {
-    let content: () -> Content
+    @ViewBuilder let content: () -> Content
     
     var body: some View {
         ZStack {
@@ -246,6 +246,22 @@ private struct MockHUDView<Content: View>: View {
             )
         }
         
+        MockHUDView {
+            let nsImage = NSWorkspace.shared.icon(forFile: "/System/Applications/Photos.app")
+            MenuPopoverHUDStyle.ContentView(
+                style: .init(),
+                content: .imageAndText(image: .static(.nsImage(nsImage, desaturated: false)), text: #"Added "New Photo.jpg""#)
+            )
+        }
+        
+        MockHUDView {
+            let nsImage = NSWorkspace.shared.icon(forFile: "/System/Applications/Photos.app")
+            MenuPopoverHUDStyle.ContentView(
+                style: .init(),
+                content: .imageAndText(image: .static(.nsImage(nsImage, desaturated: true)), text: #"Added "New Photo.jpg""#)
+            )
+        }
+            
         MockHUDView {
             MenuPopoverHUDStyle.ContentView(
                 style: .init(),

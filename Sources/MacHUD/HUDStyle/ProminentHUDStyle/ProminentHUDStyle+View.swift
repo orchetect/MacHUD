@@ -55,6 +55,8 @@ extension ProminentHUDStyle {
 // MARK: - Xcode Previews
 
 #if DEBUG
+import AppKit
+
 #Preview("Text") {
     ProminentHUDStyle.ContentView(
         style: .prominent(),
@@ -73,6 +75,22 @@ extension ProminentHUDStyle {
     ProminentHUDStyle.ContentView(
         style: .prominent(),
         content: .image(.static(.symbol(systemName: "speaker.wave.3.fill")))
+    )
+}
+
+#Preview("Image (Color)") {
+    let nsImage = NSWorkspace.shared.icon(forFile: "/System/Applications/Photos.app")
+    ProminentHUDStyle.ContentView(
+        style: .prominent(),
+        content: .image(.static(.nsImage(nsImage, desaturated: false)))
+    )
+}
+
+#Preview("Image (Desaturated)") {
+    let nsImage = NSWorkspace.shared.icon(forFile: "/System/Applications/Photos.app")
+    ProminentHUDStyle.ContentView(
+        style: .prominent(),
+        content: .image(.static(.nsImage(nsImage, desaturated: true)))
     )
 }
 

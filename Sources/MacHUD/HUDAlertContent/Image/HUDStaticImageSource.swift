@@ -10,9 +10,9 @@ import SwiftUI
 
 /// Static image source for use in HUD alerts.
 public enum HUDStaticImageSource {
-    case symbol(HUDStaticSystemImageSource)
-    case image(Image) // not Hashable
-    case nsImage(NSImage)
+    case symbol(_ imageSource: HUDStaticSystemImageSource)
+    case image(_ image: Image, desaturated: Bool = false) // not Hashable
+    case nsImage(_ nsImage: NSImage, desaturated: Bool = false)
 }
 
 extension HUDStaticImageSource: Equatable { }
@@ -28,19 +28,34 @@ extension HUDStaticImageSource {
         case let .symbol(imageSource):
             imageSource.image
             
-        case let .image(image):
+        case let .image(image, desaturated: _):
             image
             
-        case let .nsImage(nsImage):
+        case let .nsImage(nsImage, desaturated: _):
             Image(nsImage: nsImage)
         }
     }
     
     /// Returns the image source as a resizable, scaled-to-fit SwiftUI `Image` instance.
+    @ViewBuilder
     public var scalableImage: (some View)? { // TODO: refactor as non-Optional
-        image?
+        let base = image?
             .resizable()
             .scaledToFit()
+        
+        if isDesaturated {
+            base?.saturation(0.0) // .grayscale(1.0)
+        } else {
+            base
+        }
+    }
+    
+    public var isDesaturated: Bool {
+        switch self {
+        case .symbol(_): false
+        case let .image(_, desaturated: isDesaturated): isDesaturated
+        case let .nsImage(_, desaturated: isDesaturated): isDesaturated
+        }
     }
 }
 
