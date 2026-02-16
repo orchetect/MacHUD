@@ -8,22 +8,34 @@
 
 extension DefaultHUDStyle {
     func convertedToProminentHUDStyle() -> ProminentHUDStyle {
-        ProminentHUDStyle()
+        var style = ProminentHUDStyle()
             .transitionIn(transitionIn)
             .duration(duration)
             .transitionOut(transitionOut)
-            .imageAnimationDelay(imageAnimationDelay)
             // status item is not used
+        
+        if let imageAnimationDelay {
+            style = style
+                .imageAnimationDelay(imageAnimationDelay)
+        }
+        
+        return style
     }
     
     @available(macOS 26.0, *)
     func convertedToMenuPopoverHUDStyle() -> MenuPopoverHUDStyle {
-        MenuPopoverHUDStyle()
+        var style = MenuPopoverHUDStyle()
             .transitionIn(transitionIn)
             .duration(duration)
             .transitionOut(transitionOut)
-            .imageAnimationDelay(imageAnimationDelay)
             .statusItem(statusItem)
+        
+        if let imageAnimationDelay {
+            style = style
+                .imageAnimationDelay(imageAnimationDelay)
+        }
+        
+        return style
     }
 }
 

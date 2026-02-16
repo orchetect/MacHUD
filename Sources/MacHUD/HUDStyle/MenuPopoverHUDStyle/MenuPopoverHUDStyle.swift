@@ -47,7 +47,7 @@ extension MenuPopoverHUDStyle: Equatable {
             && lhs.duration == rhs.duration
             && lhs.transitionOut == rhs.transitionOut
             && lhs.imageAnimationDelay == rhs.imageAnimationDelay
-        && (lhs.statusItem != nil) == (rhs.statusItem != nil) // can't compare closures, so just check for nil
+            && (lhs.statusItem != nil) == (rhs.statusItem != nil) // can't compare closures, so just check for nil
     }
 }
 

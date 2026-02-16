@@ -12,27 +12,27 @@ import SwiftUI
 extension DefaultHUDStyle {
     public func windowStyleMask() -> NSWindow.StyleMask {
         if #available(macOS 26.0, *) {
-            MenuPopoverHUDStyle().windowStyleMask()
+            convertedToMenuPopoverHUDStyle().windowStyleMask()
         } else {
-            ProminentHUDStyle().windowStyleMask()
+            convertedToProminentHUDStyle().windowStyleMask()
         }
     }
     
     @MainActor
     public func setupWindow(context: HUDWindowContext) {
         if #available(macOS 26.0, *) {
-            MenuPopoverHUDStyle().setupWindow(context: context)
+            convertedToMenuPopoverHUDStyle().setupWindow(context: context)
         } else {
-            ProminentHUDStyle().setupWindow(context: context)
+            convertedToProminentHUDStyle().setupWindow(context: context)
         }
     }
     
     @MainActor
     public func updateWindow(context: HUDWindowContext) {
         if #available(macOS 26.0, *) {
-            MenuPopoverHUDStyle().updateWindow(context: context)
+            convertedToMenuPopoverHUDStyle().updateWindow(context: context)
         } else {
-            ProminentHUDStyle().updateWindow(context: context)
+            convertedToProminentHUDStyle().updateWindow(context: context)
         }
     }
 }
