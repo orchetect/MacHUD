@@ -15,6 +15,7 @@ struct MenuPopoverHUDView: View {
     
     @State private var text = "Volume"
     @State private var image: SampleImage = .speakerVolumeHigh
+    @State private var isImageAnimated: Bool = false
     @State private var style: MenuPopoverHUDStyle = .init()
     
     @State private var isContinuous: Bool = false
@@ -65,6 +66,8 @@ struct MenuPopoverHUDView: View {
                             Image(systemName: image.rawValue).tag(image)
                         }
                     }
+                    
+                    Toggle("Animate Image", isOn: $isImageAnimated)
                     
                     TextField("HUD Text", text: $text)
                     
@@ -135,18 +138,24 @@ extension MenuPopoverHUDView {
     
     private func showImageOnlyAlert() {
         Task {
+            let image: HUDImageSource = isImageAnimated
+                ? .animated(.image(.systemName(image.rawValue), effect: .bounce, speedMultiplier: nil))
+                : .static(.symbol(systemName: image.rawValue))
             await HUDManager.shared.displayAlert(
                 style: style.statusItem(statusItem),
-                content: .image(.static(.symbol(systemName: image.rawValue)))
+                content: .image(image)
             )
         }
     }
     
     private func showImageAndTextAlert() {
         Task {
+            let image: HUDImageSource = isImageAnimated
+                ? .animated(.image(.systemName(image.rawValue), effect: .bounce, speedMultiplier: nil))
+                : .static(.symbol(systemName: image.rawValue))
             await HUDManager.shared.displayAlert(
                 style: style.statusItem(statusItem),
-                content: .imageAndText(image: .static(.symbol(systemName: image.rawValue)), text: text)
+                content: .imageAndText(image: image, text: text)
             )
         }
     }
