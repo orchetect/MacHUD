@@ -33,7 +33,8 @@ extension DefaultHUDStyle {
 // MARK: - Helpers
 
 extension DefaultHUDStyle.AlertContent {
-    func convertedToProminentHUDStyle() -> ProminentHUDStyle.AlertContent {
+    /// Converts the default HUD style alert content to prominent HUD style alert content.
+    public func convertedToProminentHUDStyle() -> ProminentHUDStyle.AlertContent {
         switch self {
         case let .text(text):
             .text(text)
@@ -46,8 +47,9 @@ extension DefaultHUDStyle.AlertContent {
         }
     }
 
+    /// Converts the default HUD style alert content to menu popover HUD style alert content.
     @available(macOS 26.0, *)
-    func convertedToMenuPopoverHUDStyle() -> MenuPopoverHUDStyle.AlertContent {
+    public func convertedToMenuPopoverHUDStyle() -> MenuPopoverHUDStyle.AlertContent {
         switch self {
         case let .text(text):
             .text(text)
