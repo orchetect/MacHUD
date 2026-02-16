@@ -41,6 +41,7 @@ extension ProminentHUDStyle {
                     ImageView(imageSource: imageSource, format: .imageAndText)
                     TextView(text: text, size: .imageAndText)
                 }
+                
             case let .imageAndProgress(image: imageSource, value: progressValue):
                 VStack(spacing: 14) {
                     ImageView(imageSource: imageSource, format: .imageAndProgress)
@@ -71,14 +72,14 @@ extension ProminentHUDStyle {
 #Preview("Image") {
     ProminentHUDStyle.ContentView(
         style: .prominent(),
-        content: .image(.systemName("speaker.wave.3.fill"))
+        content: .image(.static(.symbol(systemName: "speaker.wave.3.fill")))
     )
 }
 
 #Preview("Image & Text") {
     ProminentHUDStyle.ContentView(
         style: .prominent(),
-        content: .imageAndText(image: .systemName("speaker.wave.3.fill"), text: "Volume")
+        content: .imageAndText(image: .static(.symbol(systemName: "speaker.wave.3.fill")), text: "Volume")
     )
 }
 
@@ -100,7 +101,7 @@ extension ProminentHUDStyle {
     ProminentHUDStyle.ContentView(
         style: .prominent(),
         content: .imageAndProgress(
-            image: .systemName("speaker.wave.3.fill"),
+            image: .static(.symbol(systemName: "speaker.wave.3.fill")),
             value: .value(0.3, range: 0.0 ... 1.0, step: .segmentCount(10))
         )
     )

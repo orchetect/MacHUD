@@ -46,21 +46,9 @@ extension ProminentHUDStyle.ContentView {
         
         private var conditionalImageView: (some View)? {
             if #available(macOS 13.0, *) {
-                return imageView?.fontWeight(.light)
+                return imageView?.fontWeight(.light) // apply slight slender styling to system symbols
             } else {
                 return imageView
-            }
-        }
-        
-        private var imageView: (some View)? {
-            if let image {
-                image
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundColor(imageColor)
-                    .opacity(0.9)
-            } else {
-                nil
             }
         }
     }
@@ -73,8 +61,21 @@ extension ProminentHUDStyle.ContentView.ImageView {
         case imageOnly
     }
     
-    private var image: Image? {
-        imageSource.image
+    @ViewBuilder
+    private var imageView: (some View)? {
+        switch imageSource {
+        case let .static(staticSource):
+            format(scalableImageView: staticSource.scalableImage)
+        case let .animated(animatedSource):
+            format(scalableImageView: animatedSource.view)
+        }
+    }
+    
+    /// Applies formatting to image. Assumes image is resizable and scaled-to-fit.
+    private func format(scalableImageView view: (some View)?) -> (some View)? {
+        view?
+            .foregroundColor(imageColor)
+            .opacity(0.9)
     }
     
     private var imageColor: Color {

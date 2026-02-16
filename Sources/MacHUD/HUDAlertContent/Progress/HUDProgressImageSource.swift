@@ -10,7 +10,7 @@ import SwiftUI
 
 /// Image source(s) for use in HUD alerts that contain a progress bar.
 public enum HUDProgressImageSource {
-    case minMax(min: HUDImageSource, max: HUDImageSource)
+    case minMax(min: HUDStaticImageSource, max: HUDStaticImageSource)
 }
 
 extension HUDProgressImageSource: Equatable { }
@@ -22,12 +22,18 @@ extension HUDProgressImageSource: Sendable { }
 extension HUDProgressImageSource {
     /// Audio device volume level images.
     public static var audioVolume: Self {
-        .minMax(min: .systemName("speaker.fill"), max: .systemName("speaker.wave.3.fill"))
+        .minMax(
+            min: .symbol(systemName: "speaker.fill"),
+            max: .symbol(systemName: "speaker.wave.3.fill")
+        )
     }
     
     /// Screen brightness level images.
     public static var screenBrightness: Self {
-        .minMax(min: .systemName("sun.min.fill"), max: .systemName("sun.max.fill"))
+        .minMax(
+            min: .symbol(systemName: "sun.min.fill"),
+            max: .symbol(systemName: "sun.max.fill")
+        )
     }
 }
 

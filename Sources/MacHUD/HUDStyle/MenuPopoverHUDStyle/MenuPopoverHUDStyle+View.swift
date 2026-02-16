@@ -72,16 +72,21 @@ extension MenuPopoverHUDStyle.ContentView {
         var body: some View {
             VStack(spacing: 10) {
                 HStack {
-                    (image ?? Image(systemName: "questionmark"))
-                        .resizable()
-                        .scaledToFit()
+                    image
                         .frame(width: 24, height: 24)
                 }
             }
         }
         
-        private var image: Image? {
-            imageSource.image
+        @ViewBuilder
+        private var image: (some View)? {
+            if let view = imageSource.view {
+                view
+            } else {
+                Image(systemName: "questionmark")
+                    .resizable()
+                    .scaledToFit()
+            }
         }
     }
 }
@@ -97,8 +102,6 @@ extension MenuPopoverHUDStyle.ContentView {
                 HStack {
                     if let image {
                         image
-                            .resizable()
-                            .scaledToFit()
                             .frame(width: 24, height: 24)
                     }
                     
@@ -111,8 +114,8 @@ extension MenuPopoverHUDStyle.ContentView {
             }
         }
         
-        private var image: Image? {
-            imageSource.image
+        private var image: (some View)? {
+            imageSource.view
         }
     }
 }
@@ -230,14 +233,14 @@ private struct MockHUDView<Content: View>: View {
         MockHUDView {
             MenuPopoverHUDStyle.ContentView(
                 style: .init(),
-                content: .image(.systemName("speaker.3.fill"))
+                content: .image(.static(.symbol(systemName: "speaker.3.fill")))
             )
         }
         
         MockHUDView {
             MenuPopoverHUDStyle.ContentView(
                 style: .init(),
-                content: .imageAndText(image: .systemName("speaker.3.fill"), text: "MacBook Pro Speakers")
+                content: .imageAndText(image: .static(.symbol(systemName: "speaker.3.fill")), text: "MacBook Pro Speakers")
             )
         }
         

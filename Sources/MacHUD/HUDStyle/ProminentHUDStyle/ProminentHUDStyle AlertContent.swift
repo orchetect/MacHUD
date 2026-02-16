@@ -11,6 +11,7 @@ import SwiftUI
 extension ProminentHUDStyle {
     public enum AlertContent: HUDAlertContent {
         case text(String)
+        
         case image(HUDImageSource)
         case imageAndText(image: HUDImageSource, text: String)
         case imageAndProgress(image: HUDImageSource, value: HUDSteppedProgressValue)
@@ -28,7 +29,7 @@ extension ProminentHUDStyle.AlertContent {
     ///     If `false`, a standard static image is used mimicking macOS system behavior.
     public static func audioVolume(level: HUDProgressValue, dynamicImage: Bool = false) -> Self {
         .imageAndProgress(
-            image: .image(forVolumeLevel: dynamicImage ? level.unitInterval : 1.0),
+            image: .static(.image(forVolumeLevel: dynamicImage ? level.unitInterval : 1.0)),
             value: level.stepped(.segmentCount(ProminentHUDStyle.Geometry.standardSegmentCount))
         )
     }
@@ -39,7 +40,7 @@ extension ProminentHUDStyle.AlertContent {
     ///   - level: Screen brightness level.
     public static func screenBrightness(level: HUDProgressValue) -> Self {
         .imageAndProgress(
-            image: .systemName("sun.max"),
+            image: .static(.symbol(systemName: "sun.max")),
             value: level.stepped(.segmentCount(ProminentHUDStyle.Geometry.standardSegmentCount))
         )
     }
