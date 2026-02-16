@@ -16,6 +16,7 @@ extension ProminentHUDStyle.ContentView {
         
         let imageSource: HUDImageSource
         let format: ImageFormat
+        let animationDelay: TimeInterval?
         
         var body: some View {
             switch format {
@@ -46,9 +47,10 @@ extension ProminentHUDStyle.ContentView {
         
         private var conditionalImageView: (some View)? {
             if #available(macOS 13.0, *) {
-                return imageView?.fontWeight(.light) // apply slight slender styling to system symbols
+                return imageView(animationDelay: animationDelay)?
+                    .fontWeight(.light) // apply slight slender styling to system symbols
             } else {
-                return imageView
+                return imageView(animationDelay: animationDelay)
             }
         }
     }
@@ -62,12 +64,12 @@ extension ProminentHUDStyle.ContentView.ImageView {
     }
     
     @ViewBuilder
-    private var imageView: (some View)? {
+    private func imageView(animationDelay: TimeInterval? = nil) -> (some View)? {
         switch imageSource {
         case let .static(staticSource):
             format(scalableImageView: staticSource.scalableImage)
         case let .animated(animatedSource):
-            format(scalableImageView: animatedSource.view)
+            format(scalableImageView: animatedSource.view(animationDelay: animationDelay))
         }
     }
     

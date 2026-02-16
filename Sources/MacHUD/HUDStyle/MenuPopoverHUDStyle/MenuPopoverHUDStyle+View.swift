@@ -35,9 +35,9 @@ extension MenuPopoverHUDStyle {
             case let .text(text):
                 TextView(text: text)
             case let .image(imageSource):
-                ImageView(imageSource: imageSource)
+                ImageView(imageSource: imageSource, animationDelay: style.imageAnimationDelay)
             case let .imageAndText(image: imageSource, text: text):
-                ImageAndTextView(imageSource: imageSource, text: text)
+                ImageAndTextView(imageSource: imageSource, text: text, animationDelay: style.imageAnimationDelay)
             case let .textAndProgress(text: text, value: value, images: imageSources):
                 TextAndProgressView(text: text, progressImages: imageSources, progressValue: value)
             }
@@ -68,6 +68,7 @@ extension MenuPopoverHUDStyle.ContentView {
 extension MenuPopoverHUDStyle.ContentView {
     struct ImageView: View {
         let imageSource: HUDImageSource
+        let animationDelay: TimeInterval?
         
         var body: some View {
             VStack(spacing: 10) {
@@ -80,7 +81,7 @@ extension MenuPopoverHUDStyle.ContentView {
         
         @ViewBuilder
         private var image: (some View)? {
-            if let view = imageSource.view {
+            if let view = imageSource.view(animationDelay: animationDelay) {
                 view
             } else {
                 Image(systemName: "questionmark")
@@ -96,6 +97,7 @@ extension MenuPopoverHUDStyle.ContentView {
     struct ImageAndTextView: View {
         let imageSource: HUDImageSource
         let text: String
+        let animationDelay: TimeInterval?
         
         var body: some View {
             VStack(spacing: 10) {
@@ -115,7 +117,7 @@ extension MenuPopoverHUDStyle.ContentView {
         }
         
         private var image: (some View)? {
-            imageSource.view
+            imageSource.view(animationDelay: animationDelay)
         }
     }
 }
@@ -290,6 +292,34 @@ private struct MockHUDView<Content: View>: View {
             MenuPopoverHUDStyle.ContentView(
                 style: .init(),
                 content: .audioVolume(deviceName: "MacBook Pro Speakers", level: .unitInterval(1.0))
+            )
+        }
+        
+        MockHUDView {
+            MenuPopoverHUDStyle.ContentView(
+                style: .init(),
+                content: .imageAndText(
+                    image: .animated(.image(
+                        .systemName("speaker.wave.3.fill", variable: 0.5, renderingMode: .hierarchical),
+                        effect: .bounce,
+                        speedMultiplier: nil
+                    )),
+                    text: "Volume"
+                )
+            )
+        }
+        
+        MockHUDView {
+            MenuPopoverHUDStyle.ContentView(
+                style: .init(),
+                content: .imageAndText(
+                    image: .animated(.imageReplacement(
+                        initial: .systemName("speaker.slash.fill", variable: 0.5, renderingMode: .hierarchical),
+                        target: .systemName("speaker.wave.3.fill", variable: 0.5, renderingMode: .hierarchical),
+                        speedMultiplier: 0.5
+                    )),
+                    text: "Built-In Speakers"
+                )
             )
         }
         

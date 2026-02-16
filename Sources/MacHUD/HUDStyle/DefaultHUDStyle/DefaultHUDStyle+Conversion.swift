@@ -12,6 +12,7 @@ extension DefaultHUDStyle {
             .transitionIn(transitionIn)
             .duration(duration)
             .transitionOut(transitionOut)
+            .imageAnimationDelay(imageAnimationDelay)
     }
     
     @available(macOS 26.0, *)
@@ -20,6 +21,7 @@ extension DefaultHUDStyle {
             .transitionIn(transitionIn)
             .duration(duration)
             .transitionOut(transitionOut)
+            .imageAnimationDelay(imageAnimationDelay)
     }
 }
 

@@ -29,6 +29,13 @@ extension HUDStyle {
         copy.transitionOut = value
         return copy
     }
+    
+    /// Returns the style updating the ``imageAnimationDelay`` property value.
+    public func imageAnimationDelay(_ value: TimeInterval?) -> Self {
+        var copy = self
+        copy.imageAnimationDelay = value
+        return copy
+    }
 }
 
 #endif

@@ -33,13 +33,14 @@ extension HUDImageSource {
         }
     }
     
+    /// Returns the composed view.
     @MainActor @ViewBuilder
-    public var view: (some View)? {
+    public func view(animationDelay: TimeInterval? = nil) -> (some View)? {
         switch self {
         case let .static(imageSource):
             imageSource.scalableImage
         case let .animated(imageSource):
-            imageSource.view
+            imageSource.view(animationDelay: animationDelay)
         }
     }
 }

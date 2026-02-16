@@ -34,17 +34,17 @@ extension ProminentHUDStyle {
                 TextView(text: text, size: .textOnly)
                 
             case let .image(imageSource):
-                ImageView(imageSource: imageSource, format: .imageOnly)
+                ImageView(imageSource: imageSource, format: .imageOnly, animationDelay: nil)
                 
             case let .imageAndText(image: imageSource, text: text):
                 VStack(spacing: 14) {
-                    ImageView(imageSource: imageSource, format: .imageAndText)
+                    ImageView(imageSource: imageSource, format: .imageAndText, animationDelay: nil)
                     TextView(text: text, size: .imageAndText)
                 }
                 
             case let .imageAndProgress(image: imageSource, value: progressValue):
                 VStack(spacing: 14) {
-                    ImageView(imageSource: imageSource, format: .imageAndProgress)
+                    ImageView(imageSource: imageSource, format: .imageAndProgress, animationDelay: nil)
                     AmountView(value: progressValue)
                 }
             }
@@ -80,6 +80,34 @@ extension ProminentHUDStyle {
     ProminentHUDStyle.ContentView(
         style: .prominent(),
         content: .imageAndText(image: .static(.symbol(systemName: "speaker.wave.3.fill")), text: "Volume")
+    )
+}
+
+#Preview("Image & Text (Animated)") {
+    ProminentHUDStyle.ContentView(
+        style: .prominent(),
+        content: .imageAndText(
+            image: .animated(.image(
+                .systemName("speaker.wave.3.fill", variable: 0.5, renderingMode: .hierarchical),
+                effect: .bounce,
+                speedMultiplier: nil
+            )),
+            text: "Volume"
+        )
+    )
+}
+
+#Preview("Image & Text (Transition)") {
+    ProminentHUDStyle.ContentView(
+        style: .prominent(),
+        content: .imageAndText(
+            image: .animated(.imageReplacement(
+                initial: .systemName("speaker.slash.fill", variable: 0.5, renderingMode: .hierarchical),
+                target: .systemName("speaker.wave.3.fill", variable: 0.5, renderingMode: .hierarchical),
+                speedMultiplier: 0.5
+            )),
+            text: "Built-In Speakers"
+        )
     )
 }
 

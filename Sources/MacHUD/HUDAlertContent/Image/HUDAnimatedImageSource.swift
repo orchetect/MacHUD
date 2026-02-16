@@ -71,15 +71,19 @@ extension HUDAnimatedImageSource {
 extension HUDAnimatedImageSource {
     /// Returns the composed view.
     @MainActor @ViewBuilder
-    public var view: (some View)? {
+    public func view(animationDelay: TimeInterval? = nil) -> (some View)? {
         switch self {
         case let .image(
             imageSource,
             effect: effect,
             speedMultiplier: speedMultiplier
         ):
-            imageSource.scalableImage?
-                .applySymbolEffectIfPossible(effect, speedMultiplier: speedMultiplier)
+            ImageAnimationView(
+                imageSource: imageSource,
+                effect: effect,
+                speedMultiplier: speedMultiplier,
+                delay: animationDelay
+            )
             
         case let .imageReplacement(
             initial: initialImageSource,
@@ -91,8 +95,45 @@ extension HUDAnimatedImageSource {
                 initialImageSource: initialImageSource,
                 targetImageSource: targetImageSource,
                 magicReplace: magicReplace,
-                speedMultiplier: speedMultiplier
+                speedMultiplier: speedMultiplier,
+                delay: animationDelay
             )
+        }
+    }
+    
+    struct ImageAnimationView: View {
+        let imageSource: HUDStaticSystemImageSource
+        let effect: HUDAnimatedImageSource.Effect
+        let speedMultiplier: Double?
+        let delay: TimeInterval?
+        
+        @State private var isTransitioned: Bool = false
+        
+        var body: some View {
+            image
+                .onAppear {
+                    Task {
+                        if let sanitizedDelay { try await Task.sleep(seconds: sanitizedDelay) }
+                        try Task.checkCancellation()
+                        isTransitioned = true
+                    }
+                }
+        }
+        
+        @ViewBuilder
+        private var image: (some View)? {
+            if isTransitioned || sanitizedDelay == nil {
+                imageSource.scalableImage
+                    .applySymbolEffectIfPossible(effect, speedMultiplier: speedMultiplier)
+            } else {
+                imageSource.scalableImage
+            }
+        }
+        
+        private var sanitizedDelay: TimeInterval? {
+            guard let delay else { return nil }
+            guard !delay.isZero else { return nil }
+            return delay.clamped(to: 0.0 ... 10.0)
         }
     }
     
@@ -101,12 +142,19 @@ extension HUDAnimatedImageSource {
         let targetImageSource: HUDStaticSystemImageSource
         let magicReplace: Bool
         let speedMultiplier: Double?
+        let delay: TimeInterval?
         
         @State private var isTransitioned: Bool = false
         
         var body: some View {
             conditionalImage
-                .onAppear { Task { isTransitioned = true } }
+                .onAppear {
+                    Task {
+                        if let sanitizedDelay { try await Task.sleep(seconds: sanitizedDelay) }
+                        try Task.checkCancellation()
+                        isTransitioned = true
+                    }
+                }
         }
         
         @ViewBuilder
@@ -134,6 +182,12 @@ extension HUDAnimatedImageSource {
         private var options: SymbolEffectOptions {
             .nonRepeating.speed(speedMultiplier ?? 1.0)
         }
+        
+        private var sanitizedDelay: TimeInterval? {
+            guard let delay else { return nil }
+            guard !delay.isZero else { return nil }
+            return delay.clamped(to: 0.0 ... 10.0)
+        }
     }
 }
 
@@ -146,7 +200,7 @@ extension HUDAnimatedImageSource {
             effect: .bounce,
             speedMultiplier: nil
         )
-        .view?
+        .view()?
         .frame(width: 96, height: 96)
         
         HUDAnimatedImageSource.image(
@@ -154,7 +208,7 @@ extension HUDAnimatedImageSource {
             effect: .breathe,
             speedMultiplier: 2.0
         )
-        .view?
+        .view()?
         .frame(width: 96, height: 96)
         
         HUDAnimatedImageSource.image(
@@ -162,7 +216,7 @@ extension HUDAnimatedImageSource {
             effect: .pulse,
             speedMultiplier: 2.0
         )
-        .view?
+        .view()?
         .frame(width: 96, height: 96)
         
         HUDAnimatedImageSource.image(
@@ -170,7 +224,7 @@ extension HUDAnimatedImageSource {
             effect: .rotate,
             speedMultiplier: 2.0
         )
-        .view?
+        .view()?
         .frame(width: 96, height: 96)
         
         HUDAnimatedImageSource.image(
@@ -178,7 +232,7 @@ extension HUDAnimatedImageSource {
             effect: .variableColor,
             speedMultiplier: 2.0
         )
-        .view?
+        .view()?
         .frame(width: 96, height: 96)
         
         HUDAnimatedImageSource.image(
@@ -186,7 +240,21 @@ extension HUDAnimatedImageSource {
             effect: .wiggle,
             speedMultiplier: nil
         )
-        .view?
+        .view()?
+        .frame(width: 96, height: 96)
+    }
+    .padding(40)
+}
+
+@available(macOS 12.0, *)
+#Preview("Single Image (Delayed)") {
+    VStack(spacing: 40) {
+        HUDAnimatedImageSource.image(
+            .systemName("speaker.wave.3.fill", variable: 0.5, renderingMode: .hierarchical),
+            effect: .bounce,
+            speedMultiplier: nil
+        )
+        .view(animationDelay: 1.0)?
         .frame(width: 96, height: 96)
     }
     .padding(40)
@@ -201,7 +269,7 @@ extension HUDAnimatedImageSource {
             magicReplace: false,
             speedMultiplier: 0.5
         )
-        .view?
+        .view()?
         .frame(width: 96, height: 96)
         
         HUDAnimatedImageSource.imageReplacement(
@@ -210,7 +278,22 @@ extension HUDAnimatedImageSource {
             magicReplace: false,
             speedMultiplier: 0.5
         )
-        .view?
+        .view()?
+        .frame(width: 96, height: 96)
+    }
+    .padding(40)
+}
+
+@available(macOS 12.0, *)
+#Preview("Image Transition (Delayed)") {
+    VStack(spacing: 40) {
+        HUDAnimatedImageSource.imageReplacement(
+            initial: .systemName("speaker.slash.fill", variable: 0.5, renderingMode: .hierarchical),
+            target: .systemName("speaker.wave.3.fill", variable: 0.5, renderingMode: .hierarchical),
+            magicReplace: false,
+            speedMultiplier: 0.5
+        )
+        .view(animationDelay: 1.0)?
         .frame(width: 96, height: 96)
     }
     .padding(40)

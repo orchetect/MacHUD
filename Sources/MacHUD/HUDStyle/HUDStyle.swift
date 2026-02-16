@@ -31,6 +31,9 @@ public protocol HUDStyle: Equatable, Hashable, Sendable, SendableMetatype where 
     /// `nil` dismisses the alert immediately without a transition.
     var transitionOut: HUDTransition? { get set }
     
+    /// A delay to apply before triggering image animations.
+    var imageAnimationDelay: TimeInterval? { get set }
+    
     // MARK: - Window and View Content
     
     /// The view displayed in the HUD alert.

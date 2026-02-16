@@ -13,21 +13,25 @@ public struct DefaultHUDStyle: HUDStyle {
     public var transitionIn: HUDTransition?
     public var duration: TimeInterval
     public var transitionOut: HUDTransition?
+    public var imageAnimationDelay: TimeInterval?
     
     public init() {
         transitionIn = Self.defaultTransitionIn
         duration = Self.defaultDuration
         transitionOut = Self.defaultTransitionOut
+        imageAnimationDelay = Self.defaultImageAnimationDelay
     }
     
     public init(
         transitionIn: HUDTransition?,
         duration: TimeInterval,
-        transitionOut: HUDTransition?
+        transitionOut: HUDTransition?,
+        imageAnimationDelay: TimeInterval? = nil
     ) {
         self.transitionIn = transitionIn
         self.duration = duration
         self.transitionOut = transitionOut
+        self.imageAnimationDelay = imageAnimationDelay ?? Self.defaultImageAnimationDelay
     }
 }
 
@@ -61,6 +65,14 @@ extension DefaultHUDStyle {
             MenuPopoverHUDStyle().transitionOut
         } else {
             ProminentHUDStyle().transitionOut
+        }
+    }
+    
+    static var defaultImageAnimationDelay: TimeInterval? {
+        if #available(macOS 26.0, *) {
+            MenuPopoverHUDStyle().imageAnimationDelay
+        } else {
+            ProminentHUDStyle().imageAnimationDelay
         }
     }
 }

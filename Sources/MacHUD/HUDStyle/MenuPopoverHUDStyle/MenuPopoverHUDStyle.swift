@@ -20,6 +20,9 @@ public struct MenuPopoverHUDStyle: HUDStyle {
     public var transitionOut: HUDTransition?
     public var statusItem: (@MainActor () -> NSStatusItem?)?
     
+    // a small delay allows HUD window to transition in partly before image animation begins
+    public var imageAnimationDelay: TimeInterval? = 0.2
+    
     public init() {
         self = .macOS26()
     }
