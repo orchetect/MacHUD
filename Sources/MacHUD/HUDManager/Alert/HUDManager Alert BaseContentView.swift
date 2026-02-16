@@ -14,6 +14,8 @@ internal import SwiftExtensions
 extension HUDManager.Alert {
     /// The base HUD view that wraps the inner view provided but the HUD style.
     public struct BaseContentView: View {
+        let id: UUID = UUID()
+        
         let style: Style
         let content: Style.AlertContent?
         
@@ -32,6 +34,7 @@ extension HUDManager.Alert {
                 .compositingGroup()
                 // .fixedSize()
                 .allowsHitTesting(false)
+                .id(id) // ensures state resets for each HUD alert
         }
         
         @ViewBuilder
