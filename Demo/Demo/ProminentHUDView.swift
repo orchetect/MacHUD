@@ -132,7 +132,7 @@ extension ProminentHUDView {
         Task {
             await HUDManager.shared.displayAlert(
                 style: style,
-                content: .image(.systemName(image.rawValue))
+                content: .image(.static(.symbol(systemName: image.rawValue)))
             )
         }
     }
@@ -141,7 +141,7 @@ extension ProminentHUDView {
         Task {
             await HUDManager.shared.displayAlert(
                 style: style,
-                content: .imageAndText(image: .systemName(image.rawValue), text: text)
+                content: .imageAndText(image: .static(.symbol(systemName: image.rawValue)), text: text)
             )
         }
     }
@@ -150,7 +150,7 @@ extension ProminentHUDView {
         Task {
             await HUDManager.shared.displayAlert(
                 style: .prominent(),
-                content: .imageAndText(image: .image(Image(.xcodeBuild)), text: "Build Succeeded")
+                content: .imageAndText(image: .static(.image(Image(.xcodeBuild))), text: "Build Succeeded")
             )
         }
     }
@@ -195,7 +195,7 @@ extension ProminentHUDView {
             await HUDManager.shared.displayAlert(
                 style: .prominent(),
                 content: .imageAndText(
-                    image: .systemName("pencil.and.scribble"),
+                    image: .static(.symbol(systemName: "pencil.and.scribble")),
                     text:
                         """
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt \

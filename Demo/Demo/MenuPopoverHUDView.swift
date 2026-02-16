@@ -137,7 +137,7 @@ extension MenuPopoverHUDView {
         Task {
             await HUDManager.shared.displayAlert(
                 style: style.statusItem(statusItem),
-                content: .image(.systemName(image.rawValue))
+                content: .image(.static(.symbol(systemName: image.rawValue)))
             )
         }
     }
@@ -146,7 +146,7 @@ extension MenuPopoverHUDView {
         Task {
             await HUDManager.shared.displayAlert(
                 style: style.statusItem(statusItem),
-                content: .imageAndText(image: .systemName(image.rawValue), text: text)
+                content: .imageAndText(image: .static(.symbol(systemName: image.rawValue)), text: text)
             )
         }
     }
@@ -194,7 +194,7 @@ extension MenuPopoverHUDView {
             await HUDManager.shared.displayAlert(
                 style: .menuPopover().statusItem(statusItem),
                 content: .imageAndText(
-                    image: .systemName("pencil.and.scribble"),
+                    image: .static(.symbol(systemName: "pencil.and.scribble")),
                     text:
                         """
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt \
