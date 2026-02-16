@@ -7,7 +7,8 @@
 #if os(macOS)
 
 extension DefaultHUDStyle {
-    func convertedToProminentHUDStyle() -> ProminentHUDStyle {
+    /// Converts the default HUD style to prominent HUD style.
+    public func convertedToProminentHUDStyle() -> ProminentHUDStyle {
         var style = ProminentHUDStyle()
             .transitionIn(transitionIn)
             .duration(duration)
@@ -22,8 +23,9 @@ extension DefaultHUDStyle {
         return style
     }
     
+    /// Converts the default HUD style to menu popover HUD style.
     @available(macOS 26.0, *)
-    func convertedToMenuPopoverHUDStyle() -> MenuPopoverHUDStyle {
+    public func convertedToMenuPopoverHUDStyle() -> MenuPopoverHUDStyle {
         var style = MenuPopoverHUDStyle()
             .transitionIn(transitionIn)
             .duration(duration)
