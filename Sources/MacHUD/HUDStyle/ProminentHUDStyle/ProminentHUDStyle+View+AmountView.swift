@@ -20,9 +20,6 @@ extension ProminentHUDStyle.ContentView {
         
         /// - Parameters:
         ///   - value: Progress value.
-        ///   - segmentCount: Number of segments that the progress bar is divided into.
-        ///     macOS 11 thru 15 HUD used 16 segments for audio volume and screen brightness.
-        ///     If `nil`, the progress bar is rendered as segmentless.
         init(value: HUDSteppedProgressValue) {
             self.progressValue = value
             
