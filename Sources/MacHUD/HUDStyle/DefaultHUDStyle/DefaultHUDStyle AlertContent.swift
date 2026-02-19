@@ -28,6 +28,15 @@ extension DefaultHUDStyle {
             value: HUDSteppedProgressValue,
             menuPopoverProgressImages: HUDProgressImageSource? = nil
         )
+        
+        /// Image, text, and progress bar alert.
+        case imageAndTextAndProgress(
+            image: HUDImageSource,
+            title: String,
+            subtitle: String? = nil,
+            value: HUDSteppedProgressValue,
+            menuPopoverProgressImages: HUDProgressImageSource? = nil
+        )
     }
 }
 
@@ -46,8 +55,23 @@ extension DefaultHUDStyle.AlertContent {
         case let .imageAndText(image: image, title: title, subtitle: subtitle):
             .imageAndText(image: image, title: title, subtitle: subtitle)
             
-        case let .imageOrTextAndProgress(prominentImage: image, title: _, subtitle: _, value: value, menuPopoverProgressImages: _):
+        case let .imageOrTextAndProgress(
+            prominentImage: image,
+            title: _,
+            subtitle: _,
+            value: value,
+            menuPopoverProgressImages: _
+        ):
             .imageAndProgress(image: image, value: value)
+            
+        case let .imageAndTextAndProgress(
+            image: image,
+            title: title,
+            subtitle: subtitle,
+            value: value,
+            menuPopoverProgressImages: _
+        ):
+            .imageAndTextAndProgress(image: image, title: title, subtitle: subtitle, value: value)
         }
     }
 
@@ -64,12 +88,33 @@ extension DefaultHUDStyle.AlertContent {
         case let .imageAndText(image: image, title: title, subtitle: subtitle):
             .imageAndText(image: image, title: title, subtitle: subtitle)
             
-        case let .imageOrTextAndProgress(prominentImage: _, title: title, subtitle: subtitle, value: value, menuPopoverProgressImages: images):
+        case let .imageOrTextAndProgress(
+            prominentImage: _,
+            title: title,
+            subtitle: subtitle,
+            value: value,
+            menuPopoverProgressImages: images
+        ):
             .textAndProgress(
                 title: title,
                 subtitle: subtitle,
                 value: value,
                 images: images
+            )
+            
+        case let .imageAndTextAndProgress(
+            image: image,
+            title: title,
+            subtitle: subtitle,
+            value: value,
+            menuPopoverProgressImages: images
+        ):
+            .imageAndTextAndProgress(
+                image: image,
+                title: title,
+                subtitle: subtitle,
+                value: value,
+                progressImages: images
             )
         }
     }

@@ -17,11 +17,10 @@ extension MenuPopoverHUDStyle {
         /// Image-only HUD alert.
         case image(HUDImageSource)
         
-        /// Text and image HUD alert.
+        /// Image and text HUD alert.
         case imageAndText(image: HUDImageSource, title: String, subtitle: String? = nil)
         
-        /// HUD alert including a progress bar.
-        /// Value is specified as a floating-point value between `0.0 ... 1.0`.
+        /// Text and progress bar HUD alert.
         ///
         /// - Parameters:
         ///   - title: Text string.
@@ -33,6 +32,22 @@ extension MenuPopoverHUDStyle {
             subtitle: String? = nil,
             value: HUDSteppedProgressValue,
             images: HUDProgressImageSource?
+        )
+        
+        /// Image, text, and progress bar alert.
+        ///
+        /// - Parameters:
+        ///   - image: Main image.
+        ///   - title: Text string.
+        ///   - subtitle: Optional second line of de-emphasized text.
+        ///   - value: Progress bar value.
+        ///   - progressImages: Optionally specify minimum and maximum images to display on either side of the progress bar.
+        case imageAndTextAndProgress(
+            image: HUDImageSource,
+            title: String,
+            subtitle: String? = nil,
+            value: HUDSteppedProgressValue,
+            progressImages: HUDProgressImageSource?
         )
     }
 }

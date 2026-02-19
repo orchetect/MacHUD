@@ -34,12 +34,32 @@ extension MenuPopoverHUDStyle {
             switch content {
             case let .text(title, subtitle: subtitle):
                 TextView(title: title, subtitle: subtitle)
+                
             case let .image(imageSource):
                 ImageView(imageSource: imageSource, animationDelay: style.imageAnimationDelay)
+                
             case let .imageAndText(image: imageSource, title: title, subtitle: subtitle):
                 ImageAndTextView(imageSource: imageSource, title: title, subtitle: subtitle, animationDelay: style.imageAnimationDelay)
+                
             case let .textAndProgress(title: title, subtitle: subtitle, value: value, images: imageSources):
-                TextAndProgressView(title: title, subtitle: subtitle, progressImages: imageSources, progressValue: value)
+                TextAndProgressView(
+                    imageSource: nil,
+                    title: title,
+                    subtitle: subtitle,
+                    progressImages: imageSources,
+                    progressValue: value,
+                    animationDelay: style.imageAnimationDelay
+                )
+                
+            case let .imageAndTextAndProgress(image: imageSource, title: title, subtitle: subtitle, value: value, progressImages: progressImages):
+                TextAndProgressView(
+                    imageSource: imageSource,
+                    title: title,
+                    subtitle: subtitle,
+                    progressImages: progressImages,
+                    progressValue: value,
+                    animationDelay: style.imageAnimationDelay
+                )
             }
         }
     }
@@ -139,14 +159,20 @@ extension MenuPopoverHUDStyle.ContentView {
 @available(macOS 26.0, *)
 extension MenuPopoverHUDStyle.ContentView {
     struct TextAndProgressView: View {
+        let imageSource: HUDImageSource?
         let title: String
         let subtitle: String?
         let progressImages: HUDProgressImageSource?
         let progressValue: HUDSteppedProgressValue
+        let animationDelay: TimeInterval?
         
         var body: some View {
             VStack(spacing: 10) {
-                TextView(title: title, subtitle: subtitle)
+                if let imageSource {
+                    ImageAndTextView(imageSource: imageSource, title: title, subtitle: subtitle, animationDelay: animationDelay)
+                } else {
+                    TextView(title: title, subtitle: subtitle)
+                }
                 
                 HStack {
                     if let minImage {
@@ -232,7 +258,7 @@ private struct MockHUDView<Content: View>: View {
 
 #if DEBUG
 @available(macOS 26.0, *)
-#Preview("Examples") {
+#Preview("Text-Only") {
     VStack(spacing: 20) {
         MockHUDView {
             MenuPopoverHUDStyle.ContentView(
@@ -244,40 +270,35 @@ private struct MockHUDView<Content: View>: View {
         MockHUDView {
             MenuPopoverHUDStyle.ContentView(
                 style: .init(),
+                content: .text("MacBook Pro Speakers", subtitle: "Volume: 70%")
+            )
+        }
+        
+        Spacer()
+            .layoutPriority(1)
+    }
+    .padding()
+}
+
+@available(macOS 26.0, *)
+#Preview("Image-Only") {
+    VStack(spacing: 20) {
+        MockHUDView {
+            MenuPopoverHUDStyle.ContentView(
+                style: .init(),
                 content: .image(.static(.symbol(systemName: "speaker.3.fill")))
             )
         }
         
-        MockHUDView {
-            MenuPopoverHUDStyle.ContentView(
-                style: .init(),
-                content: .imageAndText(image: .static(.symbol(systemName: "speaker.3.fill")), title: "MacBook Pro Speakers")
-            )
-        }
-        
-        MockHUDView {
-            let nsImage = NSWorkspace.shared.icon(forFile: "/System/Applications/Photos.app")
-            MenuPopoverHUDStyle.ContentView(
-                style: .init(),
-                content: .imageAndText(image: .static(.nsImage(nsImage, desaturated: false)), title: #"Added "New Photo.jpg""#)
-            )
-        }
-        
-        MockHUDView {
-            let nsImage = NSWorkspace.shared.icon(forFile: "/System/Applications/Photos.app")
-            MenuPopoverHUDStyle.ContentView(
-                style: .init(),
-                content: .imageAndText(image: .static(.nsImage(nsImage, desaturated: true)), title: #"Added "New Photo.jpg""#)
-            )
-        }
-            
-        MockHUDView {
-            MenuPopoverHUDStyle.ContentView(
-                style: .init(),
-                content: .textAndProgress(title: "System Audio", value: .unitInterval(0.1), images: .audioVolume)
-            )
-        }
-        
+        Spacer()
+            .layoutPriority(1)
+    }
+    .padding()
+}
+
+@available(macOS 26.0, *)
+#Preview("Audio Volume") {
+    VStack(spacing: 20) {
         MockHUDView {
             MenuPopoverHUDStyle.ContentView(
                 style: .init(),
@@ -320,6 +341,47 @@ private struct MockHUDView<Content: View>: View {
             )
         }
         
+        Spacer()
+            .layoutPriority(1)
+    }
+    .padding()
+}
+
+@available(macOS 26.0, *)
+#Preview("Image & Text") {
+    VStack(spacing: 20) {
+        MockHUDView {
+            MenuPopoverHUDStyle.ContentView(
+                style: .init(),
+                content: .imageAndText(image: .static(.symbol(systemName: "speaker.3.fill")), title: "MacBook Pro Speakers")
+            )
+        }
+        
+        MockHUDView {
+            let nsImage = NSWorkspace.shared.icon(forFile: "/System/Applications/Photos.app")
+            MenuPopoverHUDStyle.ContentView(
+                style: .init(),
+                content: .imageAndText(image: .static(.nsImage(nsImage, desaturated: false)), title: #"Added "New Photo.jpg""#)
+            )
+        }
+        
+        MockHUDView {
+            let nsImage = NSWorkspace.shared.icon(forFile: "/System/Applications/Photos.app")
+            MenuPopoverHUDStyle.ContentView(
+                style: .init(),
+                content: .imageAndText(image: .static(.nsImage(nsImage, desaturated: true)), title: #"Added "New Photo.jpg""#)
+            )
+        }
+        
+        Spacer()
+            .layoutPriority(1)
+    }
+    .padding()
+}
+
+@available(macOS 26.0, *)
+#Preview("Image & Text (Animated)") {
+    VStack(spacing: 20) {
         MockHUDView {
             MenuPopoverHUDStyle.ContentView(
                 style: .init(),
@@ -344,6 +406,73 @@ private struct MockHUDView<Content: View>: View {
                         speedMultiplier: 0.5
                     )),
                     title: "Built-In Speakers"
+                )
+            )
+        }
+        
+        Spacer()
+            .layoutPriority(1)
+    }
+    .padding()
+}
+
+@available(macOS 26.0, *)
+#Preview("Image & Text (with Subheading)") {
+    VStack(spacing: 20) {
+        MockHUDView {
+            MenuPopoverHUDStyle.ContentView(
+                style: .init(),
+                content: .imageAndText(image: .static(.symbol(systemName: "speaker.3.fill")), title: "MacBook Pro Speakers")
+            )
+        }
+        
+        MockHUDView {
+            let nsImage = NSWorkspace.shared.icon(forFile: "/System/Applications/Photos.app")
+            MenuPopoverHUDStyle.ContentView(
+                style: .init(),
+                content: .imageAndText(image: .static(.nsImage(nsImage, desaturated: false)), title: "Photos", subtitle: #"Added "New Photo.jpg""#)
+            )
+        }
+        
+        MockHUDView {
+            let nsImage = NSWorkspace.shared.icon(forFile: "/System/Applications/Photos.app")
+            MenuPopoverHUDStyle.ContentView(
+                style: .init(),
+                content: .imageAndText(image: .static(.nsImage(nsImage, desaturated: true)), title: "Photos", subtitle: #"Added "New Photo.jpg""#)
+            )
+        }
+        
+        Spacer()
+            .layoutPriority(1)
+    }
+    .padding()
+}
+
+@available(macOS 26.0, *)
+#Preview("Image & Text & Progress") {
+    VStack(spacing: 20) {
+        MockHUDView {
+            MenuPopoverHUDStyle.ContentView(
+                style: .init(),
+                content: .imageAndTextAndProgress(
+                    image: .static(.symbol(systemName: "speaker.3.fill")),
+                    title: "MacBook Pro Speakers",
+                    subtitle: nil,
+                    value: .unitInterval(0.6),
+                    progressImages: nil
+                )
+            )
+        }
+        
+        MockHUDView {
+            MenuPopoverHUDStyle.ContentView(
+                style: .init(),
+                content: .imageAndTextAndProgress(
+                    image: .static(.symbol(systemName: "speaker.3.fill")),
+                    title: "MacBook Pro Speakers",
+                    subtitle: "Volume: 60%",
+                    value: .unitInterval(0.6),
+                    progressImages: nil
                 )
             )
         }
