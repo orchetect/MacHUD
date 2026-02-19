@@ -52,7 +52,7 @@ extension MenuPopoverHUDStyle.ContentView {
         let subtitle: String?
         
         var body: some View {
-            VStack(spacing: 10) {
+            VStack(spacing: 5) {
                 HStack {
                     Text(title)
                         .font(.system(size: titleFontSize, weight: .semibold))
@@ -76,7 +76,7 @@ extension MenuPopoverHUDStyle.ContentView {
         private let titleFontSize: CGFloat = 12.0
         
         private var subtitleFontSize: CGFloat {
-            titleFontSize * 0.8
+            titleFontSize * 0.9
         }
     }
 }
