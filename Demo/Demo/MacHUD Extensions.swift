@@ -60,6 +60,7 @@ extension HUDTransition: @retroactive CaseIterable {
             .opacity(duration: 0.05),
             .opacity(duration: 0.4),
             .opacity(duration: 0.8),
+            .opacity(duration: 1.0),
             .opacity(duration: 2.0),
             .scaleAndOpacity(duration: 0.05),
             .scaleAndOpacity(scaleFactor: .percent90, duration: 0.4),

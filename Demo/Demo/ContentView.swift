@@ -28,6 +28,8 @@ struct ContentView: View {
                 } else {
                     Text("Menu popover HUD style is only available on macOS 26 and later.")
                 }
+            case .custom:
+                CustomHUDView()
             }
         }
     }
@@ -37,11 +39,13 @@ extension ContentView {
     enum Panel: String, CaseIterable, Identifiable {
         case prominent
         case menuPopover
+        case custom
         
         var name: String {
             switch self {
             case .prominent: "Prominent"
             case .menuPopover: "Menu Popover"
+            case .custom: "Custom"
             }
         }
         
@@ -49,6 +53,7 @@ extension ContentView {
             switch self {
             case .prominent: "Prominent HUD Alerts"
             case .menuPopover: "Menu Popover HUD Alerts"
+            case .custom: "Custom HUD Alerts"
             }
         }
         
@@ -56,6 +61,7 @@ extension ContentView {
             switch self {
             case .prominent: "bell.square"
             case .menuPopover: "rectangle.compress.vertical"
+            case .custom: "rectangle.and.pencil.and.ellipsis"
             }
         }
         
