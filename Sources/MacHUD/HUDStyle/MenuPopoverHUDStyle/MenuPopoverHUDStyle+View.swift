@@ -51,13 +51,11 @@ extension MenuPopoverHUDStyle.ContentView {
         let title: String
         let subtitle: String?
         
-        private let fontSize: CGFloat = 12.0
-        
         var body: some View {
             VStack(spacing: 10) {
                 HStack {
                     Text(title)
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(.system(size: titleFontSize, weight: .semibold))
                         .multilineTextAlignment(.leading)
                         .truncationMode(.tail)
                     Spacer()
@@ -66,13 +64,19 @@ extension MenuPopoverHUDStyle.ContentView {
                 if let subtitle, !subtitle.trimmed.isEmpty {
                     HStack {
                         Text(subtitle)
-                            .font(.system(size: fontSize * 0.8, weight: .regular))
+                            .font(.system(size: subtitleFontSize, weight: .regular))
                             .multilineTextAlignment(.leading)
                             .truncationMode(.tail)
                         Spacer()
                     }
                 }
             }
+        }
+        
+        private let titleFontSize: CGFloat = 12.0
+        
+        private var subtitleFontSize: CGFloat {
+            titleFontSize * 0.8
         }
     }
 }
