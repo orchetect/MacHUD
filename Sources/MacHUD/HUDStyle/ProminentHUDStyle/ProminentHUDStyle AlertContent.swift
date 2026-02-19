@@ -15,6 +15,7 @@ extension ProminentHUDStyle {
         case image(HUDImageSource)
         case imageAndText(image: HUDImageSource, title: String, subtitle: String? = nil)
         case imageAndProgress(image: HUDImageSource, value: HUDSteppedProgressValue)
+        case imageAndTextAndProgress(image: HUDImageSource, title: String, subtitle: String? = nil, value: HUDSteppedProgressValue)
     }
 }
 

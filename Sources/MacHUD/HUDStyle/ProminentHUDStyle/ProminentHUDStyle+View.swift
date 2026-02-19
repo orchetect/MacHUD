@@ -47,6 +47,13 @@ extension ProminentHUDStyle {
                     ImageView(imageSource: imageSource, format: .imageAndProgress, animationDelay: nil)
                     AmountView(value: progressValue)
                 }
+                
+            case let .imageAndTextAndProgress(image: imageSource, title: title, subtitle: subtitle, value: progressValue):
+                VStack(spacing: 14) {
+                    ImageView(imageSource: imageSource, format: .imageAndTextAndProgress, animationDelay: nil)
+                    TextView(title: title, subtitle: subtitle, size: .imageAndText)
+                    AmountView(value: progressValue)
+                }
             }
         }
     }
@@ -186,6 +193,30 @@ import AppKit
         style: .prominent(),
         content: .imageAndProgress(
             image: .static(.symbol(systemName: "speaker.wave.3.fill")),
+            value: .value(0.3, range: 0.0 ... 1.0, step: .segmentCount(10))
+        )
+    )
+}
+
+#Preview("Image & Text & Progress") {
+    ProminentHUDStyle.ContentView(
+        style: .prominent(),
+        content: .imageAndTextAndProgress(
+            image: .static(.symbol(systemName: "speaker.wave.3.fill")),
+            title: "Volume",
+            subtitle: nil,
+            value: .value(0.3, range: 0.0 ... 1.0, step: .segmentCount(10))
+        )
+    )
+}
+
+#Preview("Image & Text (Double Line) & Progress") {
+    ProminentHUDStyle.ContentView(
+        style: .prominent(),
+        content: .imageAndTextAndProgress(
+            image: .static(.symbol(systemName: "speaker.wave.3.fill")),
+            title: "Volume",
+            subtitle: "Built-In Speakers",
             value: .value(0.3, range: 0.0 ... 1.0, step: .segmentCount(10))
         )
     )

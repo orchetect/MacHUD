@@ -20,22 +20,26 @@ extension ProminentHUDStyle.ContentView {
         
         var body: some View {
             switch format {
-            case .imageAndText:
-                framedImageView()
-                    .frame(minWidth: Geometry.minSize(isImagePresent: true, isTextPresent: true))
-                    .padding([.top], 15) // based on Xcode 26.3's built-in HUD alerts
-            
-            case .imageAndProgress:
-                framedImageView(scale: 0.8)
-                    .frame(minWidth: Geometry.minSize(isImagePresent: true, isTextPresent: false))
-                    .padding([.top, .bottom], 14 * 2)
-                
             case .imageOnly:
                 framedImageView()
                     .frame(
                         minWidth: Geometry.minSize(isImagePresent: true, isTextPresent: false),
                         minHeight: Geometry.minSize(isImagePresent: true, isTextPresent: false)
                     )
+                
+            case .imageAndText:
+                framedImageView()
+                    .frame(minWidth: Geometry.minSize(isImagePresent: true, isTextPresent: true))
+                    .padding([.top], 15) // based on Xcode 26.3's built-in HUD alerts
+                
+            case .imageAndProgress:
+                framedImageView(scale: 0.8)
+                    .frame(minWidth: Geometry.minSize(isImagePresent: true, isTextPresent: false))
+                    .padding([.top, .bottom], 14 * 2)
+                
+            case .imageAndTextAndProgress:
+                framedImageView()
+                    .frame(minWidth: Geometry.minSize(isImagePresent: true, isTextPresent: true))
             }
         }
         
@@ -58,9 +62,10 @@ extension ProminentHUDStyle.ContentView {
 
 extension ProminentHUDStyle.ContentView.ImageView {
     enum ImageFormat: String, CaseIterable, Sendable {
+        case imageOnly
         case imageAndText
         case imageAndProgress
-        case imageOnly
+        case imageAndTextAndProgress
     }
     
     @ViewBuilder
