@@ -65,7 +65,7 @@ struct ProminentHUDView: View {
                         }
                     }
                     
-                    Toggle("Animate Image", isOn: $isImageAnimated)
+                    Toggle("Animate Symbol", isOn: $isImageAnimated)
                     
                     TextField("Title Text", text: $titleText)
                     
