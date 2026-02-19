@@ -232,7 +232,7 @@ private struct MockHUDView<Content: View>: View {
 
 #if DEBUG
 @available(macOS 26.0, *)
-#Preview("Examples") { // TODO: add more previews once additional alert content parameters have been implemented
+#Preview("Examples") {
     VStack(spacing: 20) {
         MockHUDView {
             MenuPopoverHUDStyle.ContentView(
