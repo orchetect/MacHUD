@@ -26,12 +26,12 @@ extension MenuPopoverHUDStyle {
         ///   - title: Text string.
         ///   - subtitle: Optional second line of de-emphasized text.
         ///   - value: Progress bar value.
-        ///   - images: Optionally specify minimum and maximum images to display on either side of the progress bar.
+        ///   - progressImages: Optionally specify minimum and maximum images to display on either side of the progress bar.
         case textAndProgress(
             title: String,
             subtitle: String? = nil,
             value: HUDSteppedProgressValue,
-            images: HUDProgressImageSource?
+            progressImages: HUDProgressImageSource?
         )
         
         /// Image, text, and progress bar alert.
@@ -66,7 +66,7 @@ extension MenuPopoverHUDStyle.AlertContent {
             title: deviceName,
             subtitle: nil,
             value: level.stepped(.segmentCount(18)), // as seen in macOS 26 volume HUD
-            images: .audioVolume
+            progressImages: .audioVolume
         )
     }
     
@@ -80,7 +80,7 @@ extension MenuPopoverHUDStyle.AlertContent {
             title: displayName,
             subtitle: nil,
             value: level.stepped(.segmentCount(18)), // as seen in macOS 26 screen brightness HUD
-            images: .screenBrightness
+            progressImages: .screenBrightness
         )
     }
 }

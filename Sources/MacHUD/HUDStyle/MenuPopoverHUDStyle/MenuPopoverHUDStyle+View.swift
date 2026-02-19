@@ -41,12 +41,12 @@ extension MenuPopoverHUDStyle {
             case let .imageAndText(image: imageSource, title: title, subtitle: subtitle):
                 ImageAndTextView(imageSource: imageSource, title: title, subtitle: subtitle, animationDelay: style.imageAnimationDelay)
                 
-            case let .textAndProgress(title: title, subtitle: subtitle, value: value, images: imageSources):
+            case let .textAndProgress(title: title, subtitle: subtitle, value: value, progressImages: progressImages):
                 TextAndProgressView(
                     imageSource: nil,
                     title: title,
                     subtitle: subtitle,
-                    progressImages: imageSources,
+                    progressImages: progressImages,
                     progressValue: value,
                     animationDelay: style.imageAnimationDelay
                 )

@@ -233,7 +233,7 @@ extension MenuPopoverHUDView {
                 content: .textAndProgress(
                     title: loremIpsum,
                     value: .unitInterval(.random(in: 0.0 ... 1.0)),
-                    images: .audioVolume
+                    progressImages: .audioVolume
                 )
             )
         }

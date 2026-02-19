@@ -93,13 +93,13 @@ extension DefaultHUDStyle.AlertContent {
             title: title,
             subtitle: subtitle,
             value: value,
-            menuPopoverProgressImages: images
+            menuPopoverProgressImages: progressImages
         ):
             .textAndProgress(
                 title: title,
                 subtitle: subtitle,
                 value: value,
-                images: images
+                progressImages: progressImages
             )
             
         case let .imageAndTextAndProgress(
@@ -107,14 +107,14 @@ extension DefaultHUDStyle.AlertContent {
             title: title,
             subtitle: subtitle,
             value: value,
-            menuPopoverProgressImages: images
+            menuPopoverProgressImages: progressImages
         ):
             .imageAndTextAndProgress(
                 image: image,
                 title: title,
                 subtitle: subtitle,
                 value: value,
-                progressImages: images
+                progressImages: progressImages
             )
         }
     }
