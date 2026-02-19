@@ -13,17 +13,32 @@ extension ProminentHUDStyle.ContentView {
     struct TextView: View {
         private typealias Geometry = ProminentHUDStyle.Geometry
         
-        let text: String
+        let title: String
+        let subtitle: String?
         let size: TextSize
         
         var body: some View {
-            Text(text)
-                .font(.system(size: textFontSize))
-                .foregroundColor(textColor)
-                .multilineTextAlignment(.center)
-                .truncationMode(.tail)
-                .frame(maxWidth: Geometry.maxContentWidth)
-                .fixedSize(horizontal: true, vertical: false)
+            VStack(spacing: verticalSpacing) {
+                Text(title)
+                    .font(.system(size: titleFontSize))
+                    .multilineTextAlignment(.center)
+                    .truncationMode(.tail)
+                    .lineSpacing(5.0)
+                    .foregroundColor(titleTextColor)
+                    .frame(maxWidth: Geometry.maxContentWidth)
+                    .fixedSize(horizontal: true, vertical: false)
+                
+                if let subtitle, !subtitle.trimmed.isEmpty {
+                    Text(subtitle)
+                        .font(.system(size: subtitleFontSize))
+                        .multilineTextAlignment(.center)
+                        .truncationMode(.tail)
+                        .lineSpacing(5.0)
+                        .foregroundColor(subtitleTextColor)
+                        .frame(maxWidth: Geometry.maxContentWidth)
+                        .fixedSize(horizontal: true, vertical: false)
+                }
+            }
         }
     }
 }
@@ -34,10 +49,17 @@ extension ProminentHUDStyle.ContentView.TextView {
         case textOnly
     }
     
-    private var textFontSize: CGFloat {
+    private var titleFontSize: CGFloat {
         switch size {
         case .imageAndText: textWithImageFontSize
         case .textOnly: textOnlyFontSize
+        }
+    }
+    
+    private var subtitleFontSize: CGFloat {
+        switch size {
+        case .imageAndText: titleFontSize * 0.75
+        case .textOnly: titleFontSize * 0.4
         }
     }
     
@@ -55,8 +77,19 @@ extension ProminentHUDStyle.ContentView.TextView {
         18.0
     }
     
-    private var textColor: Color {
+    private var titleTextColor: Color {
         .primary
+    }
+    
+    private var subtitleTextColor: Color {
+        titleTextColor.opacity(0.8)
+    }
+    
+    private var verticalSpacing: CGFloat {
+        switch size {
+        case .imageAndText: 5.0
+        case .textOnly: 10.0
+        }
     }
 }
 

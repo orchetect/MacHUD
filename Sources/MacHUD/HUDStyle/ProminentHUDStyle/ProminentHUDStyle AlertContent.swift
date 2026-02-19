@@ -10,10 +10,10 @@ import SwiftUI
 
 extension ProminentHUDStyle {
     public enum AlertContent: HUDAlertContent {
-        case text(String)
+        case text(String, subtitle: String? = nil)
         
         case image(HUDImageSource)
-        case imageAndText(image: HUDImageSource, text: String)
+        case imageAndText(image: HUDImageSource, title: String, subtitle: String? = nil)
         case imageAndProgress(image: HUDImageSource, value: HUDSteppedProgressValue)
     }
 }

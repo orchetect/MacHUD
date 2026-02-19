@@ -32,14 +32,14 @@ extension MenuPopoverHUDStyle {
         @ViewBuilder
         private var conditionalView: some View {
             switch content {
-            case let .text(text):
-                TextView(text: text)
+            case let .text(title, subtitle: subtitle):
+                TextView(title: title, subtitle: subtitle)
             case let .image(imageSource):
                 ImageView(imageSource: imageSource, animationDelay: style.imageAnimationDelay)
-            case let .imageAndText(image: imageSource, text: text):
-                ImageAndTextView(imageSource: imageSource, text: text, animationDelay: style.imageAnimationDelay)
-            case let .textAndProgress(text: text, value: value, images: imageSources):
-                TextAndProgressView(text: text, progressImages: imageSources, progressValue: value)
+            case let .imageAndText(image: imageSource, title: title, subtitle: subtitle):
+                ImageAndTextView(imageSource: imageSource, title: title, subtitle: subtitle, animationDelay: style.imageAnimationDelay)
+            case let .textAndProgress(title: title, subtitle: subtitle, value: value, images: imageSources):
+                TextAndProgressView(title: title, subtitle: subtitle, progressImages: imageSources, progressValue: value)
             }
         }
     }
@@ -48,16 +48,29 @@ extension MenuPopoverHUDStyle {
 @available(macOS 26.0, *)
 extension MenuPopoverHUDStyle.ContentView {
     struct TextView: View {
-        let text: String
+        let title: String
+        let subtitle: String?
+        
+        private let fontSize: CGFloat = 12.0
         
         var body: some View {
             VStack(spacing: 10) {
                 HStack {
-                    Text(text)
+                    Text(title)
                         .font(.system(size: 12, weight: .semibold))
                         .multilineTextAlignment(.leading)
                         .truncationMode(.tail)
                     Spacer()
+                }
+                
+                if let subtitle, !subtitle.trimmed.isEmpty {
+                    HStack {
+                        Text(subtitle)
+                            .font(.system(size: fontSize * 0.8, weight: .regular))
+                            .multilineTextAlignment(.leading)
+                            .truncationMode(.tail)
+                        Spacer()
+                    }
                 }
             }
         }
@@ -96,7 +109,8 @@ extension MenuPopoverHUDStyle.ContentView {
 extension MenuPopoverHUDStyle.ContentView {
     struct ImageAndTextView: View {
         let imageSource: HUDImageSource
-        let text: String
+        let title: String
+        let subtitle: String?
         let animationDelay: TimeInterval?
         
         var body: some View {
@@ -107,11 +121,7 @@ extension MenuPopoverHUDStyle.ContentView {
                             .frame(width: 24, height: 24)
                     }
                     
-                    Text(text)
-                        .font(.system(size: 12, weight: .semibold))
-                        .multilineTextAlignment(.leading)
-                        .truncationMode(.tail)
-                    Spacer()
+                    TextView(title: title, subtitle: subtitle)
                 }
             }
         }
@@ -125,19 +135,14 @@ extension MenuPopoverHUDStyle.ContentView {
 @available(macOS 26.0, *)
 extension MenuPopoverHUDStyle.ContentView {
     struct TextAndProgressView: View {
-        let text: String
+        let title: String
+        let subtitle: String?
         let progressImages: HUDProgressImageSource?
         let progressValue: HUDSteppedProgressValue
         
         var body: some View {
             VStack(spacing: 10) {
-                HStack {
-                    Text(text)
-                        .font(.system(size: 12, weight: .semibold))
-                        .multilineTextAlignment(.leading)
-                        .truncationMode(.tail)
-                    Spacer()
-                }
+                TextView(title: title, subtitle: subtitle)
                 
                 HStack {
                     if let minImage {
@@ -242,7 +247,7 @@ private struct MockHUDView<Content: View>: View {
         MockHUDView {
             MenuPopoverHUDStyle.ContentView(
                 style: .init(),
-                content: .imageAndText(image: .static(.symbol(systemName: "speaker.3.fill")), text: "MacBook Pro Speakers")
+                content: .imageAndText(image: .static(.symbol(systemName: "speaker.3.fill")), title: "MacBook Pro Speakers")
             )
         }
         
@@ -250,7 +255,7 @@ private struct MockHUDView<Content: View>: View {
             let nsImage = NSWorkspace.shared.icon(forFile: "/System/Applications/Photos.app")
             MenuPopoverHUDStyle.ContentView(
                 style: .init(),
-                content: .imageAndText(image: .static(.nsImage(nsImage, desaturated: false)), text: #"Added "New Photo.jpg""#)
+                content: .imageAndText(image: .static(.nsImage(nsImage, desaturated: false)), title: #"Added "New Photo.jpg""#)
             )
         }
         
@@ -258,14 +263,14 @@ private struct MockHUDView<Content: View>: View {
             let nsImage = NSWorkspace.shared.icon(forFile: "/System/Applications/Photos.app")
             MenuPopoverHUDStyle.ContentView(
                 style: .init(),
-                content: .imageAndText(image: .static(.nsImage(nsImage, desaturated: true)), text: #"Added "New Photo.jpg""#)
+                content: .imageAndText(image: .static(.nsImage(nsImage, desaturated: true)), title: #"Added "New Photo.jpg""#)
             )
         }
             
         MockHUDView {
             MenuPopoverHUDStyle.ContentView(
                 style: .init(),
-                content: .textAndProgress(text: "System Audio", value: .unitInterval(0.1), images: .audioVolume)
+                content: .textAndProgress(title: "System Audio", value: .unitInterval(0.1), images: .audioVolume)
             )
         }
         
@@ -320,7 +325,7 @@ private struct MockHUDView<Content: View>: View {
                         effect: .bounce,
                         speedMultiplier: nil
                     )),
-                    text: "Volume"
+                    title: "Volume"
                 )
             )
         }
@@ -334,7 +339,7 @@ private struct MockHUDView<Content: View>: View {
                         target: .systemName("speaker.wave.3.fill", variable: 0.5, renderingMode: .hierarchical),
                         speedMultiplier: 0.5
                     )),
-                    text: "Built-In Speakers"
+                    title: "Built-In Speakers"
                 )
             )
         }

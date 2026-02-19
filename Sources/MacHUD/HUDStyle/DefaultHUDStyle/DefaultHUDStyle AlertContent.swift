@@ -12,18 +12,19 @@ extension DefaultHUDStyle {
     /// Alert content that can adapt to the default HUD style.
     public enum AlertContent: HUDAlertContent {
         /// Text-only alert.
-        case text(String)
+        case text(String, subtitle: String? = nil)
         
         /// Image-only alert.
         case image(HUDImageSource)
         
         /// Image and text alert.
-        case imageAndText(image: HUDImageSource, text: String)
+        case imageAndText(image: HUDImageSource, title: String, subtitle: String? = nil)
         
         /// Image or text alert depending on platform, along with a progress bar.
         case imageOrTextAndProgress(
             prominentImage: HUDImageSource,
-            text: String,
+            title: String,
+            subtitle: String? = nil,
             value: HUDSteppedProgressValue,
             menuPopoverProgressImages: HUDProgressImageSource? = nil
         )
@@ -36,13 +37,16 @@ extension DefaultHUDStyle.AlertContent {
     /// Converts the default HUD style alert content to prominent HUD style alert content.
     public func convertedToProminentHUDStyle() -> ProminentHUDStyle.AlertContent {
         switch self {
-        case let .text(text):
-            .text(text)
+        case let .text(text, subtitle: subtitle):
+            .text(text, subtitle: subtitle)
+            
         case let .image(imageSource):
             .image(imageSource)
-        case let .imageAndText(image: image, text: text):
-            .imageAndText(image: image, text: text)
-        case let .imageOrTextAndProgress(prominentImage: image, text: _, value: value, menuPopoverProgressImages: _):
+            
+        case let .imageAndText(image: image, title: title, subtitle: subtitle):
+            .imageAndText(image: image, title: title, subtitle: subtitle)
+            
+        case let .imageOrTextAndProgress(prominentImage: image, title: _, subtitle: _, value: value, menuPopoverProgressImages: _):
             .imageAndProgress(image: image, value: value)
         }
     }
@@ -51,15 +55,19 @@ extension DefaultHUDStyle.AlertContent {
     @available(macOS 26.0, *)
     public func convertedToMenuPopoverHUDStyle() -> MenuPopoverHUDStyle.AlertContent {
         switch self {
-        case let .text(text):
-            .text(text)
+        case let .text(title, subtitle: subtitle):
+            .text(title, subtitle: subtitle)
+            
         case let .image(imageSource):
             .image(imageSource)
-        case let .imageAndText(image: image, text: text):
-            .imageAndText(image: image, text: text)
-        case let .imageOrTextAndProgress(prominentImage: _, text: text, value: value, menuPopoverProgressImages: images):
+            
+        case let .imageAndText(image: image, title: title, subtitle: subtitle):
+            .imageAndText(image: image, title: title, subtitle: subtitle)
+            
+        case let .imageOrTextAndProgress(prominentImage: _, title: title, subtitle: subtitle, value: value, menuPopoverProgressImages: images):
             .textAndProgress(
-                text: text,
+                title: title,
+                subtitle: subtitle,
                 value: value,
                 images: images
             )

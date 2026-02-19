@@ -12,23 +12,25 @@ import SwiftUI
 extension MenuPopoverHUDStyle {
     public enum AlertContent: HUDAlertContent {
         /// Text-only HUD alert.
-        case text(String)
+        case text(String, subtitle: String? = nil)
         
         /// Image-only HUD alert.
         case image(HUDImageSource)
         
         /// Text and image HUD alert.
-        case imageAndText(image: HUDImageSource, text: String)
+        case imageAndText(image: HUDImageSource, title: String, subtitle: String? = nil)
         
         /// HUD alert including a progress bar.
         /// Value is specified as a floating-point value between `0.0 ... 1.0`.
         ///
         /// - Parameters:
-        ///   - text: Text string.
+        ///   - title: Text string.
+        ///   - subtitle: Optional second line of de-emphasized text.
         ///   - value: Progress bar value.
         ///   - images: Optionally specify minimum and maximum images to display on either side of the progress bar.
         case textAndProgress(
-            text: String,
+            title: String,
+            subtitle: String? = nil,
             value: HUDSteppedProgressValue,
             images: HUDProgressImageSource?
         )
@@ -46,7 +48,8 @@ extension MenuPopoverHUDStyle.AlertContent {
     ///   - level: Audio level.
     public static func audioVolume(deviceName: String, level: HUDProgressValue) -> Self {
         .textAndProgress(
-            text: deviceName,
+            title: deviceName,
+            subtitle: nil,
             value: level.stepped(.segmentCount(18)), // as seen in macOS 26 volume HUD
             images: .audioVolume
         )
@@ -59,7 +62,8 @@ extension MenuPopoverHUDStyle.AlertContent {
     ///   - level: Brightness level.
     public static func screenBrightness(displayName: String = "Display", level: HUDProgressValue) -> Self {
         .textAndProgress(
-            text: displayName,
+            title: displayName,
+            subtitle: nil,
             value: level.stepped(.segmentCount(18)), // as seen in macOS 26 screen brightness HUD
             images: .screenBrightness
         )

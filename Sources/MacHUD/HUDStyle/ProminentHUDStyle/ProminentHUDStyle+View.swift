@@ -30,16 +30,16 @@ extension ProminentHUDStyle {
         @ViewBuilder
         public var conditionalBody: some View {
             switch content {
-            case let .text(text):
-                TextView(text: text, size: .textOnly)
+            case let .text(title, subtitle: subtitle):
+                TextView(title: title, subtitle: subtitle, size: .textOnly)
                 
             case let .image(imageSource):
                 ImageView(imageSource: imageSource, format: .imageOnly, animationDelay: nil)
                 
-            case let .imageAndText(image: imageSource, text: text):
+            case let .imageAndText(image: imageSource, title: title, subtitle: subtitle):
                 VStack(spacing: 14) {
                     ImageView(imageSource: imageSource, format: .imageAndText, animationDelay: nil)
-                    TextView(text: text, size: .imageAndText)
+                    TextView(title: title, subtitle: subtitle, size: .imageAndText)
                 }
                 
             case let .imageAndProgress(image: imageSource, value: progressValue):
@@ -61,6 +61,20 @@ import AppKit
     ProminentHUDStyle.ContentView(
         style: .prominent(),
         content: .text("Test")
+    )
+}
+
+#Preview("Text (Single Field Multi-line)") {
+    ProminentHUDStyle.ContentView(
+        style: .prominent(),
+        content: .text("Test Title\nTest Subtitle")
+    )
+}
+
+#Preview("Text (Title & Subtitle)") {
+    ProminentHUDStyle.ContentView(
+        style: .prominent(),
+        content: .text("Test Title", subtitle: "Test Subtitle")
     )
 }
 
@@ -97,7 +111,10 @@ import AppKit
 #Preview("Image & Text") {
     ProminentHUDStyle.ContentView(
         style: .prominent(),
-        content: .imageAndText(image: .static(.symbol(systemName: "speaker.wave.3.fill")), text: "Volume")
+        content: .imageAndText(
+            image: .static(.symbol(systemName: "speaker.wave.3.fill")),
+            title: "Volume"
+        )
     )
 }
 
@@ -110,7 +127,7 @@ import AppKit
                 effect: .bounce,
                 speedMultiplier: nil
             )),
-            text: "Volume"
+            title: "Volume"
         )
     )
 }
@@ -124,7 +141,28 @@ import AppKit
                 target: .systemName("speaker.wave.3.fill", variable: 0.5, renderingMode: .hierarchical),
                 speedMultiplier: 0.5
             )),
-            text: "Built-In Speakers"
+            title: "Built-In Speakers"
+        )
+    )
+}
+
+#Preview("Image & Text (Single Field Multi-line)") {
+    ProminentHUDStyle.ContentView(
+        style: .prominent(),
+        content: .imageAndText(
+            image: .static(.symbol(systemName: "speaker.wave.3.fill")),
+            title: "Volume\nBuilt-In Speakers"
+        )
+    )
+}
+
+#Preview("Image & Text (Title & Subtitle)") {
+    ProminentHUDStyle.ContentView(
+        style: .prominent(),
+        content: .imageAndText(
+            image: .static(.symbol(systemName: "speaker.wave.3.fill")),
+            title: "Volume",
+            subtitle: "Built-In Speakers"
         )
     )
 }
