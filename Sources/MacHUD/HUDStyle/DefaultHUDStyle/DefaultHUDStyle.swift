@@ -14,7 +14,11 @@ public struct DefaultHUDStyle: HUDStyle {
     public var transitionIn: HUDTransition?
     public var duration: TimeInterval
     public var transitionOut: HUDTransition?
+    
+    /// A delay to apply before triggering image animations.
     public var imageAnimationDelay: TimeInterval? = nil
+    
+    /// Status item access in order to position HUD alerts beneath the status item.
     public var statusItem: (@MainActor () -> NSStatusItem?)?
     
     public init() {

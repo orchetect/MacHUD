@@ -18,9 +18,11 @@ public struct MenuPopoverHUDStyle: HUDStyle {
     public var transitionIn: HUDTransition?
     public var duration: TimeInterval
     public var transitionOut: HUDTransition?
-    // a small delay allows HUD window to transition in partly before image animation begins
+    
+    /// A delay to apply before triggering image animations.
     public var imageAnimationDelay: TimeInterval? = 0.2
     
+    /// Status item access in order to position HUD alerts beneath the status item.
     public var statusItem: (@MainActor () -> NSStatusItem?)?
     
     public init() {

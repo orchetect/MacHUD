@@ -10,12 +10,14 @@ import Foundation
 
 /// Prominent HUD alert style.
 public struct ProminentHUDStyle: HUDStyle {
-    /// Position on screen for the HUD to appear.
-    public var position: Position
-    
     public var transitionIn: HUDTransition?
     public var duration: TimeInterval
     public var transitionOut: HUDTransition?
+    
+    /// Position on screen for the HUD to appear.
+    public var position: Position
+    
+    /// A delay to apply before triggering image animations.
     public var imageAnimationDelay: TimeInterval? = 0.5
     
     public init() {
