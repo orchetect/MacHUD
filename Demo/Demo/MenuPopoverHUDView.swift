@@ -9,11 +9,12 @@ import SwiftUI
 
 @available(macOS 26.0, *)
 struct MenuPopoverHUDView: View {
-    @Environment(\.statusItem) private var statusItem
+    @Environment(ViewModel.self) private var viewModel
     
     let panel: ContentView.Panel = .menuPopover
     
-    @State private var text = "Volume"
+    @State private var titleText = "Volume"
+    @State private var subtitleText = ""
     @State private var image: SampleImage = .speakerVolumeHigh
     @State private var isImageAnimated: Bool = false
     @State private var style: MenuPopoverHUDStyle = .init()
@@ -40,7 +41,7 @@ struct MenuPopoverHUDView: View {
                     )
                 }
                 
-                Section("Style") {
+                Section("Generate HUD Alerts") {
                     Picker("Transition In", selection: $style.transitionIn) {
                         ForEach(HUDTransition.allCases) { transition in
                             Text(transition.name).tag(transition)
@@ -58,9 +59,7 @@ struct MenuPopoverHUDView: View {
                         }
                         Text("None").tag(nil as HUDTransition?)
                     }
-                }
-                
-                Section("Generate HUD Alert") {
+                    
                     Picker("System Symbol", selection: $image) {
                         ForEach(SampleImage.allCases) { image in
                             Image(systemName: image.rawValue).tag(image)
@@ -69,7 +68,9 @@ struct MenuPopoverHUDView: View {
                     
                     Toggle("Animate Image", isOn: $isImageAnimated)
                     
-                    TextField("HUD Text", text: $text)
+                    TextField("Title Text", text: $titleText)
+                    
+                    TextField("Subtitle Text", text: $subtitleText)
                     
                     HStack {
                         Button("Show Text-Only Alert") {
@@ -102,7 +103,7 @@ struct MenuPopoverHUDView: View {
                     }
                 }
                 
-                Section("Debug & Edge Case Testing") {
+                Section("Debug / Testing") {
                     Button("Show Text-Only HUD Alert With Very Long Text") {
                         showShowTextOnlyAlertWithVeryLongText()
                     }
@@ -116,11 +117,11 @@ struct MenuPopoverHUDView: View {
                     }
                 }
                 
-                Section("Memory Use Debug: Generate HUD Alerts Automatically") {
+                Section("Memory Debug / Testing") {
                     LabeledContent("Count", value: "\(alertCount)")
                     
                     Toggle("Show Continuously (Stress Test)", isOn: $isContinuous)
-                        .onChange(of: isContinuous) { newValue in
+                        .onChange(of: isContinuous) { oldValue, newValue in
                             newValue ? startContinuousTask() : stopContinuousTask()
                         }
                 }
@@ -136,8 +137,8 @@ extension MenuPopoverHUDView {
     private func showTextOnlyAlert() {
         Task {
             await HUDManager.shared.displayAlert(
-                style: style.statusItem(statusItem),
-                content: .text(text)
+                style: style.statusItem(viewModel.statusItem),
+                content: .text(titleText, subtitle: subtitleText)
             )
         }
     }
@@ -148,7 +149,7 @@ extension MenuPopoverHUDView {
                 ? .animated(.image(.systemName(image.rawValue), effect: .bounce, speedMultiplier: nil))
                 : .static(.symbol(systemName: image.rawValue))
             await HUDManager.shared.displayAlert(
-                style: style.statusItem(statusItem),
+                style: style.statusItem(viewModel.statusItem),
                 content: .image(image)
             )
         }
@@ -160,8 +161,8 @@ extension MenuPopoverHUDView {
                 ? .animated(.image(.systemName(image.rawValue), effect: .bounce, speedMultiplier: nil))
                 : .static(.symbol(systemName: image.rawValue))
             await HUDManager.shared.displayAlert(
-                style: style.statusItem(statusItem),
-                content: .imageAndText(image: image, text: text)
+                style: style.statusItem(viewModel.statusItem),
+                content: .imageAndText(image: image, title: titleText, subtitle: subtitleText)
             )
         }
     }
@@ -169,7 +170,7 @@ extension MenuPopoverHUDView {
     private func showAudioVolumeChangeAlert() {
         Task {
             await HUDManager.shared.displayAlert(
-                style: .menuPopover().statusItem(statusItem),
+                style: .menuPopover().statusItem(viewModel.statusItem),
                 content: .audioVolume(
                     deviceName: "MacBook Pro Speakers",
                     level: .value(Int.random(in: 0 ... 18), range: 0 ... 18)
@@ -181,7 +182,7 @@ extension MenuPopoverHUDView {
     private func showScreenBrightnessChangeAlert() {
         Task {
             await HUDManager.shared.displayAlert(
-                style: .menuPopover().statusItem(statusItem),
+                style: .menuPopover().statusItem(viewModel.statusItem),
                 content: .screenBrightness(level: .value(Int.random(in: 0 ... 18), range: 0 ... 18))
             )
         }
@@ -190,7 +191,7 @@ extension MenuPopoverHUDView {
     private func showUnmuteAudioAlert() {
         Task {
             await HUDManager.shared.displayAlert(
-                style: .menuPopover().statusItem(statusItem),
+                style: .menuPopover().statusItem(viewModel.statusItem),
                 content: .imageAndText(
                     image: .animated(.imageReplacement(
                         initial: .systemName("speaker.slash.fill", renderingMode: .hierarchical),
@@ -198,7 +199,7 @@ extension MenuPopoverHUDView {
                         magicReplace: false,
                         speedMultiplier: nil
                     )),
-                    text: "Built-In Speakers"
+                    title: "Built-In Speakers"
                 )
             )
         }
@@ -207,16 +208,8 @@ extension MenuPopoverHUDView {
     private func showShowTextOnlyAlertWithVeryLongText() {
         Task {
             await HUDManager.shared.displayAlert(
-                style: .menuPopover().statusItem(statusItem),
-                content: .text(
-                    """
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt \
-                    ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco \
-                    laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in \
-                    voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat \
-                    non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                    """
-                )
+                style: .menuPopover().statusItem(viewModel.statusItem),
+                content: .text(loremIpsum)
             )
         }
     }
@@ -224,17 +217,10 @@ extension MenuPopoverHUDView {
     private func showShowImageAndTextAlertWithVeryLongText() {
         Task {
             await HUDManager.shared.displayAlert(
-                style: .menuPopover().statusItem(statusItem),
+                style: .menuPopover().statusItem(viewModel.statusItem),
                 content: .imageAndText(
                     image: .static(.symbol(systemName: "pencil.and.scribble")),
-                    text:
-                        """
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt \
-                        ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco \
-                        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in \
-                        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat \
-                        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                        """
+                    title: loremIpsum
                 )
             )
         }
@@ -243,16 +229,9 @@ extension MenuPopoverHUDView {
     private func showShowImageAndProgressBarAlertWithVeryLongText() {
         Task {
             await HUDManager.shared.displayAlert(
-                style: .menuPopover().statusItem(statusItem),
+                style: .menuPopover().statusItem(viewModel.statusItem),
                 content: .textAndProgress(
-                    text:
-                        """
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt \
-                        ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco \
-                        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in \
-                        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat \
-                        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                        """,
+                    title: loremIpsum,
                     value: .unitInterval(.random(in: 0.0 ... 1.0)),
                     images: .audioVolume
                 )
@@ -269,7 +248,7 @@ extension MenuPopoverHUDView {
         continuousTask = Task {
             while !Task.isCancelled {
                 await HUDManager.shared.displayAlert(
-                    style: style.statusItem(statusItem),
+                    style: style.statusItem(viewModel.statusItem),
                     content: .text(UUID().uuidString)
                 )
                 alertCount += 1

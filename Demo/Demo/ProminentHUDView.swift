@@ -10,7 +10,8 @@ import SwiftUI
 struct ProminentHUDView: View {
     let panel: ContentView.Panel = .prominent
     
-    @State private var text = "Volume"
+    @State private var titleText = "Volume"
+    @State private var subtitleText = ""
     @State private var image: SampleImage = .speakerVolumeHigh
     @State private var isImageAnimated: Bool = false
     @State private var style: ProminentHUDStyle = .init()
@@ -33,7 +34,7 @@ struct ProminentHUDView: View {
                     )
                 }
                 
-                Section("Style") {
+                Section("Generate HUD Alerts") {
                     Picker("Position on Screen", selection: $style.position) {
                         ForEach(ProminentHUDStyle.Position.allCases) { position in
                             Text(position.name).tag(position)
@@ -57,9 +58,7 @@ struct ProminentHUDView: View {
                         }
                         Text("None").tag(nil as HUDTransition?)
                     }
-                }
-                
-                Section("Generate HUD Alert") {
+                    
                     Picker("System Symbol", selection: $image) {
                         ForEach(SampleImage.allCases) { image in
                             Image(systemName: image.rawValue).tag(image)
@@ -68,7 +67,9 @@ struct ProminentHUDView: View {
                     
                     Toggle("Animate Image", isOn: $isImageAnimated)
                     
-                    TextField("HUD Text", text: $text)
+                    TextField("Title Text", text: $titleText)
+                    
+                    TextField("Subtitle Text", text: $subtitleText)
                     
                     HStack {
                         Button("Show Text-Only Alert") {
@@ -105,7 +106,7 @@ struct ProminentHUDView: View {
                     }
                 }
                 
-                Section("Debug & Edge Case Testing") {
+                Section("Debug / Testing") {
                     Button("Show Text-Only HUD Alert With Very Long Text") {
                         showShowTextOnlyAlertWithVeryLongText()
                     }
@@ -115,11 +116,11 @@ struct ProminentHUDView: View {
                     }
                 }
                 
-                Section("Memory Use Debug: Generate HUD Alerts Automatically") {
+                Section("Memory Debug / Testing") {
                     LabeledContent("Count", value: "\(alertCount)")
                     
                     Toggle("Show Continuously (Stress Test)", isOn: $isContinuous)
-                        .onChange(of: isContinuous) { newValue in
+                        .onChange(of: isContinuous) { oldValue, newValue in
                             newValue ? startContinuousTask() : stopContinuousTask()
                         }
                 }
@@ -133,7 +134,10 @@ struct ProminentHUDView: View {
 extension ProminentHUDView {
     private func showTextOnlyAlert() {
         Task {
-            await HUDManager.shared.displayAlert(style: style, content: .text(text))
+            await HUDManager.shared.displayAlert(
+                style: style,
+                content: .text(titleText, subtitle: subtitleText)
+            )
         }
     }
     
@@ -156,7 +160,7 @@ extension ProminentHUDView {
                 : .static(.symbol(systemName: image.rawValue))
             await HUDManager.shared.displayAlert(
                 style: style,
-                content: .imageAndText(image: image, text: text)
+                content: .imageAndText(image: image, title: titleText, subtitle: subtitleText)
             )
         }
     }
@@ -165,7 +169,7 @@ extension ProminentHUDView {
         Task {
             await HUDManager.shared.displayAlert(
                 style: .prominent(),
-                content: .imageAndText(image: .static(.image(Image(.xcodeBuild))), text: "Build Succeeded")
+                content: .imageAndText(image: .static(.image(Image(.xcodeBuild))), title: "Build Succeeded")
             )
         }
     }
@@ -199,7 +203,7 @@ extension ProminentHUDView {
                         magicReplace: false,
                         speedMultiplier: nil
                     )),
-                    text: "Built-In Speakers"
+                    title: "Built-In Speakers"
                 )
             )
         }
@@ -209,15 +213,7 @@ extension ProminentHUDView {
         Task {
             await HUDManager.shared.displayAlert(
                 style: .prominent(),
-                content: .text(
-                    """
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt \
-                    ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco \
-                    laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in \
-                    voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat \
-                    non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                    """
-                )
+                content: .text(loremIpsum)
             )
         }
     }
@@ -228,14 +224,7 @@ extension ProminentHUDView {
                 style: .prominent(),
                 content: .imageAndText(
                     image: .static(.symbol(systemName: "pencil.and.scribble")),
-                    text:
-                        """
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt \
-                        ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco \
-                        laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in \
-                        voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat \
-                        non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                        """
+                    title: loremIpsum
                 )
             )
         }

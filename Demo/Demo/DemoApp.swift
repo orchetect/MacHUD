@@ -12,12 +12,12 @@ import SwiftUI
 @main
 struct DemoApp: App {
     @State private var isMenuPresented: Bool = false
-    @State private var statusItem: NSStatusItem?
+    @State private var viewModel = ViewModel()
     
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environment(\.statusItem, statusItem)
+                .environment(viewModel)
                 .task {
                     await HUDManager.shared.prewarm()
                 }
@@ -32,7 +32,7 @@ struct DemoApp: App {
             Button("Quit") { NSApp.terminate(nil) }
         }
         .menuBarExtraAccess(isPresented: $isMenuPresented) { statusItem in
-            self.statusItem = statusItem
+            viewModel.statusItem = statusItem
         }
     }
 }
