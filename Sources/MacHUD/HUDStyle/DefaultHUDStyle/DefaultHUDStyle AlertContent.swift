@@ -25,7 +25,7 @@ extension DefaultHUDStyle {
             prominentImage: HUDImageSource,
             title: String,
             subtitle: String? = nil,
-            value: HUDSteppedProgressValue,
+            progressValue: HUDSteppedProgressValue,
             menuPopoverProgressImages: HUDProgressImageSource? = nil
         )
         
@@ -34,7 +34,7 @@ extension DefaultHUDStyle {
             image: HUDImageSource,
             title: String,
             subtitle: String? = nil,
-            value: HUDSteppedProgressValue,
+            progressValue: HUDSteppedProgressValue,
             menuPopoverProgressImages: HUDProgressImageSource? = nil
         )
     }
@@ -59,19 +59,19 @@ extension DefaultHUDStyle.AlertContent {
             prominentImage: image,
             title: _,
             subtitle: _,
-            value: value,
+            progressValue: progressValue,
             menuPopoverProgressImages: _
         ):
-            .imageAndProgress(image: image, value: value)
+            .imageAndProgress(image: image, progressValue: progressValue)
             
         case let .imageAndTextAndProgress(
             image: image,
             title: title,
             subtitle: subtitle,
-            value: value,
+            progressValue: progressValue,
             menuPopoverProgressImages: _
         ):
-            .imageAndTextAndProgress(image: image, title: title, subtitle: subtitle, value: value)
+            .imageAndTextAndProgress(image: image, title: title, subtitle: subtitle, progressValue: progressValue)
         }
     }
 
@@ -92,13 +92,13 @@ extension DefaultHUDStyle.AlertContent {
             prominentImage: _,
             title: title,
             subtitle: subtitle,
-            value: value,
+            progressValue: progressValue,
             menuPopoverProgressImages: progressImages
         ):
             .textAndProgress(
                 title: title,
                 subtitle: subtitle,
-                value: value,
+                progressValue: progressValue,
                 progressImages: progressImages
             )
             
@@ -106,14 +106,14 @@ extension DefaultHUDStyle.AlertContent {
             image: image,
             title: title,
             subtitle: subtitle,
-            value: value,
+            progressValue: progressValue,
             menuPopoverProgressImages: progressImages
         ):
             .imageAndTextAndProgress(
                 image: image,
                 title: title,
                 subtitle: subtitle,
-                value: value,
+                progressValue: progressValue,
                 progressImages: progressImages
             )
         }

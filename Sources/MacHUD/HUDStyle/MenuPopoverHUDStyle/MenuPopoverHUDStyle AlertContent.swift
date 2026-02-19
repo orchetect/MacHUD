@@ -25,12 +25,12 @@ extension MenuPopoverHUDStyle {
         /// - Parameters:
         ///   - title: Text string.
         ///   - subtitle: Optional second line of de-emphasized text.
-        ///   - value: Progress bar value.
+        ///   - progressValue: Progress bar value.
         ///   - progressImages: Optionally specify minimum and maximum images to display on either side of the progress bar.
         case textAndProgress(
             title: String,
             subtitle: String? = nil,
-            value: HUDSteppedProgressValue,
+            progressValue: HUDSteppedProgressValue,
             progressImages: HUDProgressImageSource?
         )
         
@@ -40,13 +40,13 @@ extension MenuPopoverHUDStyle {
         ///   - image: Main image.
         ///   - title: Text string.
         ///   - subtitle: Optional second line of de-emphasized text.
-        ///   - value: Progress bar value.
+        ///   - progressValue: Progress bar value.
         ///   - progressImages: Optionally specify minimum and maximum images to display on either side of the progress bar.
         case imageAndTextAndProgress(
             image: HUDImageSource,
             title: String,
             subtitle: String? = nil,
-            value: HUDSteppedProgressValue,
+            progressValue: HUDSteppedProgressValue,
             progressImages: HUDProgressImageSource?
         )
     }
@@ -65,7 +65,7 @@ extension MenuPopoverHUDStyle.AlertContent {
         .textAndProgress(
             title: deviceName,
             subtitle: nil,
-            value: level.stepped(.segmentCount(18)), // as seen in macOS 26 volume HUD
+            progressValue: level.stepped(.segmentCount(18)), // as seen in macOS 26 volume HUD
             progressImages: .audioVolume
         )
     }
@@ -79,7 +79,7 @@ extension MenuPopoverHUDStyle.AlertContent {
         .textAndProgress(
             title: displayName,
             subtitle: nil,
-            value: level.stepped(.segmentCount(18)), // as seen in macOS 26 screen brightness HUD
+            progressValue: level.stepped(.segmentCount(18)), // as seen in macOS 26 screen brightness HUD
             progressImages: .screenBrightness
         )
     }

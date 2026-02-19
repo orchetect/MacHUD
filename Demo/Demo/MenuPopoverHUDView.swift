@@ -232,7 +232,7 @@ extension MenuPopoverHUDView {
                 style: .menuPopover().statusItem(viewModel.statusItem),
                 content: .textAndProgress(
                     title: loremIpsum,
-                    value: .unitInterval(.random(in: 0.0 ... 1.0)),
+                    progressValue: .unitInterval(.random(in: 0.0 ... 1.0)),
                     progressImages: .audioVolume
                 )
             )

@@ -20,10 +20,10 @@ extension ProminentHUDStyle {
         case imageAndText(image: HUDImageSource, title: String, subtitle: String? = nil)
         
         /// Image and progress bar HUD alert.
-        case imageAndProgress(image: HUDImageSource, value: HUDSteppedProgressValue)
+        case imageAndProgress(image: HUDImageSource, progressValue: HUDSteppedProgressValue)
         
         /// Image, text, and progress bar alert.
-        case imageAndTextAndProgress(image: HUDImageSource, title: String, subtitle: String? = nil, value: HUDSteppedProgressValue)
+        case imageAndTextAndProgress(image: HUDImageSource, title: String, subtitle: String? = nil, progressValue: HUDSteppedProgressValue)
     }
 }
 
@@ -39,7 +39,7 @@ extension ProminentHUDStyle.AlertContent {
     public static func audioVolume(level: HUDProgressValue, dynamicImage: Bool = false) -> Self {
         .imageAndProgress(
             image: .static(.image(forVolumeLevel: dynamicImage ? level.unitInterval : 1.0)),
-            value: level.stepped(.segmentCount(ProminentHUDStyle.Geometry.standardSegmentCount))
+            progressValue: level.stepped(.segmentCount(ProminentHUDStyle.Geometry.standardSegmentCount))
         )
     }
     
@@ -50,7 +50,7 @@ extension ProminentHUDStyle.AlertContent {
     public static func screenBrightness(level: HUDProgressValue) -> Self {
         .imageAndProgress(
             image: .static(.symbol(systemName: "sun.max")),
-            value: level.stepped(.segmentCount(ProminentHUDStyle.Geometry.standardSegmentCount))
+            progressValue: level.stepped(.segmentCount(ProminentHUDStyle.Geometry.standardSegmentCount))
         )
     }
 }

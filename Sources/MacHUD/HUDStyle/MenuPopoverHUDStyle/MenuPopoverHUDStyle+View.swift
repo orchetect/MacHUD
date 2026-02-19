@@ -41,23 +41,34 @@ extension MenuPopoverHUDStyle {
             case let .imageAndText(image: imageSource, title: title, subtitle: subtitle):
                 ImageAndTextView(imageSource: imageSource, title: title, subtitle: subtitle, animationDelay: style.imageAnimationDelay)
                 
-            case let .textAndProgress(title: title, subtitle: subtitle, value: value, progressImages: progressImages):
+            case let .textAndProgress(
+                title: title,
+                subtitle: subtitle,
+                progressValue: progressValue,
+                progressImages: progressImages
+            ):
                 TextAndProgressView(
                     imageSource: nil,
                     title: title,
                     subtitle: subtitle,
                     progressImages: progressImages,
-                    progressValue: value,
+                    progressValue: progressValue,
                     animationDelay: style.imageAnimationDelay
                 )
                 
-            case let .imageAndTextAndProgress(image: imageSource, title: title, subtitle: subtitle, value: value, progressImages: progressImages):
+            case let .imageAndTextAndProgress(
+                image: imageSource,
+                title: title,
+                subtitle: subtitle,
+                progressValue: progressValue,
+                progressImages: progressImages
+            ):
                 TextAndProgressView(
                     imageSource: imageSource,
                     title: title,
                     subtitle: subtitle,
                     progressImages: progressImages,
-                    progressValue: value,
+                    progressValue: progressValue,
                     animationDelay: style.imageAnimationDelay
                 )
             }
@@ -458,7 +469,7 @@ private struct MockHUDView<Content: View>: View {
                     image: .static(.symbol(systemName: "speaker.3.fill")),
                     title: "MacBook Pro Speakers",
                     subtitle: nil,
-                    value: .unitInterval(0.6),
+                    progressValue: .unitInterval(0.6),
                     progressImages: nil
                 )
             )
@@ -471,7 +482,7 @@ private struct MockHUDView<Content: View>: View {
                     image: .static(.symbol(systemName: "speaker.3.fill")),
                     title: "MacBook Pro Speakers",
                     subtitle: "Volume: 60%",
-                    value: .unitInterval(0.6),
+                    progressValue: .unitInterval(0.6),
                     progressImages: nil
                 )
             )
