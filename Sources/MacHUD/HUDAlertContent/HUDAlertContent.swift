@@ -14,4 +14,12 @@ public protocol HUDAlertContent: Equatable, Sendable {
     var animationDuration: TimeInterval? { get }
 }
 
+// MARK: - Default Implementation
+
+extension HUDAlertContent {
+    public var animationDuration: TimeInterval? {
+        nil
+    }
+}
+
 #endif
