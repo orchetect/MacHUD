@@ -11,7 +11,6 @@ import SwiftUI
 
 @main
 struct DemoApp: App {
-    @State private var isMenuPresented: Bool = false
     @State private var viewModel = ViewModel()
     
     var body: some Scene {
@@ -31,7 +30,8 @@ struct DemoApp: App {
             }
             Button("Quit") { NSApp.terminate(nil) }
         }
-        .menuBarExtraAccess(isPresented: $isMenuPresented) { statusItem in
+        .menuBarExtraAccess(isPresented: $viewModel.isMenuPresented) { statusItem in
+            print("Got status item reference: \(statusItem)")
             viewModel.statusItem = statusItem
         }
     }

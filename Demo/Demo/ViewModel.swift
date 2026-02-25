@@ -9,6 +9,7 @@ import Foundation
 
 @MainActor @Observable
 public class ViewModel {
+    public var isMenuPresented: Bool = false
     public weak var statusItem: NSStatusItem? = nil
     
     public init() { }
