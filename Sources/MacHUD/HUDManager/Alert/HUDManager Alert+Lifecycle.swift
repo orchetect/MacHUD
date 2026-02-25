@@ -85,6 +85,9 @@ extension HUDManager.Alert {
             throw HUDError.internalInconsistency("Missing HUD alert window.")
         }
         
+        let context = try self.context()
+        await style.windowPhase(phase: .willDismiss, context: context)
+        
         if let transition {
             await setPhase(.transitioningOut)
             
@@ -157,6 +160,8 @@ extension HUDManager.Alert {
         
         self.orderOutWindowAndZeroOutAlpha()
         await self.setPhase(.inactive)
+        
+        await style.windowPhase(phase: .didDismiss, context: context)        
     }
     
     @HUDManager

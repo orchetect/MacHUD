@@ -44,23 +44,12 @@ public protocol HUDStyle: Equatable, Hashable, Sendable, SendableMetatype where 
     /// window creation.
     func windowStyleMask() -> NSWindow.StyleMask
     
-    /// Initial setup when the alert window is first created.
+    /// This method is called when a HUD alert window phase change occurs.
     ///
-    /// This method is not called every time an alert is displayed. Instead, it is only called when
-    /// a new window is needed. Windows are cached and preserved for reuse with subsequent alerts.
+    /// - To configure the HUD window, respond to the `windowCreation` phase.
+    /// - To update window content, respond to the `contentUpdate` phase.
     @MainActor
-    func setupWindow(context: HUDWindowContext)
-    
-    /// This method is called when the alert window is first created after calling ``setupWindow(context:)``,
-    /// and then also every time an alert is displayed.
-    ///
-    /// Implement this method if there are specific window modifications that need to be made based on
-    /// the HUD alert content.
-    ///
-    /// For general window modifications that are only required for the HUD style, these can be performed
-    /// by implementing the ``setupWindow(window:contentView:)`` method.
-    @MainActor
-    func updateWindow(context: HUDWindowContext)
+    func windowPhase(phase: HUDWindowPhase, context: HUDWindowContext)
 }
 
 // MARK: - Default Implementation
@@ -71,12 +60,7 @@ extension HUDStyle {
     }
     
     @MainActor
-    public func setupWindow(context: HUDWindowContext) {
-        // empty default implementation
-    }
-    
-    @MainActor
-    public func updateWindow(context: HUDWindowContext) {
+    public func windowPhase(phase: HUDWindowPhase, context: HUDWindowContext) {
         // empty default implementation
     }
 }

@@ -23,4 +23,18 @@ extension HUDTransition: Hashable { }
 
 extension HUDTransition: Sendable { }
 
+// MARK: - Properties
+
+extension HUDTransition {
+    /// Returns the duration of the transition.
+    public var duration: TimeInterval {
+        switch self {
+        case let .opacity(duration: duration):
+            duration
+        case let .scaleAndOpacity(scaleFactor: _, duration: duration):
+            duration
+        }
+    }
+}
+
 #endif

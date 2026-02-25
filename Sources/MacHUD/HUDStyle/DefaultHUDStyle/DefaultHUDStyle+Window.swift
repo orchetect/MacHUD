@@ -19,20 +19,11 @@ extension DefaultHUDStyle {
     }
     
     @MainActor
-    public func setupWindow(context: HUDWindowContext) {
+    public func windowPhase(phase: HUDWindowPhase, context: HUDWindowContext) {
         if #available(macOS 26.0, *) {
-            convertedToMenuPopoverHUDStyle().setupWindow(context: context)
+            convertedToMenuPopoverHUDStyle().windowPhase(phase: phase, context: context)
         } else {
-            convertedToProminentHUDStyle().setupWindow(context: context)
-        }
-    }
-    
-    @MainActor
-    public func updateWindow(context: HUDWindowContext) {
-        if #available(macOS 26.0, *) {
-            convertedToMenuPopoverHUDStyle().updateWindow(context: context)
-        } else {
-            convertedToProminentHUDStyle().updateWindow(context: context)
+            convertedToProminentHUDStyle().windowPhase(phase: phase, context: context)
         }
     }
 }

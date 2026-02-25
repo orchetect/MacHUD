@@ -73,7 +73,7 @@ extension HUDManager.Alert {
         
         // style formatting
         let context = try Self.context(window: window)
-        await style.setupWindow(context: context)
+        await style.windowPhase(phase: .windowCreation, context: context)
         
         return window
     }
@@ -113,7 +113,7 @@ extension HUDManager.Alert {
             
             // style formatting
             let context = try context()
-            style.updateWindow(context: context)
+            style.windowPhase(phase: .contentUpdate, context: context)
             
             // constrain to available screen area if needed
             window.setFrame(
@@ -135,6 +135,9 @@ extension HUDManager.Alert {
             window.alphaValue = 0.0
             window.orderFront(self)
         }
+        
+        let context = try self.context()
+        await style.windowPhase(phase: .willAppear, context: context)
         
         if let transition {
             await setPhase(.transitioningIn)
@@ -215,6 +218,8 @@ extension HUDManager.Alert {
         }
         
         await setPhase(.staticallyDisplayed)
+        
+        await style.windowPhase(phase: .didAppear, context: context)
         
         // schedule dismiss timer
         await restartDisplayTimer(animationDuration: animationDuration)

@@ -15,43 +15,47 @@ extension ProminentHUDStyle {
     }
     
     @MainActor
-    public func setupWindow(context: HUDWindowContext) {
-        context.window.hasShadow = false
-        context.setCornerRadius(radius: 20)
-        context.applyVisualEffect()
-    }
-    
-    @MainActor
-    public func updateWindow(context: HUDWindowContext) {
-        guard let contentView = context.window.contentView else { return }
-        
-        // update visual effect
-        if let visualEffectView = context.visualEffectView {
-            if #available(macOS 26.0, *) {
-                visualEffectView.material = .hudWindow
-            } else {
-                switch context.colorScheme {
-                case .dark:
-                    let appearance = NSAppearance(named: .vibrantDark)
-                    visualEffectView.appearance = appearance
-                    visualEffectView.material = .dark // .hudWindow
-                case .light:
-                    let appearance = NSAppearance(named: .vibrantLight)
-                    visualEffectView.appearance = appearance
-                    visualEffectView.material = .light // .hudWindow
-                @unknown default:
-                    assertionFailure("Unhandled color scheme: \(context.colorScheme).")
+    public func windowPhase(phase: HUDWindowPhase, context: HUDWindowContext) {
+        switch phase {
+        case .windowCreation:
+            context.window.hasShadow = false
+            context.setCornerRadius(radius: 20)
+            context.applyVisualEffect()
+            
+        case .contentUpdate:
+            guard let contentView = context.window.contentView else { return }
+            
+            // update visual effect
+            if let visualEffectView = context.visualEffectView {
+                if #available(macOS 26.0, *) {
                     visualEffectView.material = .hudWindow
+                } else {
+                    switch context.colorScheme {
+                    case .dark:
+                        let appearance = NSAppearance(named: .vibrantDark)
+                        visualEffectView.appearance = appearance
+                        visualEffectView.material = .dark // .hudWindow
+                    case .light:
+                        let appearance = NSAppearance(named: .vibrantLight)
+                        visualEffectView.appearance = appearance
+                        visualEffectView.material = .light // .hudWindow
+                    @unknown default:
+                        assertionFailure("Unhandled color scheme: \(context.colorScheme).")
+                        visualEffectView.material = .hudWindow
+                    }
                 }
             }
+            
+            // set window size and position
+            let displayBounds = windowFrame(
+                contentViewSize: contentView.frame.size,
+                effectiveScreenSize: context.effectiveAlertScreenRect.size
+            )
+            context.window.setFrame(displayBounds, display: true)
+            
+        default:
+            break
         }
-        
-        // set window size and position
-        let displayBounds = windowFrame(
-            contentViewSize: contentView.frame.size,
-            effectiveScreenSize: context.effectiveAlertScreenRect.size
-        )
-        context.window.setFrame(displayBounds, display: true)
     }
 }
 

@@ -18,28 +18,32 @@ extension MenuPopoverHUDStyle {
     static let cornerRadius: CGFloat = 25.0
     
     @MainActor
-    public func setupWindow(context: HUDWindowContext) {
-        // context.window.hasShadow = false // this also disables window border 🙁
-        
-        context.setCornerRadius(radius: Self.cornerRadius)
-        context.applyLiquidGlassEffect(cornerRadius: Self.cornerRadius)
-    }
-    
-    @MainActor
-    public func updateWindow(context: HUDWindowContext) {
-        guard let contentView = context.window.contentView else { return }
-        
-        // set window size and position
-        
-        // note that in macOS 26, this HUD shows up in the upper-right corner of the screen below the menubar.
-        // however, when an app is in full-screen mode, the HUD shows up in the upper center of the screen.
-        
-        let displayBounds = windowFrame(
-            contentViewSize: contentView.frame.size,
-            effectiveScreenRect: context.effectiveAlertScreenRect,
-            isFullScreen: context.isFullScreenMode
-        )
-        context.window.setFrame(displayBounds, display: true)
+    public func windowPhase(phase: HUDWindowPhase, context: HUDWindowContext) {
+        switch phase {
+        case .windowCreation:
+            // context.window.hasShadow = false // this also disables window border 🙁
+            
+            context.setCornerRadius(radius: Self.cornerRadius)
+            context.applyLiquidGlassEffect(cornerRadius: Self.cornerRadius)
+            
+        case .contentUpdate:
+            guard let contentView = context.window.contentView else { return }
+            
+            // set window size and position
+            
+            // note that in macOS 26, this HUD shows up in the upper-right corner of the screen below the menubar.
+            // however, when an app is in full-screen mode, the HUD shows up in the upper center of the screen.
+            
+            let displayBounds = windowFrame(
+                contentViewSize: contentView.frame.size,
+                effectiveScreenRect: context.effectiveAlertScreenRect,
+                isFullScreen: context.isFullScreenMode
+            )
+            context.window.setFrame(displayBounds, display: true)
+            
+        default:
+            break
+        }
     }
     
     // These values are current as of macOS 26
