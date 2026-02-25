@@ -11,10 +11,10 @@ import SwiftUI
 /// Progress bar parameters for a HUD alert.
 public enum HUDProgressValue {
     /// Unit interval (floating-point value between `0.0 ... 1.0`).
-    case unitInterval(Double)
+    case unitInterval(_ value: Double)
     
     /// Percentage between `0 ... 100`.
-    case percent(Int)
+    case percent(_ value: Int)
     
     /// Value within a given custom possible mix/max range.
     case value(_ value: Double, range: ClosedRange<Double> = 0.0 ... 1.0)

@@ -10,8 +10,8 @@ import SwiftUI
 
 /// Type-erased box for a HUD alert image source.
 public enum HUDImageSource {
-    case `static`(HUDStaticImageSource)
-    case animated(HUDAnimatedImageSource)
+    case `static`(_ imageSource: HUDStaticImageSource)
+    case animated(_ imageSource: HUDAnimatedImageSource)
 }
 
 extension HUDImageSource: Equatable { }

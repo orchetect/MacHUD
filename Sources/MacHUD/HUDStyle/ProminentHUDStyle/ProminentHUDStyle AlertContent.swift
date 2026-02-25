@@ -11,10 +11,10 @@ import SwiftUI
 extension ProminentHUDStyle {
     public enum AlertContent: HUDAlertContent {
         /// Text-only HUD alert.
-        case text(String, subtitle: String? = nil)
+        case text(_ title: String, subtitle: String? = nil)
         
         /// Image-only HUD alert.
-        case image(HUDImageSource)
+        case image(_ imageSource: HUDImageSource)
         
         /// Image and text HUD alert.
         case imageAndText(image: HUDImageSource, title: String, subtitle: String? = nil)

@@ -12,10 +12,10 @@ extension DefaultHUDStyle {
     /// Alert content that can adapt to the default HUD style.
     public enum AlertContent: HUDAlertContent {
         /// Text-only alert.
-        case text(String, subtitle: String? = nil)
+        case text(_ title: String, subtitle: String? = nil)
         
         /// Image-only alert.
-        case image(HUDImageSource)
+        case image(_ imageSource: HUDImageSource)
         
         /// Image and text alert.
         case imageAndText(image: HUDImageSource, title: String, subtitle: String? = nil)
@@ -87,26 +87,26 @@ extension DefaultHUDStyle.AlertContent {
         case let .image(imageSource):
             .image(imageSource)
             
-        case let .imageAndText(image: image, title: title, subtitle: subtitle):
-            .imageAndText(image: image, title: title, subtitle: subtitle)
+        case let .imageAndText(image: imageSource, title: title, subtitle: subtitle):
+            .imageAndText(image: imageSource, title: title, subtitle: subtitle)
             
         case let .imageOrTextAndProgress(
-            prominentImage: image,
+            prominentImage: imageSource,
             title: _,
             subtitle: _,
             progressValue: progressValue,
             menuPopoverProgressImages: _
         ):
-            .imageAndProgress(image: image, progressValue: progressValue)
+            .imageAndProgress(image: imageSource, progressValue: progressValue)
             
         case let .imageAndTextAndProgress(
-            image: image,
+            image: imageSource,
             title: title,
             subtitle: subtitle,
             progressValue: progressValue,
             menuPopoverProgressImages: _
         ):
-            .imageAndTextAndProgress(image: image, title: title, subtitle: subtitle, progressValue: progressValue)
+            .imageAndTextAndProgress(image: imageSource, title: title, subtitle: subtitle, progressValue: progressValue)
         }
     }
 
@@ -120,8 +120,8 @@ extension DefaultHUDStyle.AlertContent {
         case let .image(imageSource):
             .image(imageSource)
             
-        case let .imageAndText(image: image, title: title, subtitle: subtitle):
-            .imageAndText(image: image, title: title, subtitle: subtitle)
+        case let .imageAndText(image: imageSource, title: title, subtitle: subtitle):
+            .imageAndText(image: imageSource, title: title, subtitle: subtitle)
             
         case let .imageOrTextAndProgress(
             prominentImage: _,
@@ -138,14 +138,14 @@ extension DefaultHUDStyle.AlertContent {
             )
             
         case let .imageAndTextAndProgress(
-            image: image,
+            image: imageSource,
             title: title,
             subtitle: subtitle,
             progressValue: progressValue,
             menuPopoverProgressImages: progressImages
         ):
             .imageAndTextAndProgress(
-                image: image,
+                image: imageSource,
                 title: title,
                 subtitle: subtitle,
                 progressValue: progressValue,

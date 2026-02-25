@@ -13,7 +13,7 @@ public enum HUDAnimatedImageSource {
     /// On supported platforms, apply an animated symbol effect to a symbol image.
     /// If the platform does not support symbol effects, the symbol will be shown without using the effect.
     case image(
-        HUDStaticSystemImageSource,
+        _ imageSource: HUDStaticSystemImageSource,
         effect: Effect,
         speedMultiplier: Double? = nil
     )

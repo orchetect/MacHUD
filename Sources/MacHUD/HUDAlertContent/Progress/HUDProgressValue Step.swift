@@ -10,8 +10,8 @@ import SwiftUI
 
 extension HUDProgressValue {
     public enum Step {
-        case span(Double)
-        case segmentCount(Int)
+        case span(_ span: Double)
+        case segmentCount(_ segmentCount: Int)
     }
 }
 

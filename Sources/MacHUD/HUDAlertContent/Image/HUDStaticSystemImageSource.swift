@@ -13,7 +13,7 @@ public enum HUDStaticSystemImageSource {
     /// System symbol image with optional variable value and rendering mode.
     /// Variable value will only be applied on macOS 13.0+ and rendering mode will only be applied
     /// on macOS 11.0+.
-    case systemName(String, variable: Double? = nil, renderingMode: RenderingMode? = nil)
+    case systemName(_ systemName: String, variable: Double? = nil, renderingMode: RenderingMode? = nil)
 }
 
 extension HUDStaticSystemImageSource: Equatable { }
