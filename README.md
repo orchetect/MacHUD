@@ -1,6 +1,6 @@
 # MacHUD
 
-[![Platforms | macOS 10.15+](https://img.shields.io/badge/platforms-macOS%2010.15+-blue.svg?style=flat)](https://developer.apple.com/swift) [![Xcode 16](https://img.shields.io/badge/Xcode-16-blue.svg?style=flat)](https://developer.apple.com/swift) [![License: MIT](http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat)](https://github.com/orchetect/MacHUD/blob/main/LICENSE)
+[![Platforms | macOS 10.15+](https://img.shields.io/badge/platforms-macOS%2010.15+-blue.svg?style=flat)](https://developer.apple.com/swift) [![Xcode 26](https://img.shields.io/badge/Xcode-26-blue.svg?style=flat)](https://developer.apple.com/swift) [![License: MIT](http://img.shields.io/badge/license-MIT-lightgrey.svg?style=flat)](https://github.com/orchetect/MacHUD/blob/main/LICENSE)
 
 A heads-up-display (HUD) library written in Swift that simulates macOS system HUD alerts, as well as custom alert designs.
 
