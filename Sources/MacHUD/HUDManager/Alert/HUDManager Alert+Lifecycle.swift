@@ -15,7 +15,7 @@ extension HUDManager.Alert {
     /// Returns true if the alert is inactive or if the alert is visibly presented on-screen
     /// but can be reused to display the new content.
     @HUDManager
-    func isReusable(for content: Style.AlertContent, reserveIfReusable: Bool = true) -> Bool {
+    func isReusable(for content: Style.AlertContent, reserveIfReusable: Bool) -> Bool {
         switch phase {
         case .inactive:
             // content is irrelevant, if alert is inactive, it can used for any content
@@ -33,8 +33,11 @@ extension HUDManager.Alert {
             _ = content
             
             if reserveIfReusable {
+                reservedForReuse = true
                 cancelDisplayTimer()
             }
+            
+            guard phase != .transitioningOut else { return false }
             
             return true
             
@@ -47,6 +50,9 @@ extension HUDManager.Alert {
     /// Creates the alert window and shows it on screen.
     @HUDManager
     func show(content: Style.AlertContent, style: Style) async throws {
+        // reset reservation
+        reservedForReuse = false
+        
         do {
             switch phase {
             case .inactive:
@@ -64,6 +70,7 @@ extension HUDManager.Alert {
                 
             case .staticallyDisplayed:
                 cancelDisplayTimer()
+                guard phase != .transitioningOut else { return }
                 self.style = style
                 try await updateWindow(content: content)
                 try await showWindow(transition: nil, animationDuration: content.animationDuration)
@@ -84,6 +91,8 @@ extension HUDManager.Alert {
         guard let window else {
             throw HUDError.internalInconsistency("Missing HUD alert window.")
         }
+        
+        guard await !reservedForReuse else { return }
         
         let context = try self.context()
         await style.windowPhase(phase: .willDismiss, context: context)

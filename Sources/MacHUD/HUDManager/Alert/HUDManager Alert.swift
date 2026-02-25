@@ -18,6 +18,7 @@ extension HUDManager {
         
         @HUDManager var phase: AlertPhase = .inactive
         @HUDManager var displayTimer: Task<Void, any Error>? = nil
+        @HUDManager var reservedForReuse: Bool = false
         
         // MARK: - UI
 		

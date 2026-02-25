@@ -90,6 +90,11 @@ extension HUDManager.Alert {
             throw HUDError.internalInconsistency("Missing HUD alert reusable content view.")
         }
         
+        do {
+            let phase = await phase
+            assert(phase != .transitioningOut)
+        }
+        
         await setPhase(.preparingWindow)
         
         let style = await style
@@ -129,6 +134,8 @@ extension HUDManager.Alert {
         guard let window else {
             throw HUDError.internalInconsistency("Missing HUD alert window.")
         }
+        
+        guard await !reservedForReuse else { return }
         
         // show alert
         autoreleasepool {
@@ -218,8 +225,9 @@ extension HUDManager.Alert {
         }
         
         await setPhase(.staticallyDisplayed)
-        
         await style.windowPhase(phase: .didAppear, context: context)
+        
+        guard await !reservedForReuse else { return }
         
         // schedule dismiss timer
         await restartDisplayTimer(animationDuration: animationDuration)

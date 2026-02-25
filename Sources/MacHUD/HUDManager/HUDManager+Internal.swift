@@ -50,7 +50,7 @@ extension HUDManager {
         // return first reusable alert that is compatible with the content
         if let alertPool = await alerts(style: style) {
             for alert in alertPool {
-                if await alert.isReusable(for: content) { return alert }
+                if await alert.isReusable(for: content, reserveIfReusable: true) { return alert }
             }
             
             // failsafe: cap max number of alerts
