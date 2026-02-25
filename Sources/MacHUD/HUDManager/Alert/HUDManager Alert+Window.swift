@@ -125,7 +125,7 @@ extension HUDManager.Alert {
     
     /// Shows the alert on screen, optionally animating its appearance and dismissal.
     @MainActor
-    func showWindow(transition: HUDTransition?) async throws {
+    func showWindow(transition: HUDTransition?, animationDuration: TimeInterval?) async throws {
         guard let window else {
             throw HUDError.internalInconsistency("Missing HUD alert window.")
         }
@@ -225,7 +225,7 @@ extension HUDManager.Alert {
         await setPhase(.staticallyDisplayed)
         
         // schedule dismiss timer
-        await restartDisplayTimer()
+        await restartDisplayTimer(animationDuration: animationDuration)
     }
     
     @HUDManager
@@ -235,11 +235,14 @@ extension HUDManager.Alert {
     }
     
     @HUDManager
-    func restartDisplayTimer() {
+    func restartDisplayTimer(animationDuration: TimeInterval? = nil) {
         cancelDisplayTimer()
         displayTimer = Task {
+            // if HUD uses image animations, add a small amount to the base duration
+            let baseDuration = style.duration + (animationDuration ?? 0.0)
+            
             // prevent time values being too small or large as failsafe
-            let duration = style.duration.clamped(to: 0.1 ... 60.0)
+            let duration = baseDuration.clamped(to: 0.1 ... 60.0)
             try? await Task.sleep(seconds: duration)
             try Task.checkCancellation()
             
