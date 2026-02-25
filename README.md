@@ -25,7 +25,7 @@ To add this package to an Xcode app project, use:
 1. To add this package to a Swift package, add the dependency to your package and target in Package.swift:
 
    ```swift
-   .package(url: "https://github.com/orchetect/MacHUD", from: "0.5.0")
+   .package(url: "https://github.com/orchetect/MacHUD", from: "0.5.2")
    ```
 
 2. Import the library:
