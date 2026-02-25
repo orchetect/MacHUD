@@ -167,28 +167,24 @@ extension HUDManager.Alert {
                     context.duration = 0.001
                     context.allowsImplicitAnimation = true
                     
-                    autoreleasepool {
-                        // window
-                        var newFrame = targetWindowFrame
-                        newFrame.origin.y += 10
-                        window.animator().setFrame(newFrame, display: true, animate: false)
-                        
-                        assert(!contentView.isRotatedOrScaledFromBase, "Scale state is unknown. This may cause incorrect alert size on screen.")
-                        let cframe = contentView.frame
-                        let newContentOrigin = NSPoint(
-                            x: cframe.origin.x + ((cframe.width - (cframe.width * scaleFactors.shrink.width)) / 2),
-                            y: cframe.origin.y + ((cframe.height * scaleFactors.shrink.height) / 4)
-                        )
-                        contentView.setFrameOrigin(newContentOrigin)
-                        contentView.animator().scaleUnitSquare(to: scaleFactors.shrink)
-                    }
+                    // window
+                    var newFrame = targetWindowFrame
+                    newFrame.origin.y += 10
+                    window.animator().setFrame(newFrame, display: true, animate: false)
+                    
+                    assert(!contentView.isRotatedOrScaledFromBase, "Scale state is unknown. This may cause incorrect alert size on screen.")
+                    let cframe = contentView.frame
+                    let newContentOrigin = NSPoint(
+                        x: cframe.origin.x + ((cframe.width - (cframe.width * scaleFactors.shrink.width)) / 2),
+                        y: cframe.origin.y + ((cframe.height * scaleFactors.shrink.height) / 4)
+                    )
+                    contentView.setFrameOrigin(newContentOrigin)
+                    contentView.animator().scaleUnitSquare(to: scaleFactors.shrink)
                 }
             }
             
             if !isOpacity {
-                autoreleasepool {
-                    window.alphaValue = 1.0
-                }
+                window.alphaValue = 1.0
             }
             
             // animate alert appearing
@@ -197,29 +193,25 @@ extension HUDManager.Alert {
                 context.duration = transitionDuration
                 context.allowsImplicitAnimation = true
                 
-                autoreleasepool {
-                    if isOpacity {
-                        window.animator().alphaValue = 1.0
-                    }
+                if isOpacity {
+                    window.animator().alphaValue = 1.0
+                }
+                
+                if let scaleFactors, let contentView = window.contentView {
+                    window.animator().setFrame(targetWindowFrame, display: true, animate: true)
                     
-                    if let scaleFactors, let contentView = window.contentView {
-                        window.animator().setFrame(targetWindowFrame, display: true, animate: true)
-                        
-                        let cframe = contentView.frame
-                        let newContentOrigin = NSPoint(
-                            x: cframe.origin.x - ((cframe.width - (cframe.width * scaleFactors.shrink.width)) / 2),
-                            y: cframe.origin.y - ((cframe.height * scaleFactors.shrink.height) / 4)
-                        )
-                        contentView.setFrameOrigin(newContentOrigin)
-                        contentView.animator().scaleUnitSquare(to: scaleFactors.reset)
-                    }
+                    let cframe = contentView.frame
+                    let newContentOrigin = NSPoint(
+                        x: cframe.origin.x - ((cframe.width - (cframe.width * scaleFactors.shrink.width)) / 2),
+                        y: cframe.origin.y - ((cframe.height * scaleFactors.shrink.height) / 4)
+                    )
+                    contentView.setFrameOrigin(newContentOrigin)
+                    contentView.animator().scaleUnitSquare(to: scaleFactors.reset)
                 }
             }
         } else {
             // don't animate alert appearing
-            autoreleasepool {
-                window.alphaValue = 1.0
-            }
+            window.alphaValue = 1.0
         }
         
         await setPhase(.staticallyDisplayed)

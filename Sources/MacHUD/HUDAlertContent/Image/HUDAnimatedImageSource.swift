@@ -133,14 +133,16 @@ extension HUDAnimatedImageSource {
         @State private var isTransitioned: Bool = false
         
         var body: some View {
-            image
-                .onAppear {
-                    Task {
-                        if let sanitizedDelay { try await Task.sleep(seconds: sanitizedDelay) }
-                        try Task.checkCancellation()
-                        isTransitioned = true
-                    }
+            ZStack {
+                image
+            }
+            .onAppear {
+                Task {
+                    if let sanitizedDelay { try await Task.sleep(seconds: sanitizedDelay) }
+                    try Task.checkCancellation()
+                    isTransitioned = true
                 }
+            }
         }
         
         @ViewBuilder
@@ -170,14 +172,16 @@ extension HUDAnimatedImageSource {
         @State private var isTransitioned: Bool = false
         
         var body: some View {
-            conditionalImage
-                .onAppear {
-                    Task {
-                        if let sanitizedDelay { try await Task.sleep(seconds: sanitizedDelay) }
-                        try Task.checkCancellation()
-                        isTransitioned = true
-                    }
+            ZStack {
+                conditionalImage
+            }
+            .onAppear {
+                Task {
+                    if let sanitizedDelay { try await Task.sleep(seconds: sanitizedDelay) }
+                    try Task.checkCancellation()
+                    isTransitioned = true
                 }
+            }
         }
         
         @ViewBuilder

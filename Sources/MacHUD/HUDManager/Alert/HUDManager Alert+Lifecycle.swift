@@ -108,43 +108,49 @@ extension HUDManager.Alert {
             // animate alert dismissing
             // NOTE: Animations will not work unless called on main thread/actor
             await NSAnimationContext.runAnimationGroup { context in
+                #if Logging
+                logger.debug("Dismissing HUD alert using animation (duration: \(transitionDuration) seconds).")
+                #endif
+                
                 context.duration = transitionDuration
                 context.allowsImplicitAnimation = true
                 
-                autoreleasepool {
-                    if isOpacity {
-                        window.animator().alphaValue = 0
-                    }
-                    if let scaleFactors, let contentView = window.contentView {
-                        let wframe = window.frame
-                        var newFrame = wframe
-                        newFrame.origin.y += 10
-                        window.animator().setFrame(newFrame, display: true, animate: true)
-                        
-                        assert(!contentView.isRotatedOrScaledFromBase, "Scale state is unknown. This may cause incorrect alert size on screen.")
-                        let cframe = contentView.frame
-                        let newContentOrigin = NSPoint(
-                            x: cframe.origin.x + ((cframe.width - (cframe.width * scaleFactors.shrink.width)) / 2),
-                            y: cframe.origin.y + ((cframe.height * scaleFactors.shrink.height) / 4)
-                        )
-                        contentView.setFrameOrigin(newContentOrigin)
-                        contentView.animator().scaleUnitSquare(to: scaleFactors.shrink)
-                    }
-                    // CIMotionBlur does not animate here - have to discover a way to animate CIFilter properties.
-                    // contentView.animator().contentFilters.first?.setValue(1.5, forKey: kCIInputRadiusKey)
+                if isOpacity {
+                    assert(window.alphaValue > 0.0)
+                    window.animator().alphaValue = 0.0
                 }
+                if let scaleFactors,
+                   let contentView = window.contentView
+                {
+                    let wframe = window.frame
+                    var newFrame = wframe
+                    newFrame.origin.y += 10
+                    window.animator().setFrame(newFrame, display: true, animate: true)
+                    
+                    assert(!contentView.isRotatedOrScaledFromBase, "Scale state is unknown. This may cause incorrect alert size on screen.")
+                    let cframe = contentView.frame
+                    let newContentOrigin = NSPoint(
+                        x: cframe.origin.x + ((cframe.width - (cframe.width * scaleFactors.shrink.width)) / 2),
+                        y: cframe.origin.y + ((cframe.height * scaleFactors.shrink.height) / 4)
+                    )
+                    contentView.setFrameOrigin(newContentOrigin)
+                    contentView.animator().scaleUnitSquare(to: scaleFactors.shrink)
+                }
+                // CIMotionBlur does not animate here - have to discover a way to animate CIFilter properties.
+                // contentView.animator().contentFilters.first?.setValue(1.5, forKey: kCIInputRadiusKey)
             }
             
             // reset scaling
-            if let scaleFactors, let contentView = window.contentView, contentView.isRotatedOrScaledFromBase {
+            if let scaleFactors,
+               let contentView = window.contentView,
+               contentView.isRotatedOrScaledFromBase
+            {
                 await NSAnimationContext.runAnimationGroup { context in
                     context.duration = 0.001
                     context.allowsImplicitAnimation = true
                     
-                    autoreleasepool {
-                        contentView.setFrameOrigin(.zero)
-                        contentView.animator().scaleUnitSquare(to: scaleFactors.reset)
-                    }
+                    contentView.setFrameOrigin(.zero)
+                    contentView.animator().scaleUnitSquare(to: scaleFactors.reset)
                 }
             }
         }
