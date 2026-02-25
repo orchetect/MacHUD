@@ -21,30 +21,43 @@ struct MyHUDStyle: HUDStyle {
     }
     
     @MainActor
-    func setupWindow(context: HUDWindowContext) {
-        // Set up window properties that remain consistent for all future HUD alerts of this style.
-        
-        context.setCornerRadius(radius: 10.0)
-        context.window.contentView?.layer?.borderColor = .white
-        context.window.contentView?.layer?.borderWidth = 3.0
-        context.window.hasShadow = true
-    }
-    
-    @MainActor
-    func updateWindow(context: HUDWindowContext) {
-        // Set up window properties that are specific to the alert content, and as such will need to be applied
-        // every time a HUD alert is displayed.
-        
-        // position window on screen
-        let size = context.window.frame.size
-        let rect = NSRect(
-            origin: CGPoint(
-                x: (context.effectiveAlertScreenRect.width - size.width) / 2,
-                y: (context.effectiveAlertScreenRect.height - size.height) / 2
-            ),
-            size: size
-        )
-        context.window.setFrame(rect, display: true)
+    public func windowPhase(phase: HUDWindowPhase, context: HUDWindowContext) {
+        switch phase {
+        case .windowCreation:
+            // Set up window properties that remain consistent for all future HUD alerts of this style.
+            
+            context.setCornerRadius(radius: 10.0)
+            context.window.contentView?.layer?.borderColor = .white
+            context.window.contentView?.layer?.borderWidth = 3.0
+            context.window.hasShadow = true
+            
+        case .contentUpdate:
+            // Set up window properties that are specific to the alert content, and as such will need to be applied
+            // every time a HUD alert is displayed.
+            
+            // position window on screen
+            let size = context.window.frame.size
+            let rect = NSRect(
+                origin: CGPoint(
+                    x: (context.effectiveAlertScreenRect.width - size.width) / 2,
+                    y: (context.effectiveAlertScreenRect.height - size.height) / 2
+                ),
+                size: size
+            )
+            context.window.setFrame(rect, display: true)
+            
+        case .willAppear:
+            break
+            
+        case .didAppear:
+            break
+            
+        case .willDismiss:
+            break
+            
+        case .didDismiss:
+            break
+        }
     }
 }
 
