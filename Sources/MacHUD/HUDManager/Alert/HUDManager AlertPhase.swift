@@ -28,4 +28,16 @@ extension HUDManager.AlertPhase: CaseIterable { }
 
 extension HUDManager.AlertPhase: Sendable { }
 
+extension HUDManager.AlertPhase: CustomDebugStringConvertible {
+    var debugDescription: String {
+        switch self {
+        case .inactive: "Inactive"
+        case .preparingWindow: "Preparing window"
+        case .transitioningIn: "Transitioning in"
+        case .staticallyDisplayed: "Statically displayed"
+        case .transitioningOut: "Transitioning out"
+        }
+    }
+}
+
 #endif

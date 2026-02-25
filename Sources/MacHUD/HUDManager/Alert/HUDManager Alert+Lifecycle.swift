@@ -161,11 +161,19 @@ extension HUDManager.Alert {
     
     @HUDManager
     func setPhase(_ phase: HUDManager.AlertPhase) {
+        #if Logging
+        logger.debug("HUD alert presentation phase changed to \(phase.debugDescription).")
+        #endif
+        
         self.phase = phase
     }
     
     @MainActor
     func orderOutWindowAndZeroOutAlpha() {
+        #if Logging
+        logger.debug("Ordering out HUD alert window and zeroing out its alpha value.")
+        #endif
+        
         autoreleasepool {
             window?.orderOut(self)
             window?.alphaValue = 0

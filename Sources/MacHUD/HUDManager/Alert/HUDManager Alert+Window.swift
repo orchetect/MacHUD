@@ -242,7 +242,9 @@ extension HUDManager.Alert {
             do {
                 try await dismiss(transition: style.transitionOut)
             } catch {
+                #if Logging
                 logger.debug("Error dismissing HUD alert: \(error.localizedDescription)")
+                #endif
             }
         }
     }
