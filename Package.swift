@@ -13,7 +13,7 @@ let package = Package(
     ],
     traits: [
         .trait(name: "Logging", description: "Enables debug logging."),
-        .default(enabledTraits: ["Logging"])
+        .default(enabledTraits: [])
     ],
     dependencies: [
         .package(url: "https://github.com/orchetect/swift-extensions", from: "2.0.0")
