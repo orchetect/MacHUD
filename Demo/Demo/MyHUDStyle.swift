@@ -55,6 +55,10 @@ extension MyHUDStyle {
         init(title: String) {
             self.title = title
         }
+        
+        public var animationDuration: TimeInterval? {
+            nil
+        }
     }
 }
 
