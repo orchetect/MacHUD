@@ -64,6 +64,29 @@ extension HUDAnimatedImageSource {
             targetImageSource
         }
     }
+    
+    /// Returns the approximate duration of the animation.
+    public var animationDuration: TimeInterval {
+        var (duration, speedMultiplier) = switch self {
+        case let .image(
+            _,
+            effect: effect,
+            speedMultiplier: speedMultiplier
+        ):
+            (effect.animationDuration, speedMultiplier)
+            
+        case let .imageReplacement(
+            initial: _,
+            target: _,
+            magicReplace: _,
+            speedMultiplier: speedMultiplier
+        ):
+            (0.5, speedMultiplier)
+        }
+        
+        if let speedMultiplier { duration *= speedMultiplier }
+        return duration
+    }
 }
 
 // MARK: - View Builder

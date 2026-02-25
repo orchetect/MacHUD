@@ -57,6 +57,22 @@ extension HUDAnimatedImageSource.Effect: Hashable { }
 
 extension HUDAnimatedImageSource.Effect: Sendable { }
 
+// MARK: - Properties
+
+extension HUDAnimatedImageSource.Effect {
+    /// Returns the approximate duration of the animation.
+    public var animationDuration: TimeInterval {
+        switch self {
+        case .bounce: 0.5
+        case .breathe: 1.0
+        case .pulse: 0.5
+        case .rotate: 0.75
+        case .variableColor: 0.75
+        case .wiggle: 0.5
+        }
+    }
+}
+
 // MARK: - Helpers
 
 extension View {

@@ -85,4 +85,28 @@ extension MenuPopoverHUDStyle.AlertContent {
     }
 }
 
+// MARK: - Properties
+
+@available(macOS 26.0, *)
+extension MenuPopoverHUDStyle.AlertContent {
+    public var animationDuration: TimeInterval? {
+        switch self {
+        case .text(_, subtitle: _):
+            nil
+            
+        case let .image(imageSource):
+            imageSource.animationDuration
+            
+        case let .imageAndText(image: imageSource, title: _, subtitle: _):
+            imageSource.animationDuration
+            
+        case .textAndProgress(title: _, subtitle: _, progressValue: _, progressImages: _):
+            nil
+            
+        case let .imageAndTextAndProgress(image: imageSource, title: _, subtitle: _, progressValue: _, progressImages: _):
+            imageSource.animationDuration
+        }
+    }
+}
+
 #endif

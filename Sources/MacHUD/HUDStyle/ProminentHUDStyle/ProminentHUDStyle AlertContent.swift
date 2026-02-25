@@ -55,4 +55,27 @@ extension ProminentHUDStyle.AlertContent {
     }
 }
 
+// MARK: - Properties
+
+extension ProminentHUDStyle.AlertContent {
+    public var animationDuration: TimeInterval? {
+        switch self {
+        case .text(_, subtitle: _):
+            nil
+            
+        case let .image(imageSource):
+            imageSource.animationDuration
+            
+        case let .imageAndText(image: imageSource, title: _, subtitle: _):
+            imageSource.animationDuration
+            
+        case let .imageAndProgress(image: imageSource, progressValue: _):
+            imageSource.animationDuration
+            
+        case let .imageAndTextAndProgress(image: imageSource, title: _, subtitle: _, progressValue: _):
+            imageSource.animationDuration
+        }
+    }
+}
+
 #endif

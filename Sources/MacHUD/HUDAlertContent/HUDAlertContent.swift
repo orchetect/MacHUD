@@ -6,6 +6,12 @@
 
 #if os(macOS)
 
-public protocol HUDAlertContent: Equatable, Sendable { }
+import Foundation
+
+public protocol HUDAlertContent: Equatable, Sendable {
+    /// If image animation is used in the HUD alert content, provide the duration of the animation.
+    /// This duration can be approximate.
+    var animationDuration: TimeInterval? { get }
+}
 
 #endif

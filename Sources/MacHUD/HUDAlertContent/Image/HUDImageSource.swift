@@ -43,6 +43,16 @@ extension HUDImageSource {
             imageSource.view(animationDelay: animationDelay)
         }
     }
+    
+    /// If the image is animated, returns the approximate duration of the animation.
+    public var animationDuration: TimeInterval? {
+        switch self {
+        case .static(_):
+            nil
+        case let .animated(imageSource):
+            imageSource.animationDuration
+        }
+    }
 }
 
 #endif

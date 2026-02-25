@@ -40,6 +40,41 @@ extension DefaultHUDStyle {
     }
 }
 
+// MARK: - Properties
+
+extension DefaultHUDStyle.AlertContent {
+    public var animationDuration: TimeInterval? {
+        switch self {
+        case .text(_, subtitle: _):
+            nil
+            
+        case let .image(imageSource):
+            imageSource.animationDuration
+            
+        case let .imageAndText(image: imageSource, title: _, subtitle: _):
+            imageSource.animationDuration
+            
+        case let .imageOrTextAndProgress(
+            prominentImage: imageSource,
+            title: _,
+            subtitle: _,
+            progressValue: _,
+            menuPopoverProgressImages: _
+        ):
+            imageSource.animationDuration
+            
+        case let .imageAndTextAndProgress(
+            image: imageSource,
+            title: _,
+            subtitle: _,
+            progressValue: _,
+            menuPopoverProgressImages: _
+        ):
+            imageSource.animationDuration
+        }
+    }
+}
+
 // MARK: - Helpers
 
 extension DefaultHUDStyle.AlertContent {
