@@ -58,11 +58,6 @@ extension HUDStyle {
     public func windowStyleMask() -> NSWindow.StyleMask {
         [.borderless]
     }
-    
-    @MainActor
-    public func windowPhase(phase: HUDWindowPhase, context: HUDWindowContext) {
-        // empty default implementation
-    }
 }
 
 #endif
