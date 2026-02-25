@@ -41,6 +41,21 @@ extension MenuPopoverHUDStyle {
             )
             context.window.setFrame(displayBounds, display: true)
             
+        case .willAppear:
+            guard let statusItem = statusItem?(),
+                  let button = statusItem.button
+            else { return }
+            
+            button.animator().isHighlighted = true
+            
+        case .willDismiss:
+            guard let statusItem = statusItem?(),
+                  let button = statusItem.button
+            else { return }
+            
+            // TODO: don't set to false if status item was already highlighted prior to HUD alert being shown?
+            button.animator().isHighlighted = false
+            
         default:
             break
         }
