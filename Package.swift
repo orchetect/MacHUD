@@ -16,7 +16,7 @@ let package = Package(
         .default(enabledTraits: [])
     ],
     dependencies: [
-        .package(url: "https://github.com/orchetect/swift-extensions", from: "2.0.0")
+        .package(url: "https://github.com/orchetect/swift-extensions", from: "2.1.5")
     ],
     targets: [
         .target(
