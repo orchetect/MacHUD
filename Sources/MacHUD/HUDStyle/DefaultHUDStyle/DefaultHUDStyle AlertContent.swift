@@ -1,7 +1,7 @@
 //
 //  DefaultHUDStyle AlertContent.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -13,13 +13,13 @@ extension DefaultHUDStyle {
     public enum AlertContent: HUDAlertContent {
         /// Text-only alert.
         case text(_ title: String, subtitle: String? = nil)
-        
+
         /// Image-only alert.
         case image(_ imageSource: HUDImageSource)
-        
+
         /// Image and text alert.
         case imageAndText(image: HUDImageSource, title: String, subtitle: String? = nil)
-        
+
         /// Image or text alert depending on platform, along with a progress bar.
         case imageOrTextAndProgress(
             prominentImage: HUDImageSource,
@@ -28,7 +28,7 @@ extension DefaultHUDStyle {
             progressValue: HUDSteppedProgressValue,
             menuPopoverProgressImages: HUDProgressImageSource? = nil
         )
-        
+
         /// Image, text, and progress bar alert.
         case imageAndTextAndProgress(
             image: HUDImageSource,
@@ -47,13 +47,13 @@ extension DefaultHUDStyle.AlertContent {
         switch self {
         case .text(_, subtitle: _):
             nil
-            
+
         case let .image(imageSource):
             imageSource.animationDuration
-            
+
         case let .imageAndText(image: imageSource, title: _, subtitle: _):
             imageSource.animationDuration
-            
+
         case let .imageOrTextAndProgress(
             prominentImage: imageSource,
             title: _,
@@ -62,7 +62,7 @@ extension DefaultHUDStyle.AlertContent {
             menuPopoverProgressImages: _
         ):
             imageSource.animationDuration
-            
+
         case let .imageAndTextAndProgress(
             image: imageSource,
             title: _,
@@ -83,13 +83,13 @@ extension DefaultHUDStyle.AlertContent {
         switch self {
         case let .text(text, subtitle: subtitle):
             .text(text, subtitle: subtitle)
-            
+
         case let .image(imageSource):
             .image(imageSource)
-            
+
         case let .imageAndText(image: imageSource, title: title, subtitle: subtitle):
             .imageAndText(image: imageSource, title: title, subtitle: subtitle)
-            
+
         case let .imageOrTextAndProgress(
             prominentImage: imageSource,
             title: _,
@@ -98,7 +98,7 @@ extension DefaultHUDStyle.AlertContent {
             menuPopoverProgressImages: _
         ):
             .imageAndProgress(image: imageSource, progressValue: progressValue)
-            
+
         case let .imageAndTextAndProgress(
             image: imageSource,
             title: title,
@@ -116,13 +116,13 @@ extension DefaultHUDStyle.AlertContent {
         switch self {
         case let .text(title, subtitle: subtitle):
             .text(title, subtitle: subtitle)
-            
+
         case let .image(imageSource):
             .image(imageSource)
-            
+
         case let .imageAndText(image: imageSource, title: title, subtitle: subtitle):
             .imageAndText(image: imageSource, title: title, subtitle: subtitle)
-            
+
         case let .imageOrTextAndProgress(
             prominentImage: _,
             title: title,
@@ -136,7 +136,7 @@ extension DefaultHUDStyle.AlertContent {
                 progressValue: progressValue,
                 progressImages: progressImages
             )
-            
+
         case let .imageAndTextAndProgress(
             image: imageSource,
             title: title,

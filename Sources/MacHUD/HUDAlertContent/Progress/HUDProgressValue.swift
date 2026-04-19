@@ -1,7 +1,7 @@
 //
 //  HUDProgressValue.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -12,10 +12,10 @@ import SwiftUI
 public enum HUDProgressValue {
     /// Unit interval (floating-point value between `0.0 ... 1.0`).
     case unitInterval(_ value: Double)
-    
+
     /// Percentage between `0 ... 100`.
     case percent(_ value: Int)
-    
+
     /// Value within a given custom possible mix/max range.
     case value(_ value: Double, range: ClosedRange<Double> = 0.0 ... 1.0)
 }
@@ -34,19 +34,19 @@ extension HUDProgressValue {
     public static func unitInterval(_ value: some BinaryFloatingPoint) -> Self {
         .unitInterval(Double(value))
     }
-    
+
     /// Percentage between `0 ... 100`.
     @_disfavoredOverload
     public static func percent(_ value: some BinaryInteger) -> Self {
         .percent(Int(value))
     }
-    
+
     /// Percentage between `0 ... 100`.
     @_disfavoredOverload
     public static func percent(_ value: some BinaryFloatingPoint) -> Self {
         .percent(Int(value))
     }
-    
+
     /// Value within a given custom possible mix/max range.
     @_disfavoredOverload
     public static func value<B: BinaryInteger>(
@@ -56,7 +56,7 @@ extension HUDProgressValue {
     ) -> Self {
         .value(Double(value), range: Double(range.lowerBound) ... Double(range.upperBound))
     }
-    
+
     /// Value within a given custom possible mix/max range.
     @_disfavoredOverload
     public static func value<F: BinaryFloatingPoint>(
@@ -96,18 +96,18 @@ extension HUDProgressValue {
             return (safeAmount - range.lowerBound) / (range.upperBound - range.lowerBound)
         }
     }
-    
+
     /// Returns the value as a percentage value between `0 ... 100`.
     public var percentageValue: Int {
         Int(unitInterval * 100)
     }
-    
+
     /// Returns the value as a localized percentage string (ie: "56%").
     @available(macOS 12.0, iOS 15.0, tvOS 15.0, watchOS 8.0, *)
     public var localizedPercentageString: String {
         percentageValue.formatted(.percent)
     }
-    
+
     /// Returns the minimum and maximum value range.
     public var range: ClosedRange<Double> {
         switch self {

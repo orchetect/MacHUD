@@ -1,7 +1,7 @@
 //
 //  HUDImageSource.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -32,7 +32,7 @@ extension HUDImageSource {
             imageSource.targetImageSource
         }
     }
-    
+
     /// Returns the composed view.
     @MainActor @ViewBuilder
     public func view(animationDelay: TimeInterval? = nil) -> (some View)? {
@@ -43,7 +43,7 @@ extension HUDImageSource {
             imageSource.view(animationDelay: animationDelay)
         }
     }
-    
+
     /// If the image is animated, returns the approximate duration of the animation.
     public var animationDuration: TimeInterval? {
         switch self {

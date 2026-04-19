@@ -1,7 +1,7 @@
 //
 //  HUDStaticSystemImageSource RenderingMode.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -13,13 +13,13 @@ extension HUDStaticSystemImageSource {
     public enum RenderingMode {
         /// A mode that renders symbols as multiple layers, with different opacities applied to the foreground style.
         case hierarchical
-        
+
         /// A mode that renders symbols as a single layer filled with the foreground style.
         case monochrome
-        
+
         /// A mode that renders symbols as multiple layers with their inherit styles.
         case multicolor
-        
+
         /// A mode that renders symbols as multiple layers, with different styles applied to the layers.
         case palette
     }

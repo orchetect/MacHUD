@@ -1,7 +1,7 @@
 //
 //  HUDStaticSystemImageSource.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -39,7 +39,7 @@ extension HUDStaticSystemImageSource {
             } else {
                 return nil
             }
-            
+
             return if #available(macOS 12.0, *), let renderingMode {
                 baseImage
                     .symbolRenderingMode(renderingMode.symbolRenderingMode)
@@ -48,7 +48,7 @@ extension HUDStaticSystemImageSource {
             }
         }
     }
-    
+
     /// Returns the image source as a resizable, scaled-to-fit SwiftUI `Image` instance.
     public var scalableImage: (some View)? { // TODO: refactor as non-Optional
         image?
@@ -75,18 +75,18 @@ extension HUDStaticSystemImageSource {
             return .systemName("speaker.slash.fill", renderingMode: renderingMode)
         }
         let level = rawLevel.clamped(to: 0.0 ... 1.0)
-        
+
         if useVariable {
             return .systemName("speaker.wave.3.fill", variable: level, renderingMode: renderingMode)
         }
-        
+
         let systemName = switch level {
         case ...0.0: "speaker.fill"
         case 0.0 ... 0.33: "speaker.wave.1.fill"
         case 0.33 ... 0.66: "speaker.wave.2.fill"
         default /* case 0.66 ... 1.0 */: "speaker.wave.3.fill"
         }
-        
+
         return .systemName(systemName, renderingMode: renderingMode)
     }
 }

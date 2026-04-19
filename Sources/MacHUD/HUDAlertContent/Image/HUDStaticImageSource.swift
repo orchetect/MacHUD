@@ -1,7 +1,7 @@
 //
 //  HUDStaticImageSource.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -27,29 +27,29 @@ extension HUDStaticImageSource {
         switch self {
         case let .symbol(imageSource):
             imageSource.image
-            
+
         case let .image(image, desaturated: _):
             image
-            
+
         case let .nsImage(nsImage, desaturated: _):
             Image(nsImage: nsImage)
         }
     }
-    
+
     /// Returns the image source as a resizable, scaled-to-fit SwiftUI `Image` instance.
     @ViewBuilder
     public var scalableImage: (some View)? { // TODO: refactor as non-Optional
         let base = image?
             .resizable()
             .scaledToFit()
-        
+
         if isDesaturated {
             base?.saturation(0.0) // .grayscale(1.0)
         } else {
             base
         }
     }
-    
+
     public var isDesaturated: Bool {
         switch self {
         case .symbol(_): false
@@ -72,8 +72,7 @@ extension HUDStaticImageSource {
     ) -> Self {
         .symbol(.systemName(systemName, variable: variable, renderingMode: renderingMode))
     }
-    
-    
+
     /// Returns an appropriate system symbol image for the given audio volume level.
     ///
     /// - Parameters:

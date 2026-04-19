@@ -1,7 +1,7 @@
 //
 //  NSScreen Extensions.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -21,7 +21,7 @@ extension NSScreen {
             return screen
         }
     }
-    
+
     var effectiveAlertScreenRect: NSRect {
         // determine maximum size for alert
         visibleFrame

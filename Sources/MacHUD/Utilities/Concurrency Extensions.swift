@@ -1,7 +1,7 @@
 //
 //  Concurrency Extensions.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -16,10 +16,10 @@ extension Task where Success == Never, Failure == Never {
     /// (Backwards-compatible implementation of `Task.sleep(for: .seconds())`)
     public static func sleep(seconds: TimeInterval) async throws {
         // safety check: protect again overflow
-        
+
         let secondsClamped = min(seconds, maxSeconds)
         let nanoseconds = UInt64(secondsClamped * Double(NSEC_PER_SEC))
-        
+
         try await sleep(nanoseconds: nanoseconds)
     }
 }

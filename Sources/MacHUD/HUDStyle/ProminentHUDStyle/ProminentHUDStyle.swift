@@ -1,7 +1,7 @@
 //
 //  ProminentHUDStyle.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -13,13 +13,13 @@ public struct ProminentHUDStyle: HUDStyle {
     public var transitionIn: HUDTransition?
     public var duration: TimeInterval
     public var transitionOut: HUDTransition?
-    
+
     /// Position on screen for the HUD to appear.
     public var position: Position
-    
+
     /// A delay to apply before triggering image animations.
     public var imageAnimationDelay: TimeInterval? = 0.5
-    
+
     public init() {
         self = if #available(macOS 11.0, *) {
             .macOS11Thru15
@@ -29,7 +29,7 @@ public struct ProminentHUDStyle: HUDStyle {
             .macOS10_15
         }
     }
-    
+
     public init(
         position: Position,
         transitionIn: HUDTransition?,

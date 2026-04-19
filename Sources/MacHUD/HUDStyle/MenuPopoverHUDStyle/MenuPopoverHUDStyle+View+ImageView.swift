@@ -1,7 +1,7 @@
 //
 //  MenuPopoverHUDStyle+View+ImageView.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -14,7 +14,7 @@ extension MenuPopoverHUDStyle.ContentView {
     struct ImageView: View {
         let imageSource: HUDImageSource
         let animationDelay: TimeInterval?
-        
+
         var body: some View {
             VStack(spacing: 10) {
                 HStack {
@@ -23,7 +23,7 @@ extension MenuPopoverHUDStyle.ContentView {
                 }
             }
         }
-        
+
         @ViewBuilder
         private var image: (some View)? {
             if let view = imageSource.view(animationDelay: animationDelay) {

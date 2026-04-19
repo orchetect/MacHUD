@@ -1,7 +1,7 @@
 //
 //  HUDManager+Public.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -17,7 +17,7 @@ extension HUDManager {
     ) async {
         await displayAlert(style: .platformDefault(), content: content)
     }
-    
+
     /// Display a HUD alert on the screen asynchronously using the specified style.
     public func displayAlert<S: HUDStyle>(
         style: S,
@@ -35,7 +35,7 @@ extension HUDManager {
     ) async {
         await displayAlertAndWaitUntilDismissed(style: .platformDefault(), content: content)
     }
-    
+
     /// Display a HUD alert on the screen synchronously using the specified style.
     /// This method waits until the alert is fully dismissed before returning.
     public func displayAlertAndWaitUntilDismissed<S: HUDStyle>(
@@ -62,15 +62,16 @@ extension HUDManager {
         if #available(macOS 26.0, *) {
             await prewarmAlerts(style: MenuPopoverHUDStyle.self, count: count)
         }
-        
+
         // custom styles
         for hudStyle in repeat each customHUDStyles {
             await prewarmAlerts(style: hudStyle, count: count)
         }
     }
-    
+
     /// Synchronously waits for at least one HUD alert to be displayed on screen.
-    @concurrent nonisolated
+    @concurrent
+    nonisolated
     public func waitForAlertsToDisplay(timeout: TimeInterval? = nil) async throws {
         let timeIn = Date()
         while !Task.isCancelled {
@@ -85,9 +86,10 @@ extension HUDManager {
             }
         }
     }
-    
+
     /// Synchronously waits for all HUD alerts to dismiss from the screen.
-    @concurrent nonisolated
+    @concurrent
+    nonisolated
     public func waitForAlertsToDismiss(timeout: TimeInterval? = nil) async throws {
         let timeIn = Date()
         while !Task.isCancelled {
@@ -101,7 +103,7 @@ extension HUDManager {
             }
         }
     }
-    
+
     /// Returns the number of active HUD alerts on-screen.
     public var activeCount: Int {
         get async {

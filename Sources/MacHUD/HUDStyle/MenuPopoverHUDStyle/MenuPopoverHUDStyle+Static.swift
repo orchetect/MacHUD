@@ -1,7 +1,7 @@
 //
 //  MenuPopoverHUDStyle+Static.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -28,7 +28,7 @@ extension MenuPopoverHUDStyle {
     public static func macOS26() -> Self {
         .macOS26(statusItem: nil)
     }
-    
+
     /// Prominent HUD style matching macOS 10.15 system HUD appearance and behavior.
     public static func macOS26(statusItem: @autoclosure @escaping @MainActor () -> NSStatusItem?) -> Self {
         MenuPopoverHUDStyle(

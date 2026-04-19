@@ -1,7 +1,7 @@
 //
 //  ProminentHUDStyle+View+AmountView.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -12,17 +12,17 @@ import SwiftUI
 extension ProminentHUDStyle.ContentView {
     struct AmountView: View {
         @Environment(\.controlSize) private var controlSize
-        
+
         let progressValue: HUDSteppedProgressValue
         let segmentCount: Int?
-        
+
         typealias Geometry = ProminentHUDStyle.Geometry
-        
+
         /// - Parameters:
         ///   - value: Progress value.
         init(value: HUDSteppedProgressValue) {
-            self.progressValue = value
-            
+            progressValue = value
+
             if let proposedSegmentCount = value.step?.segmentCount(for: value.range),
                proposedSegmentCount > 0
             {
@@ -31,19 +31,19 @@ extension ProminentHUDStyle.ContentView {
                 segmentCount = nil
             }
         }
-        
+
         var body: some View {
             ZStack(alignment: .leading) {
                 Rectangle()
                     .fill(Geometry.backColor)
-                
+
                 conditionalBody
                     .offset(x: 1)
             }
             .frame(width: Geometry.width, height: Geometry.segmentHeight + 2)
             .fixedSize()
         }
-        
+
         @ViewBuilder
         private var conditionalBody: some View {
             if let segmentCount {
@@ -59,9 +59,9 @@ extension ProminentHUDStyle.ContentView.AmountView {
     struct SegmentedBarView: View {
         let progressValue: HUDProgressValue
         let segmentCount: Int
-        
+
         typealias Geometry = ProminentHUDStyle.Geometry
-        
+
         var body: some View {
             HStack(spacing: 1.0) {
                 ForEach(0 ..< segmentCount, id: \.self) { index in
@@ -71,21 +71,21 @@ extension ProminentHUDStyle.ContentView.AmountView {
                 }
             }
         }
-        
+
         private func isSegmentFilled(index: Int) -> Bool {
             Double(index) < (progressValue.unitInterval * Double(segmentCount))
         }
     }
-    
+
     struct ContinuousBarView: View {
         let progressValue: HUDProgressValue
-        
+
         typealias Geometry = ProminentHUDStyle.Geometry
-        
+
         var body: some View {
             ZStack(alignment: .leading) {
                 Color.clear
-                
+
                 Rectangle()
                     .fill(Geometry.foreColor)
                     .frame(width: (Geometry.width - 2) * progressValue.unitInterval)
@@ -132,7 +132,7 @@ extension ProminentHUDStyle.ContentView.AmountView {
         ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.2, step: .segmentCount(100)))
         ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.5, step: .segmentCount(100)))
         ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(1.0, step: .segmentCount(100)))
-        
+
         Divider()
         ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.0, step: nil))
         ProminentHUDStyle.ContentView.AmountView(value: .unitInterval(0.2, step: nil))

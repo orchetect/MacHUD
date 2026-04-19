@@ -1,7 +1,7 @@
 //
 //  HUDStyle+Internal.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -18,7 +18,7 @@ extension HUDStyle {
     nonisolated static var id: HUDStyleID {
         HUDStyleID(hudStyle: Self.self)
     }
-    
+
     /// Creates a new instance of the HUD view.
     @MainActor
     func createView(content: AlertContent) -> some View {

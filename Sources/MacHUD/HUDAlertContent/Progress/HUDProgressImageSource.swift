@@ -1,7 +1,7 @@
 //
 //  HUDProgressImageSource.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -27,7 +27,7 @@ extension HUDProgressImageSource {
             max: .symbol(systemName: "speaker.wave.3.fill")
         )
     }
-    
+
     /// Screen brightness level images.
     public static var screenBrightness: Self {
         .minMax(

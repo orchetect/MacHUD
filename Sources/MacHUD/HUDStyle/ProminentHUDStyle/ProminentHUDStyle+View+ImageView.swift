@@ -1,7 +1,7 @@
 //
 //  ProminentHUDStyle+View+ImageView.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -13,11 +13,11 @@ extension ProminentHUDStyle.ContentView {
     struct ImageView: View {
         @Environment(\.colorScheme) private var colorScheme
         private typealias Geometry = ProminentHUDStyle.Geometry
-        
+
         let imageSource: HUDImageSource
         let format: ImageFormat
         let animationDelay: TimeInterval?
-        
+
         var body: some View {
             switch format {
             case .imageOnly:
@@ -26,36 +26,38 @@ extension ProminentHUDStyle.ContentView {
                         minWidth: Geometry.minSize(isImagePresent: true, isTextPresent: false),
                         minHeight: Geometry.minSize(isImagePresent: true, isTextPresent: false)
                     )
-                
+
             case .imageAndText:
                 framedImageView()
                     .frame(minWidth: Geometry.minSize(isImagePresent: true, isTextPresent: true))
                     .padding([.top], 15) // based on Xcode 26.3's built-in HUD alerts
-                
+
             case .imageAndProgress:
                 framedImageView(scale: 0.8)
                     .frame(minWidth: Geometry.minSize(isImagePresent: true, isTextPresent: false))
                     .padding([.top, .bottom], 14 * 2)
-                
+
             case .imageAndTextAndProgress:
                 framedImageView()
                     .frame(minWidth: Geometry.minSize(isImagePresent: true, isTextPresent: true))
             }
         }
-        
+
         private func framedImageView(scale: CGFloat = 1.0) -> some View {
             conditionalImageView
                 .frame(width: Geometry.standardImageSize * scale, height: Geometry.standardImageSize * scale)
                 .aspectRatio(1.0, contentMode: .fit)
         }
-        
+
         private var conditionalImageView: (some View)? {
+            // swiftformat:disable redundantReturn
             if #available(macOS 13.0, *) {
                 return imageView(animationDelay: animationDelay)?
                     .fontWeight(.light) // apply slight slender styling to system symbols
             } else {
                 return imageView(animationDelay: animationDelay)
             }
+            // swiftformat:enable redundantReturn
         }
     }
 }
@@ -67,7 +69,7 @@ extension ProminentHUDStyle.ContentView.ImageView {
         case imageAndProgress
         case imageAndTextAndProgress
     }
-    
+
     @ViewBuilder
     private func imageView(animationDelay: TimeInterval? = nil) -> (some View)? {
         switch imageSource {
@@ -77,17 +79,17 @@ extension ProminentHUDStyle.ContentView.ImageView {
             format(scalableImageView: animatedSource.view(animationDelay: animationDelay))
         }
     }
-    
+
     /// Applies formatting to image. Assumes image is resizable and scaled-to-fit.
     private func format(scalableImageView view: (some View)?) -> (some View)? {
         view?
             .foregroundColor(imageColor)
             .opacity(0.9)
     }
-    
+
     private var imageColor: Color {
         // .primary.opacity(0.8)
-        
+
         switch colorScheme {
         case .light:
             if #available(macOS 26.0, *) {

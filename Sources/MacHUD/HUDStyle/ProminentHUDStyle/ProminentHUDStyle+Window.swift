@@ -1,7 +1,7 @@
 //
 //  ProminentHUDStyle+Window.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -13,7 +13,7 @@ extension ProminentHUDStyle {
     public func windowStyleMask() -> NSWindow.StyleMask {
         [.borderless]
     }
-    
+
     @MainActor
     public func windowPhase(phase: HUDWindowPhase, context: HUDWindowContext) {
         switch phase {
@@ -21,10 +21,10 @@ extension ProminentHUDStyle {
             context.window.hasShadow = false
             context.setCornerRadius(radius: 20)
             context.applyVisualEffect()
-            
+
         case .contentUpdate:
             guard let contentView = context.window.contentView else { return }
-            
+
             // update visual effect
             if let visualEffectView = context.visualEffectView {
                 if #available(macOS 26.0, *) {
@@ -45,14 +45,14 @@ extension ProminentHUDStyle {
                     }
                 }
             }
-            
+
             // set window size and position
             let displayBounds = windowFrame(
                 contentViewSize: contentView.frame.size,
                 effectiveScreenSize: context.effectiveAlertScreenRect.size
             )
             context.window.setFrame(displayBounds, display: true)
-            
+
         default:
             break
         }
@@ -66,25 +66,26 @@ extension ProminentHUDStyle {
         case .light:
             return NSColor(red: 0.15, green: 0.16, blue: 0.17, alpha: 1.00)
                 .cgColor
-            
+
         case .dark:
             return NSColor.white
                 .cgColor
+
         @unknown default:
             assertionFailure("Unhandled color scheme: \(colorScheme).")
             return borderColor(colorScheme: .light)
         }
     }
-    
+
     static let topOrBottomScreenEdgeOffset: CGFloat = 140.0
-    
+
     func windowFrame(contentViewSize: CGSize, effectiveScreenSize: CGSize) -> NSRect {
         let y: CGFloat = switch position {
         case .bottom: Self.topOrBottomScreenEdgeOffset
         case .center: (effectiveScreenSize.height - contentViewSize.height) * 0.5
-        case .top: (effectiveScreenSize.height - contentViewSize.height - Self.topOrBottomScreenEdgeOffset)
+        case .top: effectiveScreenSize.height - contentViewSize.height - Self.topOrBottomScreenEdgeOffset
         }
-        
+
         return NSMakeRect(
             (effectiveScreenSize.width - contentViewSize.width) * 0.5,
             y,

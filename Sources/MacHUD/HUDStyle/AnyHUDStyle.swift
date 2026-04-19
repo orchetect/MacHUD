@@ -1,16 +1,16 @@
 //
 //  AnyHUDStyle.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
 
 /// Type-erased box containing a concrete HUD style instance.
 struct AnyHUDStyle {
-    public var base: any HUDStyle
-    
-    public init(_ base: any HUDStyle) {
+    var base: any HUDStyle
+
+    init(_ base: any HUDStyle) {
         self.base = base
     }
 }

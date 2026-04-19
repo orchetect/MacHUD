@@ -1,13 +1,13 @@
 //
 //  HUDManager Alert+Lifecycle.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
 
-import AppKit
 internal import SwiftExtensions
+import AppKit
 
 // MARK: - Methods
 
@@ -20,7 +20,7 @@ extension HUDManager.Alert {
         case .inactive:
             // content is irrelevant, if alert is inactive, it can used for any content
             return true
-            
+
         case .preparingWindow,
              .transitioningIn,
              .staticallyDisplayed:
@@ -31,28 +31,28 @@ extension HUDManager.Alert {
             // ostensibly, it would require an additional `HUDAlertContent` protocol requirement
             // to implement a method such as `isLayoutCompatible(with other: Self)`.
             _ = content
-            
+
             if reserveIfReusable {
                 reservedForReuse = true
                 cancelDisplayTimer()
             }
-            
+
             guard phase != .transitioningOut else { return false }
-            
+
             return true
-            
+
         case .transitioningOut:
             // there is no viable way to stop a window that is in the process of transitioning out
             return false
         }
     }
-    
+
     /// Creates the alert window and shows it on screen.
     @HUDManager
     func show(content: Style.AlertContent, style: Style) async throws {
         // reset reservation
         reservedForReuse = false
-        
+
         do {
             switch phase {
             case .inactive:
@@ -60,21 +60,21 @@ extension HUDManager.Alert {
                 phase = .preparingWindow
                 try await updateWindow(content: content)
                 try await showWindow(transition: style.transitionIn, animationDuration: content.animationDuration)
-                
+
             case .preparingWindow, .transitioningIn:
                 cancelDisplayTimer()
                 await wait(for: .staticallyDisplayed)
                 self.style = style
                 try await updateWindow(content: content)
                 try await showWindow(transition: nil, animationDuration: content.animationDuration)
-                
+
             case .staticallyDisplayed:
                 cancelDisplayTimer()
                 guard phase != .transitioningOut else { return }
                 self.style = style
                 try await updateWindow(content: content)
                 try await showWindow(transition: nil, animationDuration: content.animationDuration)
-                
+
             case .transitioningOut:
                 assertionFailure("Alert reuse attempted while alert is transitioning out. This shouldn't happen.")
                 return
@@ -84,22 +84,22 @@ extension HUDManager.Alert {
             throw error
         }
     }
-    
+
     /// Triggers alert dismissal, animating out, and disposing of its resources.
     @MainActor
     func dismiss(transition: HUDTransition?) async throws {
         guard let window else {
             throw HUDError.internalInconsistency("Missing HUD alert window.")
         }
-        
+
         guard await !reservedForReuse else { return }
-        
-        let context = try self.context()
+
+        let context = try context()
         await style.windowPhase(phase: .willDismiss, context: context)
-        
+
         if let transition {
             await setPhase(.transitioningOut)
-            
+
             let isOpacity: Bool
             let scaleFactors: (shrink: NSSize, reset: NSSize)?
             let transitionDuration: TimeInterval
@@ -116,17 +116,17 @@ extension HUDManager.Alert {
                 )
                 transitionDuration = customDuration.clamped(to: 0.01 ... 5.0)
             }
-            
+
             // animate alert dismissing
             // NOTE: Animations will not work unless called on main thread/actor
             await NSAnimationContext.runAnimationGroup { context in
                 #if Logging
                 logger.debug("Dismissing HUD alert using animation (duration: \(transitionDuration) seconds).")
                 #endif
-                
+
                 context.duration = transitionDuration
                 context.allowsImplicitAnimation = true
-                
+
                 if isOpacity {
                     assert(window.alphaValue > 0.0)
                     window.animator().alphaValue = 0.0
@@ -138,7 +138,7 @@ extension HUDManager.Alert {
                     var newFrame = wframe
                     newFrame.origin.y += 10
                     window.animator().setFrame(newFrame, display: true, animate: true)
-                    
+
                     assert(!contentView.isRotatedOrScaledFromBase, "Scale state is unknown. This may cause incorrect alert size on screen.")
                     let cframe = contentView.frame
                     let newContentOrigin = NSPoint(
@@ -151,7 +151,7 @@ extension HUDManager.Alert {
                 // CIMotionBlur does not animate here - have to discover a way to animate CIFilter properties.
                 // contentView.animator().contentFilters.first?.setValue(1.5, forKey: kCIInputRadiusKey)
             }
-            
+
             // reset scaling
             if let scaleFactors,
                let contentView = window.contentView,
@@ -160,34 +160,34 @@ extension HUDManager.Alert {
                 await NSAnimationContext.runAnimationGroup { context in
                     context.duration = 0.001
                     context.allowsImplicitAnimation = true
-                    
+
                     contentView.setFrameOrigin(.zero)
                     contentView.animator().scaleUnitSquare(to: scaleFactors.reset)
                 }
             }
         }
-        
-        self.orderOutWindowAndZeroOutAlpha()
-        await self.setPhase(.inactive)
-        
-        await style.windowPhase(phase: .didDismiss, context: context)        
+
+        orderOutWindowAndZeroOutAlpha()
+        await setPhase(.inactive)
+
+        await style.windowPhase(phase: .didDismiss, context: context)
     }
-    
+
     @HUDManager
     func setPhase(_ phase: HUDManager.AlertPhase) {
         #if Logging
         logger.debug("HUD alert presentation phase changed to \(phase.debugDescription).")
         #endif
-        
+
         self.phase = phase
     }
-    
+
     @MainActor
     func orderOutWindowAndZeroOutAlpha() {
         #if Logging
         logger.debug("Ordering out HUD alert window and zeroing out its alpha value.")
         #endif
-        
+
         autoreleasepool {
             window?.orderOut(self)
             window?.alphaValue = 0

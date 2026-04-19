@@ -1,7 +1,7 @@
 //
 //  DefaultHUDStyle.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -14,20 +14,20 @@ public struct DefaultHUDStyle: HUDStyle {
     public var transitionIn: HUDTransition?
     public var duration: TimeInterval
     public var transitionOut: HUDTransition?
-    
+
     /// A delay to apply before triggering image animations.
-    public var imageAnimationDelay: TimeInterval? = nil
-    
+    public var imageAnimationDelay: TimeInterval?
+
     /// Status item access in order to position HUD alerts beneath the status item.
     public var statusItem: (@MainActor () -> NSStatusItem?)?
-    
+
     public init() {
         transitionIn = Self.defaultTransitionIn
         duration = Self.defaultDuration
         transitionOut = Self.defaultTransitionOut
         statusItem = nil
     }
-    
+
     public init(
         transitionIn: HUDTransition?,
         duration: TimeInterval,
@@ -74,7 +74,7 @@ extension DefaultHUDStyle {
             ProminentHUDStyle().transitionIn
         }
     }
-    
+
     static var defaultDuration: TimeInterval {
         if #available(macOS 26.0, *) {
             MenuPopoverHUDStyle().duration
@@ -82,7 +82,7 @@ extension DefaultHUDStyle {
             ProminentHUDStyle().duration
         }
     }
-    
+
     static var defaultTransitionOut: HUDTransition? {
         if #available(macOS 26.0, *) {
             MenuPopoverHUDStyle().transitionOut

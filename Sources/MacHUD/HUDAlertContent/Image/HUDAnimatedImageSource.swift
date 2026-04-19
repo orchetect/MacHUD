@@ -1,7 +1,7 @@
 //
 //  HUDAnimatedImageSource.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -43,7 +43,7 @@ extension HUDAnimatedImageSource {
     public var targetImageSource: HUDStaticImageSource {
         .symbol(targetSystemImageSource)
     }
-    
+
     /// Converts the animated image source to a ``HUDStaticSystemImageSource`` instance using
     /// the target image source (lossy).
     public var targetSystemImageSource: HUDStaticSystemImageSource {
@@ -54,7 +54,7 @@ extension HUDAnimatedImageSource {
             speedMultiplier: _
         ):
             imageSource
-            
+
         case let .imageReplacement(
             initial: _,
             target: targetImageSource,
@@ -64,7 +64,7 @@ extension HUDAnimatedImageSource {
             targetImageSource
         }
     }
-    
+
     /// Returns the approximate duration of the animation.
     public var animationDuration: TimeInterval {
         var (duration, speedMultiplier) = switch self {
@@ -74,7 +74,7 @@ extension HUDAnimatedImageSource {
             speedMultiplier: speedMultiplier
         ):
             (effect.animationDuration, speedMultiplier)
-            
+
         case let .imageReplacement(
             initial: _,
             target: _,
@@ -83,7 +83,7 @@ extension HUDAnimatedImageSource {
         ):
             (0.5, speedMultiplier)
         }
-        
+
         if let speedMultiplier { duration *= speedMultiplier }
         return duration
     }
@@ -107,7 +107,7 @@ extension HUDAnimatedImageSource {
                 speedMultiplier: speedMultiplier,
                 delay: animationDelay
             )
-            
+
         case let .imageReplacement(
             initial: initialImageSource,
             target: targetImageSource,
@@ -123,15 +123,15 @@ extension HUDAnimatedImageSource {
             )
         }
     }
-    
+
     struct ImageAnimationView: View {
         let imageSource: HUDStaticSystemImageSource
         let effect: HUDAnimatedImageSource.Effect
         let speedMultiplier: Double?
         let delay: TimeInterval?
-        
+
         @State private var isTransitioned: Bool = false
-        
+
         var body: some View {
             ZStack {
                 image
@@ -144,7 +144,7 @@ extension HUDAnimatedImageSource {
                 }
             }
         }
-        
+
         @ViewBuilder
         private var image: (some View)? {
             if isTransitioned || sanitizedDelay == nil {
@@ -154,23 +154,23 @@ extension HUDAnimatedImageSource {
                 imageSource.scalableImage
             }
         }
-        
+
         private var sanitizedDelay: TimeInterval? {
             guard let delay else { return nil }
             guard !delay.isZero else { return nil }
             return delay.clamped(to: 0.0 ... 10.0)
         }
     }
-    
+
     struct ImageReplacementView: View {
         let initialImageSource: HUDStaticSystemImageSource
         let targetImageSource: HUDStaticSystemImageSource
         let magicReplace: Bool
         let speedMultiplier: Double?
         let delay: TimeInterval?
-        
+
         @State private var isTransitioned: Bool = false
-        
+
         var body: some View {
             ZStack {
                 conditionalImage
@@ -183,7 +183,7 @@ extension HUDAnimatedImageSource {
                 }
             }
         }
-        
+
         @ViewBuilder
         private var conditionalImage: (some View)? {
             if magicReplace, #available(macOS 15.0, *) {
@@ -196,7 +196,7 @@ extension HUDAnimatedImageSource {
                 image
             }
         }
-        
+
         private var image: (some View)? {
             if isTransitioned {
                 targetImageSource.scalableImage
@@ -204,12 +204,12 @@ extension HUDAnimatedImageSource {
                 initialImageSource.scalableImage
             }
         }
-        
+
         @available(macOS 14.0, *)
         private var options: SymbolEffectOptions {
             .nonRepeating.speed(speedMultiplier ?? 1.0)
         }
-        
+
         private var sanitizedDelay: TimeInterval? {
             guard let delay else { return nil }
             guard !delay.isZero else { return nil }
@@ -229,7 +229,7 @@ extension HUDAnimatedImageSource {
         )
         .view()?
         .frame(width: 96, height: 96)
-        
+
         HUDAnimatedImageSource.image(
             .systemName("speaker.wave.3.fill", variable: 0.5, renderingMode: .hierarchical),
             effect: .breathe,
@@ -237,7 +237,7 @@ extension HUDAnimatedImageSource {
         )
         .view()?
         .frame(width: 96, height: 96)
-        
+
         HUDAnimatedImageSource.image(
             .systemName("speaker.wave.3.fill", variable: 0.5, renderingMode: .hierarchical),
             effect: .pulse,
@@ -245,7 +245,7 @@ extension HUDAnimatedImageSource {
         )
         .view()?
         .frame(width: 96, height: 96)
-        
+
         HUDAnimatedImageSource.image(
             .systemName("speaker.wave.3.fill", variable: 0.5, renderingMode: .hierarchical),
             effect: .rotate,
@@ -253,7 +253,7 @@ extension HUDAnimatedImageSource {
         )
         .view()?
         .frame(width: 96, height: 96)
-        
+
         HUDAnimatedImageSource.image(
             .systemName("speaker.wave.3.fill", variable: 0.5, renderingMode: .hierarchical),
             effect: .variableColor,
@@ -261,7 +261,7 @@ extension HUDAnimatedImageSource {
         )
         .view()?
         .frame(width: 96, height: 96)
-        
+
         HUDAnimatedImageSource.image(
             .systemName("speaker.wave.3.fill", variable: 0.5, renderingMode: .hierarchical),
             effect: .wiggle,
@@ -298,7 +298,7 @@ extension HUDAnimatedImageSource {
         )
         .view()?
         .frame(width: 96, height: 96)
-        
+
         HUDAnimatedImageSource.imageReplacement(
             initial: .systemName("speaker.wave.2.fill", renderingMode: .hierarchical),
             target: .systemName("speaker.wave.3.fill", renderingMode: .hierarchical),

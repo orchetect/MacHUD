@@ -1,12 +1,12 @@
 //
 //  MacHUD Extensions.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
+internal import SwiftExtensions
 import Foundation
 import MacHUD
-internal import SwiftExtensions
 
 // MARK: - ProminentHUDStyle Position
 
@@ -65,7 +65,7 @@ extension HUDTransition: @retroactive CaseIterable {
             .scaleAndOpacity(duration: 0.05),
             .scaleAndOpacity(scaleFactor: .percent90, duration: 0.4),
             .scaleAndOpacity(duration: 0.8),
-            .scaleAndOpacity(duration: 2.0),
+            .scaleAndOpacity(duration: 2.0)
         ]
     }
 }

@@ -1,7 +1,7 @@
 //
 //  ContentView.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 import AppKit
@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var panel: Panel = if #available(macOS 26.0, *) { .menuPopover } else { .prominent }
-    
+
     var body: some View {
         NavigationSplitView {
             List(Panel.allCases, selection: $panel) {
@@ -40,7 +40,7 @@ extension ContentView {
         case prominent
         case menuPopover
         case custom
-        
+
         var name: String {
             switch self {
             case .prominent: "Prominent"
@@ -48,7 +48,7 @@ extension ContentView {
             case .custom: "Custom"
             }
         }
-        
+
         var verboseName: String {
             switch self {
             case .prominent: "Prominent HUD Alerts"
@@ -56,7 +56,7 @@ extension ContentView {
             case .custom: "Custom HUD Alerts"
             }
         }
-        
+
         var systemImage: String {
             switch self {
             case .prominent: "bell.square"
@@ -64,7 +64,9 @@ extension ContentView {
             case .custom: "rectangle.and.pencil.and.ellipsis"
             }
         }
-        
-        var id: RawValue { rawValue }
+
+        var id: RawValue {
+            rawValue
+        }
     }
 }

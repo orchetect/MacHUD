@@ -1,7 +1,7 @@
 //
 //  HUDProgressValue Step.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -28,14 +28,14 @@ extension HUDProgressValue.Step {
         switch self {
         case let .span(span):
             guard span > 0.0 else { return nil }
-            
+
             // ensure a bounds are not equal
             guard range.upperBound > range.lowerBound else { return nil }
-            
+
             let segments = (range.upperBound - range.lowerBound) / span
-            
+
             return Int(segments)
-            
+
         case let .segmentCount(count):
             return count
         }

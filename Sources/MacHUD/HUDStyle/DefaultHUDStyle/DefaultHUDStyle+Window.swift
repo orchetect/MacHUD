@@ -1,7 +1,7 @@
 //
 //  DefaultHUDStyle+Window.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -17,7 +17,7 @@ extension DefaultHUDStyle {
             convertedToProminentHUDStyle().windowStyleMask()
         }
     }
-    
+
     @MainActor
     public func windowPhase(phase: HUDWindowPhase, context: HUDWindowContext) {
         if #available(macOS 26.0, *) {

@@ -1,7 +1,7 @@
 //
-//  ProminentHUDAlertContent.swift
+//  ProminentHUDStyle AlertContent.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -12,16 +12,16 @@ extension ProminentHUDStyle {
     public enum AlertContent: HUDAlertContent {
         /// Text-only HUD alert.
         case text(_ title: String, subtitle: String? = nil)
-        
+
         /// Image-only HUD alert.
         case image(_ imageSource: HUDImageSource)
-        
+
         /// Image and text HUD alert.
         case imageAndText(image: HUDImageSource, title: String, subtitle: String? = nil)
-        
+
         /// Image and progress bar HUD alert.
         case imageAndProgress(image: HUDImageSource, progressValue: HUDSteppedProgressValue)
-        
+
         /// Image, text, and progress bar alert.
         case imageAndTextAndProgress(image: HUDImageSource, title: String, subtitle: String? = nil, progressValue: HUDSteppedProgressValue)
     }
@@ -42,7 +42,7 @@ extension ProminentHUDStyle.AlertContent {
             progressValue: level.stepped(.segmentCount(ProminentHUDStyle.Geometry.standardSegmentCount))
         )
     }
-    
+
     /// Alert that simulates the macOS system screen brightness level change HUD alert.
     ///
     /// - Parameters:
@@ -62,16 +62,16 @@ extension ProminentHUDStyle.AlertContent {
         switch self {
         case .text(_, subtitle: _):
             nil
-            
+
         case let .image(imageSource):
             imageSource.animationDuration
-            
+
         case let .imageAndText(image: imageSource, title: _, subtitle: _):
             imageSource.animationDuration
-            
+
         case let .imageAndProgress(image: imageSource, progressValue: _):
             imageSource.animationDuration
-            
+
         case let .imageAndTextAndProgress(image: imageSource, title: _, subtitle: _, progressValue: _):
             imageSource.animationDuration
         }

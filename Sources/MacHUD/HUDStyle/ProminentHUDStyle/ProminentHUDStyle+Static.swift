@@ -1,7 +1,7 @@
 //
 //  ProminentHUDStyle+Static.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -27,7 +27,7 @@ extension ProminentHUDStyle {
             transitionOut: .opacity(duration: 0.8)
         )
     }
-    
+
     /// Prominent HUD style matching macOS 11 through 15 system HUD appearance and behavior.
     public static var macOS11Thru15: Self {
         ProminentHUDStyle(

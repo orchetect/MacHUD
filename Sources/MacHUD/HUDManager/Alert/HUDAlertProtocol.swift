@@ -1,18 +1,21 @@
 //
-//  AlertProtocol.swift
+//  HUDAlertProtocol.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
 
-import Foundation
 import AppKit
+import Foundation
 
 /// Internal HUD alert protocol enabling type erasure of typed ``Alert`` objects.
 protocol HUDAlertProtocol: AnyObject, Sendable {
-    @HUDManager var phase: HUDManager.AlertPhase { get set }
-    @MainActor var window: NSWindow? { get set }
+    @HUDManager
+    var phase: HUDManager.AlertPhase { get set }
+    
+    @MainActor
+    var window: NSWindow? { get set }
 }
 
 #endif

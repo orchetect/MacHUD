@@ -1,7 +1,7 @@
 //
 //  ProminentHUDStyle+Composition.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -17,7 +17,7 @@ extension ProminentHUDStyle {
         copy.imageAnimationDelay = value
         return copy
     }
-    
+
     /// Returns the style updating the ``position`` property value.
     public func position(_ value: Position) -> Self {
         var copy = self

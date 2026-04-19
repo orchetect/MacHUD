@@ -1,7 +1,7 @@
 //
 //  HUDWindowContext+Methods.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -16,7 +16,7 @@ extension HUDWindowContext {
         window.isOpaque = false
         window.backgroundColor = .clear
         window.contentView?.wantsLayer = true // needed to enable corner radius mask
-        
+
         assert(window.contentView?.layer != nil)
         window.contentView?.layer?.cornerRadius = radius
         window.contentView?.layer?.masksToBounds = true
@@ -29,19 +29,19 @@ extension HUDWindowContext {
     public func applyVisualEffect(material: NSVisualEffectView.Material = .hudWindow) {
         guard visualEffectView == nil else { return } // don't apply more than once
         guard let contentView = window.contentView else { return }
-        
+
         window.isOpaque = false
         window.backgroundColor = .clear
-        
+
         let newEffectView = NSVisualEffectView()
         contentView.addSubview(newEffectView, positioned: .below, relativeTo: contentView)
         newEffectView.addFrameConstraints(toParent: contentView)
-        
+
         newEffectView.state = .active
         newEffectView.blendingMode = .behindWindow
         newEffectView.material = material
     }
-    
+
     /// If ``applyVisualEffect(material:)`` was called to apply an effect to the window, this
     /// property will return a reference to the visual effect view.
     public var visualEffectView: NSVisualEffectView? {
@@ -58,7 +58,7 @@ extension HUDWindowContext {
     @available(macOS 26.0, *)
     struct GlassView: View {
         let cornerRadius: CGFloat
-        
+
         var body: some View {
             RoundedRectangle(cornerSize: CGSize(width: cornerRadius, height: cornerRadius), style: .continuous)
                 .fill(.clear)
@@ -66,20 +66,20 @@ extension HUDWindowContext {
                 .background(.white.opacity(0.05))
         }
     }
-    
+
     /// Applies liquid glass visual effect to the window.
     @available(macOS 26.0, *)
     public func applyLiquidGlassEffect(cornerRadius: CGFloat) {
         guard let contentView = window.contentView else { return }
-        
+
         window.isOpaque = false
         window.backgroundColor = .clear
-        
+
         let newEffectView = NSHostingView(rootView: GlassView(cornerRadius: cornerRadius))
         contentView.addSubview(newEffectView, positioned: .below, relativeTo: contentView)
         newEffectView.addFrameConstraints(toParent: contentView)
     }
-    
+
     /// If ``applyLiquidGlassEffect(cornerRadius:)`` was called to apply an effect to the window, this
     /// property will return a reference to the visual effect view.
     @available(macOS 26.0, *)

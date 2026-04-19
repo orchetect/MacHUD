@@ -1,23 +1,25 @@
 //
 //  HUDManager Alert+Window.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
 
+internal import SwiftExtensions
 import AppKit
 import SwiftUI
-internal import SwiftExtensions
 
 extension HUDManager.Alert {
-    static var defaultScaleFactor: HUDTransition.ScaleFactor { .percent90 }
-    
+    static var defaultScaleFactor: HUDTransition.ScaleFactor {
+        .percent90
+    }
+
     static func scaleFactorToShrinkWindow(scaleFactor: HUDTransition.ScaleFactor) -> NSSize {
         let scaleFactor = scaleFactor.rawValue
         return NSSize(width: scaleFactor, height: scaleFactor)
     }
-    
+
     static func scaleFactorToResetWindow(scaleFactor: HUDTransition.ScaleFactor) -> NSSize {
         let shrinkFactor = scaleFactorToShrinkWindow(scaleFactor: scaleFactor)
         return NSSize(
@@ -25,28 +27,28 @@ extension HUDManager.Alert {
             height: 1.0 / shrinkFactor.height
         )
     }
-    
+
     /// Creates a new reusable alert window and configures it.
     @MainActor
     func windowFactory() async throws -> NSWindow {
         // Note: style mask `.hudWindow` only applies to NSPanel, not NSWindow
-        let window = NSWindow(
+        let window = await NSWindow(
             contentRect: NSMakeRect(0, 0, 200, 200),
-            styleMask: await style.windowStyleMask(),
+            styleMask: style.windowStyleMask(),
             backing: .buffered,
             defer: true
         )
-        
+
         guard let contentView = window.contentView else {
             throw HUDError.internalInconsistency("Window has no content view.")
         }
-        
+
         let reusableView = NSHostingView(rootView: BaseContentView())
         contentView.autoresizesSubviews = false
         contentView.addSubview(reusableView)
-        
+
         // set up UI
-        
+
         window.titleVisibility = .hidden
         window.titlebarAppearsTransparent = true
         window.level = .screenSaver
@@ -59,25 +61,29 @@ extension HUDManager.Alert {
         // window.becomesKeyOnlyIfNeeded = true // only applicable to NSPanel
         // window.isFloatingPanel = true // only applicable to NSPanel
         // window.worksWhenModal = false // only applicable to NSPanel
-        
+
         window.collectionBehavior = [
-            .ignoresCycle, .stationary, .canJoinAllSpaces, .fullScreenAuxiliary, .transient
+            .ignoresCycle,
+            .stationary,
+            .canJoinAllSpaces,
+            .fullScreenAuxiliary,
+            .transient
         ]
         if #available(macOS 13, *) {
             window.collectionBehavior.insert(.auxiliary)
         }
-        
+
         // newContentView.sizingOptions = [.intrinsicContentSize] // macOS 13+ only
         // reusableView.frame = contentView.bounds
         reusableView.addFrameConstraints(toParent: contentView)
-        
+
         // style formatting
         let context = try Self.context(window: window)
         await style.windowPhase(phase: .windowCreation, context: context)
-        
+
         return window
     }
-    
+
     /// Updates the reusable window with new parameters.
     @MainActor
     func updateWindow(
@@ -89,37 +95,37 @@ extension HUDManager.Alert {
         guard let reusableView = getHostingView() else {
             throw HUDError.internalInconsistency("Missing HUD alert reusable content view.")
         }
-        
+
         do {
             let phase = await phase
             assert(phase != .transitioningOut)
         }
-        
+
         await setPhase(.preparingWindow)
-        
+
         let style = await style
         try autoreleasepool {
             // get screen for alert
             let alertScreen = try NSScreen.alertScreen
             let screenRect = alertScreen.effectiveAlertScreenRect
-            
+
             // assert scale factor has been reset to default
             assert(window.contentView?.isRotatedOrScaledFromBase == false)
-            
+
             // set max alert size
             window.contentMaxSize = screenRect.size
             window.maxSize = screenRect.size
-            
+
             // set content to display
             reusableView.rootView = .init(content: content, style: style)
             // prevents window from remaining too large if previously shown at a larger content size
             window.setContentSize(.zero)
             window.setContentSize(reusableView.frame.size)
-            
+
             // style formatting
             let context = try context()
             style.windowPhase(phase: .contentUpdate, context: context)
-            
+
             // constrain to available screen area if needed
             window.setFrame(
                 window.constrainFrameRect(window.frame, to: alertScreen),
@@ -127,28 +133,28 @@ extension HUDManager.Alert {
             )
         }
     }
-    
+
     /// Shows the alert on screen, optionally animating its appearance and dismissal.
     @MainActor
     func showWindow(transition: HUDTransition?, animationDuration: TimeInterval?) async throws {
         guard let window else {
             throw HUDError.internalInconsistency("Missing HUD alert window.")
         }
-        
+
         guard await !reservedForReuse else { return }
-        
+
         // show alert
         autoreleasepool {
             window.alphaValue = 0.0
             window.orderFront(self)
         }
-        
-        let context = try self.context()
+
+        let context = try context()
         await style.windowPhase(phase: .willAppear, context: context)
-        
+
         if let transition {
             await setPhase(.transitioningIn)
-            
+
             let isOpacity: Bool
             let scaleFactors: (shrink: NSSize, reset: NSSize)?
             let transitionDuration: TimeInterval
@@ -165,23 +171,23 @@ extension HUDManager.Alert {
                 )
                 transitionDuration = customDuration.clamped(to: 0.01 ... 5.0)
             }
-            
+
             let targetWindowFrame = window.frame
-            
+
             // set initial state
-            
+
             if let scaleFactors, let contentView = window.contentView {
                 // contentview
                 // For some reason, we need to set the original scale factor within an animation group or it will not scale on screen
                 await NSAnimationContext.runAnimationGroup { context in
                     context.duration = 0.001
                     context.allowsImplicitAnimation = true
-                    
+
                     // window
                     var newFrame = targetWindowFrame
                     newFrame.origin.y += 10
                     window.animator().setFrame(newFrame, display: true, animate: false)
-                    
+
                     assert(!contentView.isRotatedOrScaledFromBase, "Scale state is unknown. This may cause incorrect alert size on screen.")
                     let cframe = contentView.frame
                     let newContentOrigin = NSPoint(
@@ -192,24 +198,24 @@ extension HUDManager.Alert {
                     contentView.animator().scaleUnitSquare(to: scaleFactors.shrink)
                 }
             }
-            
+
             if !isOpacity {
                 window.alphaValue = 1.0
             }
-            
+
             // animate alert appearing
             // NOTE: Animations will not work unless called on main thread/actor
             await NSAnimationContext.runAnimationGroup { context in
                 context.duration = transitionDuration
                 context.allowsImplicitAnimation = true
-                
+
                 if isOpacity {
                     window.animator().alphaValue = 1.0
                 }
-                
+
                 if let scaleFactors, let contentView = window.contentView {
                     window.animator().setFrame(targetWindowFrame, display: true, animate: true)
-                    
+
                     let cframe = contentView.frame
                     let newContentOrigin = NSPoint(
                         x: cframe.origin.x - ((cframe.width - (cframe.width * scaleFactors.shrink.width)) / 2),
@@ -223,34 +229,34 @@ extension HUDManager.Alert {
             // don't animate alert appearing
             window.alphaValue = 1.0
         }
-        
+
         await setPhase(.staticallyDisplayed)
         await style.windowPhase(phase: .didAppear, context: context)
-        
+
         guard await !reservedForReuse else { return }
-        
+
         // schedule dismiss timer
         await restartDisplayTimer(animationDuration: animationDuration)
     }
-    
+
     @HUDManager
     func cancelDisplayTimer() {
         displayTimer?.cancel()
         displayTimer = nil
     }
-    
+
     @HUDManager
     func restartDisplayTimer(animationDuration: TimeInterval? = nil) {
         cancelDisplayTimer()
         displayTimer = Task {
             // if HUD uses image animations, add a small amount to the base duration
             let baseDuration = style.duration + (animationDuration ?? 0.0)
-            
+
             // prevent time values being too small or large as failsafe
             let duration = baseDuration.clamped(to: 0.1 ... 60.0)
             try? await Task.sleep(seconds: duration)
             try Task.checkCancellation()
-            
+
             // dismiss
             do {
                 try await dismiss(transition: style.transitionOut)
@@ -261,8 +267,9 @@ extension HUDManager.Alert {
             }
         }
     }
-    
-    @concurrent nonisolated
+
+    @concurrent
+    nonisolated
     func wait(for phase: HUDManager.AlertPhase, timeout: TimeInterval = 5.0) async {
         let timeIn = Date()
         let timeout = timeout.clamped(to: 0.0 ... 60.0)

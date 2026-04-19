@@ -1,7 +1,7 @@
 //
 //  HUDTransition.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -12,7 +12,7 @@ import Foundation
 public enum HUDTransition {
     /// Opacity fade.
     case opacity(duration: TimeInterval)
-    
+
     /// Scale and opacity fade.
     case scaleAndOpacity(scaleFactor: ScaleFactor? = nil, duration: TimeInterval)
 }

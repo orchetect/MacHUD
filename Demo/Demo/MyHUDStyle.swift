@@ -1,7 +1,7 @@
 //
 //  MyHUDStyle.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 import Foundation
@@ -13,28 +13,28 @@ struct MyHUDStyle: HUDStyle {
     var transitionIn: HUDTransition? = .opacity(duration: 1.0)
     var duration: TimeInterval = 1.0
     var transitionOut: HUDTransition? = .opacity(duration: 1.0)
-    
+
     init() { }
-    
+
     func windowStyleMask() -> NSWindow.StyleMask {
         [.fullSizeContentView]
     }
-    
+
     @MainActor
-    public func windowPhase(phase: HUDWindowPhase, context: HUDWindowContext) {
+    func windowPhase(phase: HUDWindowPhase, context: HUDWindowContext) {
         switch phase {
         case .windowCreation:
             // Set up window properties that remain consistent for all future HUD alerts of this style.
-            
+
             context.setCornerRadius(radius: 10.0)
             context.window.contentView?.layer?.borderColor = .white
             context.window.contentView?.layer?.borderWidth = 3.0
             context.window.hasShadow = true
-            
+
         case .contentUpdate:
             // Set up window properties that are specific to the alert content, and as such will need to be applied
             // every time a HUD alert is displayed.
-            
+
             // position window on screen
             let size = context.window.frame.size
             let rect = NSRect(
@@ -45,16 +45,16 @@ struct MyHUDStyle: HUDStyle {
                 size: size
             )
             context.window.setFrame(rect, display: true)
-            
+
         case .willAppear:
             break
-            
+
         case .didAppear:
             break
-            
+
         case .willDismiss:
             break
-            
+
         case .didDismiss:
             break
         }
@@ -64,12 +64,12 @@ struct MyHUDStyle: HUDStyle {
 extension MyHUDStyle {
     struct AlertContent: HUDAlertContent {
         var title: String
-        
+
         init(title: String) {
             self.title = title
         }
-        
-        public var animationDuration: TimeInterval? {
+
+        var animationDuration: TimeInterval? {
             nil
         }
     }
@@ -80,16 +80,16 @@ extension MyHUDStyle {
         typealias Style = MyHUDStyle
         let style: Style
         let content: Style.AlertContent
-        
+
         init(style: Style, content: Style.AlertContent) {
             self.style = style
             self.content = content
         }
-        
+
         var body: some View {
             ZStack {
                 Color(hue: .random(in: 0.0 ... 1.0), saturation: 1.0, brightness: 1.0)
-                
+
                 Text(content.title)
                     .font(.system(size: 72))
                     .padding(20)
@@ -102,5 +102,7 @@ extension MyHUDStyle {
 // MARK: - Static Constructor
 
 extension HUDStyle where Self == MyHUDStyle {
-    static var myStyle: MyHUDStyle { MyHUDStyle() }
+    static var myStyle: MyHUDStyle {
+        MyHUDStyle()
+    }
 }

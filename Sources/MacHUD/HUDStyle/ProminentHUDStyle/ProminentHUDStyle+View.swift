@@ -1,7 +1,7 @@
 //
 //  ProminentHUDStyle+View.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -12,42 +12,42 @@ import SwiftUI
 extension ProminentHUDStyle {
     public struct ContentView: View, HUDView {
         @Environment(\.colorScheme) private var colorScheme
-        
+
         public typealias Style = ProminentHUDStyle
         let style: Style
         let content: Style.AlertContent
-        
+
         public init(style: Style, content: Style.AlertContent) {
             self.style = style
             self.content = content
         }
-        
+
         public var body: some View {
             conditionalBody
                 .padding(Geometry.padding)
         }
-        
+
         @ViewBuilder
         public var conditionalBody: some View {
             switch content {
             case let .text(title, subtitle: subtitle):
                 TextView(title: title, subtitle: subtitle, size: .textOnly)
-                
+
             case let .image(imageSource):
                 ImageView(imageSource: imageSource, format: .imageOnly, animationDelay: nil)
-                
+
             case let .imageAndText(image: imageSource, title: title, subtitle: subtitle):
                 VStack(spacing: 14) {
                     ImageView(imageSource: imageSource, format: .imageAndText, animationDelay: nil)
                     TextView(title: title, subtitle: subtitle, size: .imageAndText)
                 }
-                
+
             case let .imageAndProgress(image: imageSource, progressValue: progressValue):
                 VStack(spacing: 14) {
                     ImageView(imageSource: imageSource, format: .imageAndProgress, animationDelay: nil)
                     AmountView(value: progressValue)
                 }
-                
+
             case let .imageAndTextAndProgress(image: imageSource, title: title, subtitle: subtitle, progressValue: progressValue):
                 VStack(spacing: 14) {
                     ImageView(imageSource: imageSource, format: .imageAndTextAndProgress, animationDelay: nil)

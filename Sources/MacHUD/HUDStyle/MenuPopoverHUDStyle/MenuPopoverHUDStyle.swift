@@ -1,7 +1,7 @@
 //
 //  MenuPopoverHUDStyle.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -18,17 +18,17 @@ public struct MenuPopoverHUDStyle: HUDStyle {
     public var transitionIn: HUDTransition?
     public var duration: TimeInterval
     public var transitionOut: HUDTransition?
-    
+
     /// A delay to apply before triggering image animations.
     public var imageAnimationDelay: TimeInterval? = 0.2
-    
+
     /// Status item access in order to position HUD alerts beneath the status item.
     public var statusItem: (@MainActor () -> NSStatusItem?)?
-    
+
     public init() {
         self = .macOS26()
     }
-    
+
     public init(
         transitionIn: HUDTransition?,
         duration: TimeInterval,

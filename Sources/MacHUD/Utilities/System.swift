@@ -1,13 +1,13 @@
 //
 //  System.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
 
-import Foundation
 import CoreGraphics
+import Foundation
 import SwiftUI
 
 /// Returns `true` if an application is in full screen mode and it is presented to the user.
@@ -20,12 +20,11 @@ func isAVisibleAppInFullScreenMode() -> Bool {
     guard let windowsInfo = CGWindowListCopyWindowInfo(.optionOnScreenOnly, kCGNullWindowID) else {
         return false
     }
-    
+
     var dockCount = 0
-    
-    for case let windowInfo as NSDictionary in (windowsInfo as NSArray)
-    where windowInfo[kCGWindowOwnerName] as? String == "Dock"
-    {
+
+    for case let windowInfo as NSDictionary in windowsInfo as NSArray
+    where windowInfo[kCGWindowOwnerName] as? String == "Dock" {
         let windowLayer = windowInfo[kCGWindowLayer]
         if let layerValue = windowLayer as? Int64,
            layerValue < 0
@@ -36,7 +35,7 @@ func isAVisibleAppInFullScreenMode() -> Bool {
             }
         }
     }
-    
+
     return false
 }
 

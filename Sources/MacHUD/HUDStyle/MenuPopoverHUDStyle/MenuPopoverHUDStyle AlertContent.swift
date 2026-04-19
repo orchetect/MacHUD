@@ -1,7 +1,7 @@
 //
 //  MenuPopoverHUDStyle AlertContent.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -13,13 +13,13 @@ extension MenuPopoverHUDStyle {
     public enum AlertContent: HUDAlertContent {
         /// Text-only HUD alert.
         case text(_ title: String, subtitle: String? = nil)
-        
+
         /// Image-only HUD alert.
         case image(_ imageSource: HUDImageSource)
-        
+
         /// Image and text HUD alert.
         case imageAndText(image: HUDImageSource, title: String, subtitle: String? = nil)
-        
+
         /// Text and progress bar HUD alert.
         ///
         /// - Parameters:
@@ -33,7 +33,7 @@ extension MenuPopoverHUDStyle {
             progressValue: HUDSteppedProgressValue,
             progressImages: HUDProgressImageSource?
         )
-        
+
         /// Image, text, and progress bar alert.
         ///
         /// - Parameters:
@@ -69,7 +69,7 @@ extension MenuPopoverHUDStyle.AlertContent {
             progressImages: .audioVolume
         )
     }
-    
+
     /// Alert that simulates the macOS system screen brightness level change HUD alert.
     ///
     /// - Parameters:
@@ -93,16 +93,16 @@ extension MenuPopoverHUDStyle.AlertContent {
         switch self {
         case .text(_, subtitle: _):
             nil
-            
+
         case let .image(imageSource):
             imageSource.animationDuration
-            
+
         case let .imageAndText(image: imageSource, title: _, subtitle: _):
             imageSource.animationDuration
-            
+
         case .textAndProgress(title: _, subtitle: _, progressValue: _, progressImages: _):
             nil
-            
+
         case let .imageAndTextAndProgress(image: imageSource, title: _, subtitle: _, progressValue: _, progressImages: _):
             imageSource.animationDuration
         }

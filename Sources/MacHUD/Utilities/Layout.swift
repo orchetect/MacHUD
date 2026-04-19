@@ -1,7 +1,7 @@
 //
 //  Layout.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -11,9 +11,9 @@ import AppKit
 extension NSView {
     func addFrameConstraints(toParent parentView: NSView) {
         let childView = self
-        
+
         childView.translatesAutoresizingMaskIntoConstraints = false
-        
+
         NSLayoutConstraint.activate([
             parentView.topAnchor.constraint(
                 equalTo: childView.topAnchor
@@ -28,7 +28,7 @@ extension NSView {
                 equalTo: childView.leftAnchor
             )
         ])
-        
+
         // parentView.addConstraint(.init(
         //     item: childView as Any,
         //     attribute: .centerY,

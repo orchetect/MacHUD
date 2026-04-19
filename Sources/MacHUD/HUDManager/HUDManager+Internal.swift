@@ -1,7 +1,7 @@
 //
 //  HUDManager+Internal.swift
 //  MacHUD • https://github.com/orchetect/MacHUD
-//  © 2018-2026 Steffan Andrews • Licensed under MIT License
+//  © 2026 Steffan Andrews • Licensed under MIT License
 //
 
 #if os(macOS)
@@ -10,7 +10,7 @@ import Foundation
 
 extension HUDManager {
     static let maxConcurrentAlerts: Int = 10
-    
+
     func prewarmAlerts(style: (some HUDStyle).Type, count: Int = 2) async {
         let id = style.id
         let currentCount = alerts[id]?.count ?? 0
@@ -23,7 +23,7 @@ extension HUDManager {
             logger.debug("Error warming the HUDManager: \(error.localizedDescription)")
         }
     }
-    
+
     @discardableResult
     func addNewAlert<S: HUDStyle>(style: S.Type) async throws -> Alert<S> {
         let id = style.id
@@ -32,7 +32,7 @@ extension HUDManager {
         alerts[id]?.append(newAlert)
         return newAlert
     }
-    
+
     func alerts<S: HUDStyle>(style: S.Type) async -> [Alert<S>]? {
         let id = style.id
         guard let alertPool = alerts[id] else { return nil }
@@ -45,14 +45,14 @@ extension HUDManager {
         }
         return typedAlertPool
     }
-    
+
     func reusableAlert<S: HUDStyle>(style: S.Type, for content: S.AlertContent) async throws -> Alert<S> {
         // return first reusable alert that is compatible with the content
         if let alertPool = await alerts(style: style) {
             for alert in alertPool {
                 if await alert.isReusable(for: content, reserveIfReusable: true) { return alert }
             }
-            
+
             // failsafe: cap max number of alerts
             if alertPool.count > Self.maxConcurrentAlerts,
                let lastAlert = alertPool.last
@@ -60,11 +60,11 @@ extension HUDManager {
                 return lastAlert
             }
         }
-        
+
         // add new alert and return it
         return try await addNewAlert(style: style)
     }
-    
+
     /// Trigger a new HID alert being shown on-screen.
     func displayAlert<S: HUDStyle>(
         style: S,
