@@ -1,14 +1,15 @@
 --header "\n {file}\n MacHUD • https://github.com/orchetect/MacHUD\n © {year} Steffan Andrews • Licensed under MIT License\n"
 --allow-partial-wrapping false
+--binary-grouping 8,8
 --call-site-paren balanced
 --complex-attributes prev-line
 --computed-var-attributes prev-line
 --empty-braces spaced
 --extension-acl on-declarations
 --func-attributes prev-line
+--max-width 140
 --ifdef preserve
 --indent-strings true
---maxwidth 140
 --property-types explicit
 --stored-var-attributes preserve
 --strip-unused-args unnamed-only
