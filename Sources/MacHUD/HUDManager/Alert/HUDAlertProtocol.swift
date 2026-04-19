@@ -13,7 +13,7 @@ import Foundation
 protocol HUDAlertProtocol: AnyObject, Sendable {
     @HUDManager
     var phase: HUDManager.AlertPhase { get set }
-    
+
     @MainActor
     var window: NSWindow? { get set }
 }
