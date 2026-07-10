@@ -27,7 +27,7 @@ on:
     - cron: '55 12 * * *'   # once a day @ 1:55am UTC (6:35am PST)
 
 env:
-  SCHEME: "MacHUD"
+  SCHEME: MacHUD
 
 jobs:
   macOS:
