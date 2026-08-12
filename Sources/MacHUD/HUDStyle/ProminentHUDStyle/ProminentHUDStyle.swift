@@ -21,13 +21,15 @@ public struct ProminentHUDStyle: HUDStyle {
     public var imageAnimationDelay: TimeInterval? = 0.5
 
     public init() {
-        self = if #available(macOS 11.0, *) {
-            .macOS11Thru15
-        } else if #available(macOS 10.15, *) {
-            .macOS10_15
-        } else {
-            .macOS10_15
+        if #available(macOS 11.0, *) {
+            self = .macOS11Thru15
+            return
         }
+        if #available(macOS 10.15, *) {
+            self = .macOS10_15
+            return
+        }
+        self = .macOS10_15
     }
 
     public init(
