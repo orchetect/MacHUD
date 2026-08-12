@@ -9,7 +9,7 @@ import MacHUD
 import SwiftUI
 
 struct ContentView: View {
-    @State private var panel: Panel = if #available(macOS 26.0, *) { .menuPopover } else { .prominent }
+    @State private var panel: Panel = Self.initialPanel
 
     var body: some View {
         NavigationSplitView {
@@ -32,6 +32,10 @@ struct ContentView: View {
                 CustomHUDView()
             }
         }
+    }
+    
+    private static var initialPanel: Panel {
+        if #available(macOS 26.0, *) { .menuPopover } else { .prominent }
     }
 }
 

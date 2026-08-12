@@ -14,15 +14,6 @@ struct DemoApp: App {
     @State private var viewModel = ViewModel()
 
     var body: some Scene {
-        WindowGroup {
-            ContentView()
-                .environment(viewModel)
-                .task {
-                    await HUDManager.shared.prewarm()
-                }
-        }
-        .defaultSize(width: 800, height: 1100)
-
         MenuBarExtra("Demo", systemImage: "bubble.fill") {
             if #available(macOS 26.0, *) { } else {
                 Button("Menubar extra is only used for macOS 26 popover HUDs") { }.disabled(true)
@@ -34,5 +25,14 @@ struct DemoApp: App {
             print("Got status item reference: \(statusItem)")
             viewModel.statusItem = statusItem
         }
+        
+        WindowGroup {
+            ContentView()
+                .environment(viewModel)
+                .task {
+                    await HUDManager.shared.prewarm()
+                }
+        }
+        .defaultSize(width: 800, height: 1100)
     }
 }
