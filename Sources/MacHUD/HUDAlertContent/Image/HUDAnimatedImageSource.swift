@@ -136,12 +136,10 @@ extension HUDAnimatedImageSource {
             ZStack {
                 image
             }
-            .onAppear {
-                Task {
-                    if let sanitizedDelay { try await Task.sleep(seconds: sanitizedDelay) }
-                    try Task.checkCancellation()
-                    isTransitioned = true
-                }
+            .task {
+                if let sanitizedDelay { try? await Task.sleep(seconds: sanitizedDelay) }
+                try? Task.checkCancellation()
+                isTransitioned = true
             }
         }
 
@@ -175,12 +173,10 @@ extension HUDAnimatedImageSource {
             ZStack {
                 conditionalImage
             }
-            .onAppear {
-                Task {
-                    if let sanitizedDelay { try await Task.sleep(seconds: sanitizedDelay) }
-                    try Task.checkCancellation()
-                    isTransitioned = true
-                }
+            .task {
+                if let sanitizedDelay { try? await Task.sleep(seconds: sanitizedDelay) }
+                try? Task.checkCancellation()
+                isTransitioned = true
             }
         }
 
